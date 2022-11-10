@@ -1,5 +1,5 @@
 ---
-name: 제안 사항
+name: purpose-issue-template
 about: Describe this issue template's purpose here.
 title: ''
 labels: question

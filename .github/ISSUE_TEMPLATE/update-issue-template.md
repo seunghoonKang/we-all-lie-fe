@@ -1,5 +1,5 @@
 ---
-name: 수정 사항
+name: update-issue-template
 about: Suggest an idea for this project
 title: ''
 labels: update

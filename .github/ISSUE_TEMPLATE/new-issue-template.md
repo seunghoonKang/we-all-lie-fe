@@ -1,5 +1,5 @@
 ---
-name: 작업 생성
+name: new-issue-template
 about: Describe this issue template's purpose here.
 title: ''
 labels: new

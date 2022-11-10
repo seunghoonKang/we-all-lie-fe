@@ -1,5 +1,5 @@
 ---
-name: 버그 이슈
+name: bug-issue-template
 about: 버그에 대해 작성해주세요.
 title: "[Bug]"
 labels: bug
