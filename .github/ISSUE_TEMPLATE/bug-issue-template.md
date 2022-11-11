@@ -2,7 +2,7 @@
 name: bug-issue-template
 about: 버그에 대해 작성해주세요.
 title: "[BUG]"
-labels: bug
+labels: bug, question
 assignees: ''
 
 ---
