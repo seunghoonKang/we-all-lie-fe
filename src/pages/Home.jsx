@@ -1,5 +1,5 @@
 import React from 'react';
-import CreateRoom from '../components/CreateRoom';
+import CreateRoom from '../components/createroom/CreateRoom';
 import RoomItem from '../components/RoomItem';
 import Chat from '../components/Chat';
 
