@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { socket } from "../shared/socket";
 import { useRef } from "react";
 
-const Chat = () => {
+const Chat = ({ showChat }) => {
   // const msgInput = useRef();
   // const msgValue = msgInput.current.value;
 
@@ -15,8 +15,10 @@ const Chat = () => {
   const msgSubmitHandler = (e) => {
     e.preventDefault();
   };
+
+  console.log("Chat 에 있는 콘솔", showChat);
   return (
-    <ChatLayout>
+    <ChatLayout showChat={showChat}>
       <ChatTop>
         <p style={{ fontSize: "30px" }}>Chat</p>
         <People>(현재 접속 인원수)</People>
@@ -53,6 +55,9 @@ const ChatLayout = styled.div`
   height: 90vh;
   min-height: 650px;
   background-color: lightgray;
+  transition: all 400ms ease-in-out;
+  visibility: ${(props) => (props.showChat ? "visible" : "hidden")};
+  opacity: ${(props) => (props.showChat ? "1" : "0")};
 `;
 
 const People = styled.p``;
@@ -113,7 +118,6 @@ const Form = styled.form`
   button {
     background-color: pink;
     padding: 5px;
-    margin-right: 10px;
     border-radius: 8px;
   }
 `;
