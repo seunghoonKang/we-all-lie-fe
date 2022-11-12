@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "styled-components";
-import { socket } from "../shared/socket";
-import { useRef } from "react";
+import React from 'react';
+import styled from 'styled-components';
+import { socket } from '../shared/socket';
+import { useRef } from 'react';
 
 const Chat = ({ showChat }) => {
   // const msgInput = useRef();
@@ -16,11 +16,10 @@ const Chat = ({ showChat }) => {
     e.preventDefault();
   };
 
-  console.log("Chat 에 있는 콘솔", showChat);
   return (
     <ChatLayout showChat={showChat}>
       <ChatTop>
-        <p style={{ fontSize: "30px" }}>Chat</p>
+        <p style={{ fontSize: '30px' }}>Chat</p>
         <People>(현재 접속 인원수)</People>
       </ChatTop>
       <ChatRow>
@@ -56,8 +55,8 @@ const ChatLayout = styled.div`
   min-height: 650px;
   background-color: lightgray;
   transition: all 400ms ease-in-out;
-  visibility: ${(props) => (props.showChat ? "visible" : "hidden")};
-  opacity: ${(props) => (props.showChat ? "1" : "0")};
+  visibility: ${(props) => (props.showChat ? 'visible' : 'hidden')};
+  opacity: ${(props) => (props.showChat ? '1' : '0')};
 `;
 
 const People = styled.p``;

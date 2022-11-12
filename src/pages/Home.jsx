@@ -1,18 +1,34 @@
-import React, { useState } from "react";
-import Chat from "../components/Chat";
-import styled from "styled-components";
+import React, { useState } from 'react';
+import CreateRoom from '../components/createroom/CreateRoom';
+import RoomItem from '../components/RoomItem';
+import Chat from '../components/Chat';
+import styled from 'styled-components';
 
 const Home = () => {
   const [showChat, setShowChat] = useState(false);
-  console.log(showChat);
+  const [openModal, setOpenModal] = useState(false);
   return (
     <div>
       <div>상단 슬라이드</div>
       <Box showChat={showChat}>
-        <List>여기에 룸 리스트</List>
+        <List>
+          <div>
+            <button
+              onClick={() => {
+                setOpenModal(!openModal);
+              }}
+            >
+              방 만들기
+            </button>
+          </div>
+          {openModal ? (
+            <CreateRoom closeModal={() => setOpenModal(!openModal)} />
+          ) : (
+            <></>
+          )}
+          <RoomItem />
+        </List>
         <Chat showChat={showChat} />
-        {/* {showChat && <Chat />} */}
-        {/* <Chat /> */}
         <Click
           onClick={() => {
             setShowChat(!showChat);
@@ -25,8 +41,6 @@ const Home = () => {
   );
 };
 
-export default Home;
-
 const Click = styled.button`
   position: absolute;
   top: 40px;
@@ -36,7 +50,7 @@ const Click = styled.button`
 `;
 
 const Box = styled.div`
-  display: ${(props) => (props.showChat ? "flex" : "block")};
+  display: ${(props) => (props.showChat ? 'flex' : 'block')};
   justify-content: space-between;
   position: relative;
 `;
@@ -48,3 +62,5 @@ const List = styled.div`
   min-height: 650px;
   margin-bottom: 100px;
 `;
+
+export default Home;
