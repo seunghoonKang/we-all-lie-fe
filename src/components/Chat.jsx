@@ -16,7 +16,6 @@ const Chat = ({ showChat }) => {
     e.preventDefault();
   };
 
-  console.log('Chat 에 있는 콘솔', showChat);
   return (
     <ChatLayout showChat={showChat}>
       <ChatTop>
