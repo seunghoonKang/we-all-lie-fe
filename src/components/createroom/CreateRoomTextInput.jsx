@@ -7,9 +7,7 @@ const CreateRoomTextInput = ({ label, ...props }) => {
     <>
       <label>{label}</label>
       <input {...field} {...props} />
-      {meta.touched && meta.error ? (
-        <div className="error">{meta.error}</div>
-      ) : null}
+      {meta.touched && meta.error ? <div>{meta.error}</div> : null}
     </>
   );
 };

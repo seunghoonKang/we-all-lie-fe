@@ -1,16 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CreateRoom from '../components/createroom/CreateRoom';
 import RoomItem from '../components/RoomItem';
 import Chat from '../components/Chat';
 
 const Home = () => {
+  const [openModal, setOpenModal] = useState(false);
   return (
     <div>
-      <CreateRoom />
-      <RoomItem />
       <div>상단 슬라이드</div>
+      <div>
+        <button
+          onClick={() => {
+            setOpenModal(!openModal);
+          }}
+        >
+          방 만들기
+        </button>
+      </div>
+      {openModal ? (
+        <CreateRoom closeModal={() => setOpenModal(!openModal)} />
+      ) : (
+        <></>
+      )}
+
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div>여기에 룸 리스트</div>
+        <RoomItem />
         <Chat />
       </div>
     </div>
