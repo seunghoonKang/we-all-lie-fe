@@ -16,5 +16,5 @@ const LayoutCtn = styled.div`
   min-width: 1080px;
   height: 97vh;
   min-height: 710px; //margin-top을 10px 줬기 때문에 720 -> 710로 줄였더용
-  /* background-color: lightblue; */
+  overflow: hidden;
 `;
