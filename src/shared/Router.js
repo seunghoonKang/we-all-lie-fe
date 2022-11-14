@@ -11,7 +11,7 @@ const Router = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/api/auth/kakao/callback" element={<Kakao />}></Route>
+        <Route path="api/auth/kakao/callback" component={Kakao}></Route>
         <Route path="/home" element={<Home />} />
         <Route path="/room:id" element={<Room />} />
         <Route path="/user:id" element={<User />} />
