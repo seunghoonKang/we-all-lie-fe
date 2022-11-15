@@ -13,7 +13,7 @@ const LayoutCtn = styled.div`
   border: 1px solid gray; //이거두개는 없애도됨
   border-radius: 20px; //구냥 해봐써 디자인이 넘 없어서,,
   width: 97%;
-  min-width: 1080px;
+  min-width: 1280px;
   height: 97vh;
   min-height: 710px; //margin-top을 10px 줬기 때문에 720 -> 710로 줄였더용
   overflow: hidden;

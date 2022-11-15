@@ -4,19 +4,25 @@ import { socket } from "../shared/socket";
 import { useRef } from "react";
 
 const Chat = ({ showChat }) => {
-  // const msgInput = useRef();
-  // const msgValue = msgInput.current.value;
+  const msgInput = useRef();
+  const msgValue = msgInput.current.value;
 
-  //토큰과 받아온 닉네임 선언하기
+  //로비 입장시, 닉네임 받아오기(on)
+  //채팅방에 @@님이 로그인하셨습니다.(?) 띄워주기
 
-  //로비 입장시, @@님이 입장하셨습니다.
-  //nickname 받아오기
+  //채팅방에 닉네임, 메세지 받기(on)
+  //하쨩 : 승쨩어디감
+
+  //채팅에 닉네임, 메세지 전송 (emit)
+  //닉네임
 
   const msgSubmitHandler = (e) => {
     e.preventDefault();
+    //전송(emit)할 식
+
+    msgInput.current.value = "";
   };
 
-  console.log("Chat 에 있는 콘솔", showChat);
   return (
     <ChatLayout showChat={showChat}>
       <ChatTop>
@@ -37,10 +43,7 @@ const Chat = ({ showChat }) => {
       </ChatRow>
       <Form onSubmit={msgSubmitHandler}>
         {/* <p>프로필?</p> */}
-        <input
-          type="text"
-          // ref={msgInput}
-        />
+        <input type="text" ref={msgInput} placeholder="Msg..." />
         <button>전송</button>
       </Form>
     </ChatLayout>
@@ -56,8 +59,12 @@ const ChatLayout = styled.div`
   min-height: 650px;
   background-color: lightgray;
   transition: all 400ms ease-in-out;
+  /* //채팅방 열고 닫기 코드
+  position: absolute;
+  top: 0;
+  ${(props) => (props.showChat ? "right:0;" : "right:-360px;")}
   visibility: ${(props) => (props.showChat ? "visible" : "hidden")};
-  opacity: ${(props) => (props.showChat ? "1" : "0")};
+  opacity: ${(props) => (props.showChat ? "1" : "0")}; */
 `;
 
 const People = styled.p``;
@@ -114,6 +121,10 @@ const Form = styled.form`
   }
   input {
     width: 80%;
+    padding: 0 5px;
+    &:focus {
+      outline: none;
+    }
   }
   button {
     background-color: pink;
