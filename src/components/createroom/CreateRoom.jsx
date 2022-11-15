@@ -43,7 +43,7 @@ const CreateRoom = ({ closeModal }) => {
               roomTitle: Yup.string()
                 .max(15, '15자 이하로 작성해주세요')
                 .required('필수 입력'),
-              participants: Yup.string()
+              /* participants: Yup.string()
                 .oneOf(
                   ['4', '5', '6', '7', '8'],
                   '유효한 인원 수를 선택해주세요'
@@ -53,7 +53,7 @@ const CreateRoom = ({ closeModal }) => {
                 ['Easy'],
                 '하드 모드는 준비중입니다.'
               ),
-              privateRoom: Yup.boolean().oneOf([false], '기능 구현예정입니다'),
+              privateRoom: Yup.boolean().oneOf([false], '기능 구현예정입니다'), */
             })}
             onSubmit={(values, { setSubmitting }) => {
               setTimeout(() => {
@@ -70,6 +70,7 @@ const CreateRoom = ({ closeModal }) => {
                 type="text"
                 placeholder="방 제목을 입력해주세요"
               ></CreateRoomTextInput>
+              {/* 추가구현예정
               <CreateRoomSelect label="인원수" name="participants">
                 <option value="">인원 선택</option>
                 <option value="4">4</option>
@@ -78,18 +79,22 @@ const CreateRoom = ({ closeModal }) => {
                 <option value="7">7</option>
                 <option value="8">8</option>
               </CreateRoomSelect>
-
+                */}
               <CreateRoomRadio role="group" name="gameMode" label="난이도">
                 <label>
                   <Field type="radio" name="gameMode" value="Easy" />
                   Easy
                 </label>
+                {/*  추가구현예정
                 <label>
                   <Field type="radio" name="gameMode" value="Hard" />
                   Hard
                 </label>
+                 */}
               </CreateRoomRadio>
-              <CreateRoomCheckBox name="privateRoom">비공개</CreateRoomCheckBox>
+              {/* 추가구현예정
+                <CreateRoomCheckBox name="privateRoom">비공개</CreateRoomCheckBox>
+              */}
               <button type="submit">방 만들기</button>
             </Form>
           </Formik>
