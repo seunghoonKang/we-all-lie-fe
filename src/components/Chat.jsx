@@ -1,11 +1,11 @@
-import React from "react";
-import styled from "styled-components";
-import { socket } from "../shared/socket";
-import { useRef } from "react";
+import React from 'react';
+import styled from 'styled-components';
+import { socket } from '../shared/socket';
+import { useRef } from 'react';
 
 const Chat = ({ showChat }) => {
   const msgInput = useRef();
-  const msgValue = msgInput.current.value;
+  // const msgValue = msgInput.current.value;
 
   //로비 입장시, 닉네임 받아오기(on)
   //채팅방에 @@님이 로그인하셨습니다.(?) 띄워주기
@@ -13,20 +13,18 @@ const Chat = ({ showChat }) => {
   //채팅방에 닉네임, 메세지 받기(on)
   //하쨩 : 승쨩어디감
 
-  //채팅에 닉네임, 메세지 전송 (emit)
-  //닉네임
-
   const msgSubmitHandler = (e) => {
     e.preventDefault();
-    //전송(emit)할 식
+    //채팅에 닉네임, 메세지 전송 (emit)
+    //You : 하쨩 하이
 
-    msgInput.current.value = "";
+    msgInput.current.value = '';
   };
 
   return (
     <ChatLayout showChat={showChat}>
       <ChatTop>
-        <p style={{ fontSize: "30px" }}>Chat</p>
+        <p style={{ fontSize: '30px' }}>Chat</p>
         <People>(현재 접속 인원수)</People>
       </ChatTop>
       <ChatRow>
@@ -62,9 +60,9 @@ const ChatLayout = styled.div`
   /* //채팅방 열고 닫기 코드
   position: absolute;
   top: 0;
-  ${(props) => (props.showChat ? "right:0;" : "right:-360px;")}
-  visibility: ${(props) => (props.showChat ? "visible" : "hidden")};
-  opacity: ${(props) => (props.showChat ? "1" : "0")}; */
+  ${(props) => (props.showChat ? 'right:0;' : 'right:-360px;')}
+  visibility: ${(props) => (props.showChat ? 'visible' : 'hidden')};
+  opacity: ${(props) => (props.showChat ? '1' : '0')}; */
 `;
 
 const People = styled.p``;
