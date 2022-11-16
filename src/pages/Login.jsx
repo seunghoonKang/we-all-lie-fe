@@ -1,9 +1,9 @@
-import React from "react";
-import { KAKAO_AUTH_URL } from "../components/login/Oauth";
-import styled from "styled-components";
+import React from 'react';
+import { KAKAO_AUTH_URL } from '../components/login/Oauth';
+import styled from 'styled-components';
 // import { socket } from "../shared/socket";
-import Notice from "../elements/Notice";
-import Header from "../elements/Header";
+import Notice from '../elements/Notice';
+import Header from '../elements/Header';
 
 // socket.emit("leave_Room", "하이하이");
 // socket.emit("enter_Room", "하이하이");
@@ -21,7 +21,7 @@ const Login = () => {
       <Notice />
       <Header />
       <KaKaoBtn onClick={handleLogin}>
-        <img style={{ transform: "scale(0.3)" }} src="/img/kakao1.png"></img>
+        <img style={{ transform: 'scale(0.3)' }} src="/img/kakao1.png"></img>
         <span>카카오계정 로그인</span>
       </KaKaoBtn>
       <MainImg>메인 이미지</MainImg>

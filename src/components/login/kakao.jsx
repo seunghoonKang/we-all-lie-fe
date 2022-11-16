@@ -1,50 +1,66 @@
 // 리다이렉트될 화면
-import React from "react";
-import { useDispatch } from "react-redux";
-import axios from "axios";
+import React from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 // import Spinner from "./Spinner";
+import { useCookies } from 'react-cookie';
+import { useEffect } from 'react';
 
-//리이렉트 화면
+//리다이렉트 화면
 const Kakao = () => {
-  const dispatch = useDispatch();
+  const navigator = useNavigate();
+  const [cookies, setCookie] = useCookies(['nickname']);
 
   // 인가코드
-  let code = new URL(window.location.href).searchParams.get("code");
-  console.log(code);
-  console.log(window.location.href);
+  let code = new URL(window.location.href).searchParams.get('code');
 
-  // axios
-  // .get(`http://3.36.1.72/api/auth/kakao/callback?code=${code}`)
+  // const Token = async () => {
+  //   const data = await axios.get(
+  //     `http://3.36.1.72/api/auth/kakao/callback?code=${code}`
+  //   );
+  //   setKakaoToken(data);
+  //   console.log(kakaoToken);
+  // };
 
-  const Get = async () => {
-    try {
-      const { data } = await axios.get(
-        `http://3.36.1.72/api/auth/kakao/callback?code=${code}`
-      );
-      return console.log(data.data);
-    } catch (error) {
-      return alert(error);
-    }
-  };
-  Get();
-  // axios({
-  //   // method: "GET",
-  //   // url: `http://localhost:3000/api/auth/kakao/callback?code=${code}`,
-  // })
-  // .then((res) => {
-  //   console.log(res);
-  // }); // 토큰이 넘어올 것임
+  axios
+    .get(`http://3.36.1.72/api/auth/kakao/callback?code=${code}`)
+    .then((res) => {
+      const kakaoToken = res.data.accessToken;
+      // console.log(kakaoToken);
+      localStorage.setItem('kakaotoken', kakaoToken);
+    })
+    .catch((error) => {
+      console.log('로그인에러', error);
+    });
 
-  //   const ACCESS_TOKEN = res.data.accessToken;
-  //   window.localStorage.setItem("token", ACCESS_TOKEN); //예시로 로컬에 저장함
-  //   // window.localStorage.setItem('name', 'anna');
-  //   window.location.href("home");
-  // })
-  // .catch((err) => {
-  //   console.log("소셜로그인 에러", err);
-  //   window.alert("로그인에 실패하였습니다.");
-  //   window.location.href("login");
-  // });
+  const kakaoToken = localStorage.getItem('kakaotoken');
+  console.log(kakaoToken);
+
+  axios
+    .post(
+      `http://3.36.1.72/api/auth/kakao/callback`,
+      {
+        kakaoToken, //카카오 토큰
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${kakaoToken}`,
+        },
+      }
+    )
+    .then((res) => {
+      // console.log(res);
+      const nickname = res.data.nickname;
+      setCookie('nickname', nickname);
+      // console.log(cookies);
+    })
+    .catch((error) => {
+      console.log('로그인 에러', error);
+    });
+
+  useEffect(() => {
+    navigator('/home');
+  }, [navigator]);
 
   return (
     <div>
