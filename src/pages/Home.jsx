@@ -1,12 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CreateRoom from '../components/createroom/CreateRoom';
 import RoomItem from '../components/RoomItem';
 import Chat from '../components/Chat';
 import styled from 'styled-components';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { addRoomLists } from '../redux/modules/roomSlice';
+import { socket } from '../shared/socket';
 const Home = () => {
   const [showChat, setShowChat] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const dispatch = useDispatch();
+  const roomLists = useSelector((state) => state.roomSlice.roomList);
+
+  useEffect(() => {
+    socket.on('createRoom', (makeRoom) => {
+      dispatch(addRoomLists(makeRoom));
+    });
+  });
+
+  console.log(roomLists?.payload);
   return (
     <div>
       <div>상단 슬라이드</div>
@@ -26,16 +38,18 @@ const Home = () => {
           ) : (
             <></>
           )}
-          <RoomItem />
+          {roomLists?.map((roomList) => {
+            <RoomItem roominfo={roomList.payload} />;
+          })}
         </List>
         <Chat showChat={showChat} />
-        <Click
+        {/* <Click
           onClick={() => {
             setShowChat(!showChat);
           }}
         >
           채팅창 열기/닫기
-        </Click>
+        </Click> */}
       </Box>
     </div>
   );

@@ -1,13 +1,18 @@
 import React, { useEffect } from 'react';
+import styled from 'styled-components';
+import { socket } from '../../shared/socket';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import CreateRoomTextInput from './CreateRoomTextInput';
-import CreateRoomSelect from './CreateRoomSelect';
-import CreateRoomCheckBox from './CreateRoomCheckBox';
 import CreateRoomRadio from './CreateRoomRadio';
-import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { addRoomLists } from '../../redux/modules/roomSlice';
+// import CreateRoomSelect from './CreateRoomSelect';
+// import CreateRoomCheckBox from './CreateRoomCheckBox';
 
 const CreateRoom = ({ closeModal }) => {
+  const dispatch = useDispatch();
+
   const closeBtnHandler = () => {
     closeModal();
   };
@@ -34,7 +39,7 @@ const CreateRoom = ({ closeModal }) => {
             initialValues={{
               roomTitle: '',
               participants: '',
-              gameMode: 'Easy',
+              gameMode: false,
               privateRoom: false,
               roomPassword: '',
               currentCount: 1,
@@ -57,8 +62,10 @@ const CreateRoom = ({ closeModal }) => {
             })}
             onSubmit={(values, { setSubmitting }) => {
               setTimeout(() => {
-                //소켓으로 보내면 되겠지..?
-                console.log(JSON.stringify(values, null, 2));
+                socket.emit('createRoom', values.gameMode, values.roomTitle);
+                // socket.on('createRoom', (makeRoom) => {
+                //   dispatch(addRoomLists(makeRoom));
+                // });
                 setSubmitting(false);
               }, 400);
             }}
@@ -82,12 +89,12 @@ const CreateRoom = ({ closeModal }) => {
                 */}
               <CreateRoomRadio role="group" name="gameMode" label="난이도">
                 <label>
-                  <Field type="radio" name="gameMode" value="Easy" />
+                  <Field type="radio" name="gameMode" value={false} />
                   Easy
                 </label>
                 {/*  추가구현예정
                 <label>
-                  <Field type="radio" name="gameMode" value="Hard" />
+                  <Field type="radio" name="gameMode" value={true} />
                   Hard
                 </label>
                  */}

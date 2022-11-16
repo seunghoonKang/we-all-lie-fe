@@ -50,7 +50,7 @@ export default Chat;
 
 const ChatLayout = styled.div`
   padding: 10px;
-  width: 360px;
+  width: 450px;
   height: 90vh;
   min-height: 650px;
   background-color: lightgray;
