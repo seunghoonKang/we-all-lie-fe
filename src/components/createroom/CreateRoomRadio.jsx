@@ -2,7 +2,7 @@ import React from 'react';
 import { useField } from 'formik';
 
 const CreateRoomRadio = ({ label, ...props }) => {
-  const [field, meta] = useField(props);
+  const [field, meta] = useField({ ...props, type: 'radio' });
   return (
     <div>
       <label>{label}</label>

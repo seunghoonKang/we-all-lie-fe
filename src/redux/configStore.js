@@ -1,7 +1,10 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from '@reduxjs/toolkit';
+import roomSlice from './modules/roomSlice';
 
 const store = configureStore({
-  reducer: {},
+  reducer: {
+    roomSlice,
+  },
 });
 
 export default store;

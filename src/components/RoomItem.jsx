@@ -1,17 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
-const RoomItem = () => {
+const RoomItem = (payload) => {
+  console.log(payload);
   return (
     <RoomContainer>
-      <div>001</div>
+      <div>{payload?._id}</div>
       <RoomContents>
-        <RoomTitle>방제목 입니다 방제목 입니다</RoomTitle>
+        <RoomTitle>{payload?.roomTitle}</RoomTitle>
         <RoomInfos>
-          <p>2/8</p>
-          <p>자</p>
-          <p>EASY</p>
-          <p>게임중</p>
+          <p>{payload?.currentCount} / 8 </p>
+          <p>자물쇠</p>
+          <p>{payload?.gameMode === false ? 'EASY' : 'HARD'}</p>
+          <p>{payload?.roomStauts === false ? '대기중' : '게임중'}</p>
         </RoomInfos>
       </RoomContents>
       <div>화살표</div>
