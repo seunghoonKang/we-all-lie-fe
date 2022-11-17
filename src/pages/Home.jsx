@@ -55,7 +55,7 @@ const Box = styled.div`
 `;
 
 const List = styled.div`
-  width: 100%;
+  width: calc(100% - 350px);
   /* //채팅방 열고닫기 코드...
   width: ${(props) => (props.showChat ? 'calc(100% - 360px)' : '100%')};
   transition: all 400ms ease-in-out; */

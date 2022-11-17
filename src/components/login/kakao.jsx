@@ -14,53 +14,29 @@ const Kakao = () => {
   // 인가코드
   let code = new URL(window.location.href).searchParams.get('code');
 
-  // const Token = async () => {
-  //   const data = await axios.get(
-  //     `http://3.36.1.72/api/auth/kakao/callback?code=${code}`
-  //   );
-  //   setKakaoToken(data);
-  //   console.log(kakaoToken);
-  // };
-
-  axios
-    .get(`http://3.36.1.72/api/auth/kakao/callback?code=${code}`)
-    .then((res) => {
+  const Token = async () => {
+    try {
+      const res = await axios.get(
+        `http://3.36.1.72/api/auth/kakao/callback?code=${code}`
+      );
       const kakaoToken = res.data.accessToken;
-      // console.log(kakaoToken);
       localStorage.setItem('kakaotoken', kakaoToken);
-    })
-    .catch((error) => {
-      console.log('로그인에러', error);
-    });
-
-  const kakaoToken = localStorage.getItem('kakaotoken');
-  console.log(kakaoToken);
-
-  axios
-    .post(
-      `http://3.36.1.72/api/auth/kakao/callback`,
-      {
-        kakaoToken, //카카오 토큰
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${kakaoToken}`,
-        },
-      }
-    )
-    .then((res) => {
-      // console.log(res);
-      const nickname = res.data.nickname;
+      console.log('res값', res);
+      const res2 = await axios.post(
+        `http://3.36.1.72/api/auth/kakao/callback`,
+        { kakaoToken },
+        { headers: { Authorization: `Bearer ${kakaoToken}` } }
+      );
+      console.log('res2값', res2);
+      const nickname = res2.data.nickname;
       setCookie('nickname', nickname);
-      // console.log(cookies);
-    })
-    .catch((error) => {
-      console.log('로그인 에러', error);
-    });
-
-  useEffect(() => {
-    navigator('/home');
-  }, [navigator]);
+      console.log(cookies);
+      navigator('/home');
+    } catch (error) {
+      console.log('로그인에러', error);
+    }
+  };
+  Token();
 
   return (
     <div>
