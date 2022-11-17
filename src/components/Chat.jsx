@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { socket } from '../shared/socket';
+// import { socket } from '../shared/socket';
 import { useRef } from 'react';
-// import cookies from './login/kakao'; //이게 맞나?
 import { useCookies } from 'react-cookie';
+
+//민형님 주소
+import { io } from 'socket.io-client';
+
+export const socket = io('http://3.36.1.72', {
+  cors: {
+    origin: 'http://localhost:3000',
+  },
+  transports: ['websocket', 'polling'],
+});
 
 const Chat = ({ showChat }) => {
   const [cookies, setCookie] = useCookies(['nickname']);
@@ -11,45 +20,62 @@ const Chat = ({ showChat }) => {
     { notice: '뀨띠님이 입장하셨습니다' },
     { name: '뿡', msg: 'ㅋ' },
   ]);
-  console.log(cookies);
-  const nickname = cookies.nickname; //'뀨띠';  //임시 닉네임
+  // console.log(cookies);
+  const nickname = cookies.nickname;
   const msgInput = useRef();
 
-  //로비 입장시, Cookie에서 닉네임 빼와서 모두에게 띄워주기,,(emit?)
-  //채팅방에 @@님이 로그인하셨습니다.(?) 띄워주기
   useEffect(() => {
-    socket.emit('enterLobby', nickname);
-    socket.on('receiveMsg', () => {
-      // SetMsgs();
+    //로비 들어왔을 때
+    //채팅방에 @@님이 로그인하셨습니다.(?) 띄워주기
+    socket.emit('enterLobby', nickname, () => {
+      setChat([...chat, { notice: `${nickname}님이 입장하셨습니다` }]);
+    });
+
+    //남이 보낸 msg
+    socket.on('receiveLobbyMsg', (msg) => {
+      console.log(msg);
+      setChat([...chat, msg]);
     });
   }, [socket]);
+  //남이 보낸 msg
+  socket.on('receiveLobbyMsg', (msg) => {
+    console.log(msg);
+    setChat([...chat, msg]);
+  });
 
   //채팅방에 닉네임, 메세지 받기(on)
   //하쨩 : 승쨩어디감
 
   const myMsg = (a) => {
-    setChat(...chat, a);
+    setChat([...chat, a]);
   };
 
   const msgSubmitHandler = (e) => {
     e.preventDefault();
-    //채팅에 닉네임, 메세지 전송 (emit)
-    //You : 하쨩 하이
-    console.log(`${nickname} : ${msgInput.current.value}`);
-
     const msgValue = msgInput.current.value;
-    socket.emit('sendMsg', { name: nickname, msg: msgValue }, () => {
-      //나한테 띄워줄 내가 보낸 메세지
-      myMsg({ name: nickname`(Me)`, msg: msgValue });
-    });
-    socket.on('receiveMsg', (msg) => {
-      console.log(msg);
-      setChat(...chat, msg);
-    });
+
+    //채팅에 닉네임, 메세지 전송 (emit)
+    const mine = { name: `${nickname}(Me)`, msg: `${msgValue}` };
+    console.log(mine);
+
+    //이건 socket.io 만들 때는 필요없는데 지금 내가 console에서 확인하려고~
+    myMsg(mine);
+
+    //내가 적은 msg
+    //나를 제외한 모든 사람들한테 메세지를 보여주도록 emit
+    socket.emit(
+      'sendLobbyMsg',
+      { name: `${nickname}`, msg: `${msgValue}` },
+      () => {
+        //나한테 띄워줄 내가 보낸 메세지 추가
+        myMsg(mine);
+      }
+    );
 
     msgInput.current.value = '';
   };
 
+  console.log(chat);
   return (
     <ChatLayout showChat={showChat}>
       <ChatTop>
