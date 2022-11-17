@@ -2,9 +2,9 @@
 import React from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-// import Spinner from "./Spinner";
 import { useCookies } from 'react-cookie';
 import { useEffect } from 'react';
+import Spinner from '../../elements/Spinner';
 
 //리다이렉트 화면
 const Kakao = () => {
@@ -20,30 +20,48 @@ const Kakao = () => {
         `http://3.36.1.72/api/auth/kakao/callback?code=${code}`
       );
       const kakaoToken = res.data.accessToken;
+      console.log(kakaoToken);
       localStorage.setItem('kakaotoken', kakaoToken);
-      console.log('res값', res);
-      const res2 = await axios.post(
-        `http://3.36.1.72/api/auth/kakao/callback`,
-        { kakaoToken },
-        { headers: { Authorization: `Bearer ${kakaoToken}` } }
-      );
-      console.log('res2값', res2);
-      const nickname = res2.data.nickname;
-      setCookie('nickname', nickname);
-      console.log(cookies);
-      navigator('/home');
+      if (res.status === 200) {
+        const res2 = await axios.post(
+          `http://3.36.1.72/api/auth/kakao/callback?code=${code}`,
+          {
+            kakaoToken, //카카오 토큰
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${kakaoToken}`,
+            },
+          }
+        );
+        console.log(res2);
+        const nickname = res2.data.nickname;
+        // console.log(nickname);
+        setCookie('nickname', nickname, {
+          path: '/',
+          secure: true,
+          sameSite: 'none',
+        });
+        // console.log(cookies);
+        if (res2.status == 200) {
+          window.location.replace('/home');
+        }
+      } else {
+        alert('카카오톡 요청 실패');
+        navigator('/');
+      }
     } catch (error) {
-      console.log('로그인에러', error);
+      console.log(error);
+      alert('로그인 실패');
+      navigator('/');
     }
   };
-  Token();
 
-  return (
-    <div>
-      스피너 나중생각
-      {/* <Spinner/> */}
-    </div>
-  );
+  useEffect(() => {
+    Token();
+  }, [Token()]);
+
+  return <Spinner />;
 };
 
 export default Kakao;
