@@ -6,8 +6,14 @@ const CreateRoomTextInput = ({ label, ...props }) => {
   return (
     <>
       <label>{label}</label>
-      <input {...field} {...props} />
-      {meta.touched && meta.error ? <div>{meta.error}</div> : null}
+      <input
+        className=" border-solid border-[0.5px] border-black w-full"
+        {...field}
+        {...props}
+      />
+      {meta.touched && meta.error ? (
+        <div className=" text-xs text-red-500">{meta.error}</div>
+      ) : null}
     </>
   );
 };

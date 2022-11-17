@@ -5,10 +5,8 @@ const CreateRoomCheckBox = ({ children, ...props }) => {
   const [field, meta] = useField({ ...props, type: 'checkbox' });
   return (
     <div>
-      <label>
-        <input type="checkbox" {...field} {...props} />
-        {children}
-      </label>
+      {/* <label>{children}</label> */}
+      <input type="checkbox" {...field} {...props} />
       {meta.touched && meta.error ? <div>{meta.error}</div> : null}
     </div>
   );

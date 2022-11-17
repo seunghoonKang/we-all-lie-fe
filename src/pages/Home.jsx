@@ -18,7 +18,7 @@ const Home = () => {
     });
   });
 
-  console.log(roomLists?.payload);
+  //console.log(roomLists?.payload);
   return (
     <div>
       <div>상단 슬라이드</div>
@@ -70,7 +70,7 @@ const Box = styled.div`
 `;
 
 const List = styled.div`
-  width: 100%;
+  width: calc(100% - 350px);
   background-color: pink;
   height: 90vh;
   min-height: 650px;
