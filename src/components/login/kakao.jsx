@@ -37,7 +37,11 @@ const Kakao = () => {
         console.log(res2);
         const nickname = res2.data.nickname;
         // console.log(nickname);
-        setCookie('nickname', nickname);
+        setCookie('nickname', nickname, {
+          path: '/',
+          secure: true,
+          sameSite: 'none',
+        });
         // console.log(cookies);
         if (res2.status == 200) {
           window.location.replace('/home');
