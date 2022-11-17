@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-const RoomItem = (payload) => {
-  console.log(payload);
+const RoomItem = ({ roominfo }) => {
+  console.log(roominfo);
   return (
     <RoomContainer>
-      <div>{payload?._id}</div>
+      <div>{roominfo?._id}</div>
       <RoomContents>
-        <RoomTitle>{payload?.roomTitle}</RoomTitle>
+        <RoomTitle>{roominfo?.roomTitle}</RoomTitle>
         <RoomInfos>
-          <p>{payload?.currentCount} / 8 </p>
+          <p>{roominfo?.currentCount} / 8 </p>
           <p>자물쇠</p>
-          <p>{payload?.gameMode === false ? 'EASY' : 'HARD'}</p>
-          <p>{payload?.roomStauts === false ? '대기중' : '게임중'}</p>
+          <p>{roominfo?.gameMode === false ? 'EASY' : 'HARD'}</p>
+          <p>{roominfo?.roomStauts === false ? '대기중' : '게임중'}</p>
         </RoomInfos>
       </RoomContents>
       <div>화살표</div>

@@ -5,13 +5,13 @@ import { socket } from '../../shared/socket';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import CreateRoomTextInput from './CreateRoomTextInput';
-import CreateRoomRadio from './CreateRoomRadio';
+//import CreateRoomRadio from './CreateRoomRadio';
 // import CreateRoomSelect from './CreateRoomSelect';
 import CreateRoomCheckBox from './CreateRoomCheckBox';
 
 const CreateRoom = ({ closeModal }) => {
   const [cookies, setCookies] = useCookies(['nickname']);
-  console.log(cookies['nickname']);
+  const nickname = cookies['nickname'];
 
   //모달창 닫기
   const closeBtnHandler = () => {
@@ -83,7 +83,12 @@ const CreateRoom = ({ closeModal }) => {
             onSubmit={(values, { setSubmitting }) => {
               setTimeout(() => {
                 console.log(values);
-                //socket.emit('createRoom', values.gameMode, values.roomTitle);
+                socket.emit(
+                  'createRoom',
+                  values.gameMode,
+                  values.roomTitle,
+                  nickname
+                );
                 setSubmitting(false);
               }, 400);
             }}
