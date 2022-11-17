@@ -9,7 +9,7 @@ export default Layout;
 
 const LayoutCtn = styled.div`
   margin: 10px auto 0 auto;
-  padding: 20px;
+  padding: 16px;
   border: 1px solid gray; //이거두개는 없애도됨
   border-radius: 20px; //구냥 해봐써 디자인이 넘 없어서,,
   width: 97%;
