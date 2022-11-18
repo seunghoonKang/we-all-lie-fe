@@ -1,48 +1,76 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { socket } from '../shared/socket';
 
-const RoomItem = (payload) => {
-  console.log(payload);
+const RoomItem = ({ roominfo }) => {
+  const navigate = useNavigate();
+  const enterRoomHandler = () => {
+    socket.emit('enterRoom', roominfo?._id);
+    navigate(`/room/${roominfo?._id}`);
+  };
+  console.log(roominfo);
   return (
     <RoomContainer>
-      <div>{payload?._id}</div>
       <RoomContents>
-        <RoomTitle>{payload?.roomTitle}</RoomTitle>
-        <RoomInfos>
-          <p>{payload?.currentCount} / 8 </p>
-          <p>자물쇠</p>
-          <p>{payload?.gameMode === false ? 'EASY' : 'HARD'}</p>
-          <p>{payload?.roomStauts === false ? '대기중' : '게임중'}</p>
-        </RoomInfos>
+        <RoomContentsContainer>
+          <div className="flex">
+            <div>{roominfo?._id}</div>
+            <RoomTitle>{roominfo?.roomTitle}</RoomTitle>
+          </div>
+          <RoomInfos>
+            <div className="h-[20px] bg-[#a13e3e80]">자물쇠</div>
+            <div className="h-[20px] bg-[#a13e3e80]">
+              {roominfo?.currentCount} / 8{' '}
+            </div>
+            <div className="h-[20px] bg-[#a13e3e80]">
+              {roominfo?.gameMode === false ? 'EASY' : 'HARD'}
+            </div>
+            <div className="h-[20px] bg-[#a13e3e80]">
+              {roominfo?.roomStatus === false ? '대기중' : '게임중'}
+            </div>
+          </RoomInfos>
+        </RoomContentsContainer>
       </RoomContents>
-      <div>화살표</div>
+      <div
+        className="cursor-pointer w-[78px] h-[36px] bg-slate-600 flex justify-center items-center mr-[20px] mt-[10px]"
+        onClick={enterRoomHandler}
+      >
+        입장하기
+      </div>
     </RoomContainer>
   );
 };
 
 const RoomContainer = styled.div`
   display: flex;
-  width: 862px;
-  height: 116px;
-  background-color: rgba(217, 217, 217, 0.1);
-  padding-top: 19px;
+  justify-content: space-between;
+  width: 100%;
+  height: 70px;
+  background-color: rgba(89, 79, 79, 0.1);
+  padding-top: 8px;
   padding-left: 33px;
   border-radius: 10px;
+  margin-top: 8px;
 `;
 
 const RoomContents = styled.div`
   display: flex;
-  flex-direction: column;
 `;
 
 const RoomTitle = styled.div`
-  padding-left: 49px;
+  margin-left: 7px;
   font-weight: 700;
+`;
+
+const RoomContentsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 const RoomInfos = styled.div`
   display: flex;
-  padding-left: 49px;
+  gap: 5px;
 `;
 
 export default RoomItem;
