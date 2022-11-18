@@ -31,9 +31,6 @@ const Home = () => {
     socket.emit('getNickname', nickname);
   }, []);
 
-  socket.on('userCount', (user) => console.log(user));
-
-  //console.log(rooms);
   return (
     <div>
       <Notice />
