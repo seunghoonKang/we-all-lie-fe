@@ -16,11 +16,16 @@ const Home = () => {
   const nickname = cookies['nickname'];
 
   useEffect(() => {
-    socket.on('showRoom', (room) => {
-      setRooms(room);
-    });
+    const intervalId = setInterval(() => {
+      socket.on('showRoom', (room) => {
+        setRooms(room);
+        console.log(rooms);
+      });
+    }, 100);
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
-  console.log(socket.id);
 
   useEffect(() => {
     socket.emit('getNickname', nickname);
@@ -28,7 +33,7 @@ const Home = () => {
 
   socket.on('userCount', (user) => console.log(user));
 
-  console.log(rooms);
+  //console.log(rooms);
   return (
     <div>
       <Notice />
