@@ -6,7 +6,8 @@ import Notice from '../elements/Notice';
 import Chat from '../components/Chat';
 import styled from 'styled-components';
 import { socket } from '../shared/socket';
-
+import { useBeforeunload } from 'react-beforeunload';
+import { useNavigate } from 'react-router-dom';
 const Home = () => {
   //채팅방 열고 닫기 코드 (나중에 필요없으면 props들과 함께 지우기)
   const [showChat, setShowChat] = useState(false);
@@ -14,6 +15,10 @@ const Home = () => {
   const [rooms, setRooms] = useState();
   const [cookies, setCookies] = useCookies(['nickname']);
   const nickname = cookies['nickname'];
+  const navigate = useNavigate('');
+
+  // //새로고침방지
+  useBeforeunload((event) => event.preventDefault());
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -29,58 +34,74 @@ const Home = () => {
 
   useEffect(() => {
     socket.emit('getNickname', nickname);
+
+    //로그인 안하면 로비입장 못하게 하기
+    if (cookies.nickname === undefined || null) {
+      alert('로그인해주세요');
+      navigate(`/`);
+    }
   }, []);
 
-  return (
-    <div>
-      <Notice />
-      <Box showChat={showChat}>
-        <List>
-          <HeaderSection>
-            <LogoImg>아마도이미지</LogoImg>
-            <MakeRoomBtn
-              onClick={() => {
-                setOpenModal(!openModal);
-              }}
-            >
-              방 만들기
-            </MakeRoomBtn>
-          </HeaderSection>
+  socket.on('userCount', (user) => console.log(user));
 
-          {openModal ? (
-            <CreateRoom closeModal={() => setOpenModal(!openModal)} />
-          ) : (
-            <></>
-          )}
-          <FilterContainer>
-            <div className="flex ml-[10px] gap-[10px]">
-              <div className="w-[96px] h-[40px] border-solid border-black border-[0.5px] flex items-center justify-center cursor-pointer">
-                ALL
+  //console.log(rooms);
+
+  //로비 입장 못하는 alert 뒤에 화면 안보이게 처리하려고.
+  //= 로그인 한 사람한테만 로비 보여주려고. => room이나 user 페이지에서도 처리해야함 ㅠ
+
+  if (cookies.nickname === undefined || null) {
+  } else {
+    return (
+      <div>
+        <Notice />
+        <Box showChat={showChat}>
+          <List>
+            <HeaderSection>
+              <LogoImg>아마도이미지</LogoImg>
+              <MakeRoomBtn
+                onClick={() => {
+                  setOpenModal(!openModal);
+                }}
+              >
+                방 만들기
+              </MakeRoomBtn>
+            </HeaderSection>
+
+            {openModal ? (
+              <CreateRoom closeModal={() => setOpenModal(!openModal)} />
+            ) : (
+              <></>
+            )}
+            <FilterContainer>
+              <div className="flex ml-[10px] gap-[10px]">
+                <div className="w-[96px] h-[40px] border-solid border-black border-[0.5px] flex items-center justify-center cursor-pointer">
+                  ALL
+                </div>
+                <div className="w-[96px] h-[40px] border-solid border-black border-[0.5px] flex items-center justify-center cursor-pointer">
+                  EASY
+                </div>
+                <div className="w-[96px] h-[40px] border-solid border-black border-[0.5px] flex items-center justify-center cursor-pointer">
+                  HARD
+                </div>
               </div>
-              <div className="w-[96px] h-[40px] border-solid border-black border-[0.5px] flex items-center justify-center cursor-pointer">
-                EASY
+              <div className="flex gap-1 mr-[27px]">
+                <div>img</div>
+                <div>{rooms?.length}</div>
               </div>
-              <div className="w-[96px] h-[40px] border-solid border-black border-[0.5px] flex items-center justify-center cursor-pointer">
-                HARD
-              </div>
-            </div>
-            <div className="flex gap-1 mr-[27px]">
-              <div>img</div>
-              <div>{rooms?.length}</div>
-            </div>
-          </FilterContainer>
-          <RoomsContainer>
-            {rooms?.map((roomList, index) => {
-              return <RoomItem roominfo={roomList} key={index} />;
-            })}
-          </RoomsContainer>
-        </List>
-        <Chat showChat={showChat} />
-        {/* //채팅방 열고 닫기 버튼 
+            </FilterContainer>
+            <RoomsContainer>
+              {rooms?.map((roomList, index) => {
+                return <RoomItem roominfo={roomList} key={index} />;
+              })}
+            </RoomsContainer>
+          </List>
+          <Chat showChat={showChat} />
+          {/* //채팅방 열고 닫기 버튼 
         <Click onClick={() => { setShowChat(!showChat); }}></Click> */}
-      </Box>
-    </div>
-  );
+        </Box>
+      </div>
+    );
+  }
 };
 
 export default Home;
