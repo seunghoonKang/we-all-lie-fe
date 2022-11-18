@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
 import { socket } from '../../shared/socket';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
@@ -10,9 +10,7 @@ import CreateRoomTextInput from './CreateRoomTextInput';
 import CreateRoomCheckBox from './CreateRoomCheckBox';
 
 const CreateRoom = ({ closeModal }) => {
-  const [cookies, setCookies] = useCookies(['nickname']);
-  const nickname = cookies['nickname'];
-
+  const navigate = useNavigate();
   //모달창 닫기
   const closeBtnHandler = () => {
     closeModal();
@@ -83,11 +81,9 @@ const CreateRoom = ({ closeModal }) => {
             onSubmit={(values, { setSubmitting }) => {
               setTimeout(() => {
                 console.log(values);
-                socket.emit(
-                  'createRoom',
-                  values.gameMode,
-                  values.roomTitle,
-                  nickname
+                socket.emit('createRoom', values.gameMode, values.roomTitle);
+                socket.on('createRoom', (room) =>
+                  navigate(`/room/${room._id}`)
                 );
                 setSubmitting(false);
               }, 400);

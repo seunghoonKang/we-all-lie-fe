@@ -1,27 +1,41 @@
 import React, { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 import CreateRoom from '../components/createroom/CreateRoom';
 import RoomItem from '../components/RoomItem';
+import Notice from '../elements/Notice';
 import Chat from '../components/Chat';
 import styled from 'styled-components';
 import { socket } from '../shared/socket';
+
 const Home = () => {
   //채팅방 열고 닫기 코드 (나중에 필요없으면 props들과 함께 지우기)
   const [showChat, setShowChat] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [rooms, setRooms] = useState();
+  const [cookies, setCookies] = useCookies(['nickname']);
+  const nickname = cookies['nickname'];
 
   useEffect(() => {
     socket.on('showRoom', (room) => {
       setRooms(room);
     });
   }, []);
+  console.log(socket.id);
+
+  useEffect(() => {
+    socket.emit('getNickname', nickname);
+  }, []);
+
+  socket.on('userCount', (user) => console.log(user));
+
   console.log(rooms);
   return (
     <div>
-      <div>상단 슬라이드</div>
+      <Notice />
       <Box showChat={showChat}>
         <List>
-          <div>
+          <HeaderSection>
+            <LogoImg>아마도이미지</LogoImg>
             <MakeRoomBtn
               onClick={() => {
                 setOpenModal(!openModal);
@@ -29,7 +43,7 @@ const Home = () => {
             >
               방 만들기
             </MakeRoomBtn>
-          </div>
+          </HeaderSection>
 
           {openModal ? (
             <CreateRoom closeModal={() => setOpenModal(!openModal)} />
@@ -50,12 +64,14 @@ const Home = () => {
             </div>
             <div className="flex gap-1 mr-[27px]">
               <div>img</div>
-              <div>{rooms.length}</div>
+              <div>{rooms?.length}</div>
             </div>
           </FilterContainer>
-          {rooms?.map((roomList) => {
-            return <RoomItem roominfo={roomList} />;
-          })}
+          <RoomsContainer>
+            {rooms?.map((roomList, index) => {
+              return <RoomItem roominfo={roomList} key={index} />;
+            })}
+          </RoomsContainer>
         </List>
         <Chat showChat={showChat} />
         {/* //채팅방 열고 닫기 버튼 
@@ -87,16 +103,27 @@ const List = styled.div`
   /* //채팅방 열고닫기 코드...
   width: ${(props) => (props.showChat ? 'calc(100% - 360px)' : '100%')};
   transition: all 400ms ease-in-out; */
-  background-color: pink;
   height: 90vh;
   min-height: 650px;
   margin-bottom: 100px;
   overflow-y: auto;
 `;
 
+const HeaderSection = styled.section`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+`;
+
+const LogoImg = styled.div`
+  margin-left: 16px;
+`;
+
 const MakeRoomBtn = styled.button`
   width: 96px;
   height: 36px;
+  margin-right: 18px;
   background-color: #d9d9d9;
 `;
 
@@ -108,4 +135,10 @@ const FilterContainer = styled.section`
   border-top: 0.5px solid black;
   border-bottom: 0.5px solid black;
   width: 100%;
+`;
+
+const RoomsContainer = styled.section`
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
 `;
