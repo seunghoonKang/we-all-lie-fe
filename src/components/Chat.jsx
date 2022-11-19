@@ -27,9 +27,14 @@ const Chat = ({ showChat }) => {
   useEffect(() => {
     //로비 들어왔을 때
     //채팅방에 @@님이 로그인하셨습니다.(?) 띄워주기
-    socket.emit('enterLobby', nickname, () => {
-      setChat([...chat, { notice: `${nickname}님이 입장하셨습니다` }]);
-    });
+    socket.emit(
+      'enterLobby',
+      nickname,
+      () => {
+        setChat([...chat, { notice: `${nickname}님이 입장하셨습니다` }]);
+      },
+      []
+    );
 
     //남이 보낸 msg
     socket.on('receiveLobbyMsg', (msg) => {
