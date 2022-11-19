@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
-const Camera = () => {
+const Camera = ({ person }) => {
   return (
     <div>
       <Wrap>
         불만이야? 응<Ready>Ready</Ready>
-        <NickName>무서운 사자얌</NickName>
+        <NickName>무서운 사자얌{person}</NickName>
       </Wrap>
     </div>
   );

@@ -20,22 +20,22 @@ const Home = () => {
   // //새로고침방지
   useBeforeunload((event) => event.preventDefault());
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      socket.on('showRoom', (room) => {
-        setRooms(room);
-        console.log(rooms);
-      });
-    }, 100);
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     socket.on('showRoom', (room) => {
+  //       setRooms(room);
+  //       console.log(rooms);
+  //     });
+  //   }, 100);
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // }, []);
 
   useEffect(() => {
     socket.emit('getNickname', nickname);
 
-    //로그인 안하면 로비입장 못하게 하기
+    //로그인 안하면 로비입장 못하게 하기 (useEffect 안에 넣어야 navigate 먹어요)
     if (cookies.nickname === undefined || null) {
       alert('로그인해주세요');
       navigate(`/`);

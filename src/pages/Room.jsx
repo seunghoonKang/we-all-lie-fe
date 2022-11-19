@@ -31,7 +31,7 @@ const Room = () => {
   */
 
   useEffect(() => {
-    //로그인 안하면 로비입장 못하게 하기
+    //로그인 안하면 로비입장 못하게 하기 (useEffect 안에 넣어야 navigate 먹어요)
     if (cookies.nickname === undefined || null) {
       alert('로그인해주세요');
       navigate(`/`);
@@ -49,9 +49,9 @@ const Room = () => {
               <MakeRoomBtn>방 나가기</MakeRoomBtn>
             </HeaderSection>
             <Game>
-              본인 컴포넌트말고 주석하면 돼용
+              {/* 본인 컴포넌트말고 주석하면 돼용
               <GameReady />
-              <GameStart />
+              <GameStart /> */}
               <GameVote />
             </Game>
           </List>
@@ -85,7 +85,7 @@ const HeaderSection = styled.section`
 
 const Game = styled.div`
   background-color: lightpink;
-  height: calc(90vh - 60px);
+  height: calc(100% - 60px);
 `;
 
 const HeaderTitle = styled.div`
