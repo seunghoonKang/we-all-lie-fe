@@ -49,10 +49,9 @@ const Room = () => {
               <MakeRoomBtn>방 나가기</MakeRoomBtn>
             </HeaderSection>
             <Game>
-              본인 컴포넌트말고 주석하면 돼용
-              <GameReady />
+              {/* <GameReady /> */}
               <GameStart />
-              <GameVote />
+              {/* <GameVote /> */}
             </Game>
           </List>
           <Chat />
