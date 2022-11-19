@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 // import { socket } from '../shared/socket';
 import { useRef } from 'react';
 import { useCookies } from 'react-cookie';
+// import { useBeforeunload } from 'react-beforeunload'; // 새로고침방지
 
 //민형님 주소
 import { io } from 'socket.io-client';
-
 export const socket = io('http://3.36.1.72', {
   cors: {
     origin: 'http://localhost:3000',
@@ -14,42 +14,61 @@ export const socket = io('http://3.36.1.72', {
   transports: ['websocket', 'polling'],
 });
 
-const Chat = ({ showChat }) => {
+const Chat = () => {
+  //채팅방 열고닫기 구현하려면 {showChat} props로 받아오기
+  let nickname = '익명';
+
   const [cookies, setCookie] = useCookies(['nickname']);
+  const [userCnt, setUserCnt] = useState(0);
   const [chat, setChat] = useState([
     { notice: '뀨띠님이 입장하셨습니다' },
-    { name: '뿡', msg: 'ㅋ' },
+    { name: '뀨띠', msg: '안눙' },
   ]);
-  // console.log(cookies);
-  const nickname = cookies.nickname;
+
+  nickname = cookies.nickname;
   const msgInput = useRef();
 
-  useEffect(() => {
-    //로비 들어왔을 때
-    //채팅방에 @@님이 로그인하셨습니다.(?) 띄워주기
-    socket.emit(
-      'enterLobby',
-      nickname,
-      () => {
-        setChat([...chat, { notice: `${nickname}님이 입장하셨습니다` }]);
-      },
-      []
-    );
-
-    //남이 보낸 msg
-    socket.on('receiveLobbyMsg', (msg) => {
-      console.log(msg);
-      setChat([...chat, msg]);
-    });
-  }, [socket]);
-  //남이 보낸 msg
-  socket.on('receiveLobbyMsg', (msg) => {
-    console.log(msg);
-    setChat([...chat, msg]);
+  //접속 인원 수
+  socket.on('userCount', (people) => {
+    setUserCnt(people);
   });
 
-  //채팅방에 닉네임, 메세지 받기(on)
-  //하쨩 : 승쨩어디감
+  //스크롤 구현
+  const scrollRef = useRef();
+  const scrollToBottom = useCallback(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({
+        top: scrollRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chat]);
+
+  // //새로고침방지
+  // useBeforeunload((event) => event.preventDefault());
+
+  useEffect(() => {
+    //로비 들어왔을 때 실행
+    //채팅방에 @@님이 로그인하셨습니다.(?) 띄워주기
+    socket.emit('enterLobby', nickname, () => {
+      setChat([...chat, { notice: `${nickname}님이 입장하셨습니다` }]);
+    });
+    // //남이 보낸 msg
+    // socket.on('receiveLobbyMsg', (msg) => {
+    //   // console.log(msg);
+    //   setChat([...chat, msg]);
+    // });
+  }, []);
+
+  //남이 보낸 msg
+  socket.on('receiveLobbyMsg', (msg) => {
+    // console.log(msg);
+    setChat([...chat, msg]);
+  });
 
   const myMsg = (a) => {
     setChat([...chat, a]);
@@ -62,8 +81,6 @@ const Chat = ({ showChat }) => {
     //채팅에 닉네임, 메세지 전송 (emit)
     const mine = { name: `${nickname}(Me)`, msg: `${msgValue}` };
     console.log(mine);
-
-    //이건 socket.io 만들 때는 필요없는데 지금 내가 console에서 확인하려고~
     myMsg(mine);
 
     //내가 적은 msg
@@ -82,38 +99,42 @@ const Chat = ({ showChat }) => {
 
   console.log(chat);
   return (
-    <ChatLayout showChat={showChat}>
+    <ChatLayout>
       <ChatTop>
         <p style={{ fontSize: '30px' }}>Chat</p>
-        <People>(현재 접속 인원수)</People>
+        <People>현재 접속 인원수({userCnt})</People>
       </ChatTop>
-      <ChatRow>
+      <ChatRow ref={scrollRef}>
         <Notice>매너 채팅 안하면 벤먹는다!</Notice>
         <Msg>
-          <Word>말풍선..</Word>
+          <User>
+            <img />
+            <span>🦁</span>
+            <span>닉네임</span>
+          </User>
+          <Word>대화가 뜹니다</Word>
         </Msg>
-        <Msg>
-          <Word>말풍선..말풍선..말풍선..</Word>
-        </Msg>
-        <Msg>
-          <Word>말풍선..</Word>
-        </Msg>
-        {chat.map((a) => {
-          a.notice && <Notice>{a.notice}</Notice>;
-          a.msg && (
-            <Msg>
-              <p>
-                <img />
-                <span>{a.name}</span>
-              </p>
-              <Word>{a.msg}</Word>
-            </Msg>
+
+        {chat.map((a, index) => {
+          return a.notice ? (
+            <Notice key={index}>{a.notice}</Notice>
+          ) : (
+            a.msg && (
+              <Msg key={index}>
+                <p>
+                  <img />
+                  <span>🦁</span>
+                  <span>{a.name}</span>
+                </p>
+                <Word>{a.msg}</Word>
+              </Msg>
+            )
           );
         })}
       </ChatRow>
       <Form onSubmit={msgSubmitHandler}>
         {/* <p>프로필?</p> */}
-        <input type="text" ref={msgInput} placeholder="여따 할말혀!" />
+        <input type="text" ref={msgInput} placeholder="여따 할말혀!" required />
         <button>전송</button>
       </Form>
     </ChatLayout>
@@ -156,6 +177,7 @@ const ChatTop = styled.div`
   }
 `;
 
+const User = styled.p``;
 const Notice = styled.div``;
 const Msg = styled.div``;
 const Word = styled.p``;
@@ -163,6 +185,7 @@ const ChatRow = styled.div`
   background-color: lightgreen;
   width: 100%;
   height: 85%;
+  overflow-y: auto;
 
   ${Notice} {
     text-align: center;
@@ -172,12 +195,16 @@ const ChatRow = styled.div`
 
   ${Msg} {
     margin: 5px;
+
+    ${User} {
+    }
   }
 
   ${Word} {
     display: inline-block;
     background-color: white;
     padding: 2px 6px;
+    word-break: break-all; //띄어쓰기 안해도, 단어 중간에서 줄바꿈 가능하게 함
   }
 `;
 
