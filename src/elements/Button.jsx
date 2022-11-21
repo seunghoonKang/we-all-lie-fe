@@ -2,7 +2,6 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 
 const Button = ({ children, ...props }) => {
-  console.log(props);
   return (
     <>
       <StyledButton

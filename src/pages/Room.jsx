@@ -44,10 +44,6 @@ const Room = () => {
         <Notice />
         <Box>
           <List>
-            <HeaderSection>
-              <HeaderTitle>아마도이미지/게임시작하면 타이머?</HeaderTitle>
-              <MakeRoomBtn>방 나가기</MakeRoomBtn>
-            </HeaderSection>
             <Game>
               {/* <GameReady /> */}
               <GameStart />
@@ -71,24 +67,11 @@ const List = styled.div`
   height: 90vh;
   min-height: 650px;
   margin-bottom: 100px;
-  overflow-y: auto;
-`;
-
-const HeaderSection = styled.section`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 60px;
-  background-color: skyblue;
 `;
 
 const Game = styled.div`
   background-color: lightpink;
   height: calc(90vh - 60px);
-`;
-
-const HeaderTitle = styled.div`
-  margin-left: 16px;
 `;
 
 const MakeRoomBtn = styled.button`

@@ -1,4 +1,3 @@
-import { hover } from '@testing-library/user-event/dist/hover';
 import React from 'react';
 import styled from 'styled-components';
 import Button from '../elements/Button';
@@ -12,6 +11,24 @@ const GameStart = () => {
   const items = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
   return (
     <GameEntireContainer>
+      <HeaderSection>
+        <HeaderTitle>
+          <Timer min="8" />
+        </HeaderTitle>
+        <Button
+          type={'button'}
+          addStyle={{
+            backgroundColor: '#2B2B2B',
+            borderRadius: '6px',
+            width: '113px',
+            height: '40px',
+            color: '#fff',
+          }}
+          onClick={voteBtnHandler}
+        >
+          투표하기
+        </Button>
+      </HeaderSection>
       <VideoContainer>
         {items.map(() => (
           <Camera />
@@ -23,19 +40,6 @@ const GameStart = () => {
         </CorrectCard>
         <Question>
           <div>[게으른 토끼] 가 [말많은 호랑이] 에게 질문합니다.</div>
-          <Button
-            type={'button'}
-            addStyle={{
-              backgroundColor: '#2B2B2B',
-              borderRadius: '6px',
-              width: '113px',
-              height: '40px',
-              color: '#fff',
-            }}
-            onClick={voteBtnHandler}
-          >
-            투표하기
-          </Button>
           <Button type={'button'} addStyle={{}} doong>
             테스트
           </Button>
@@ -52,6 +56,18 @@ const GameEntireContainer = styled.div`
   min-width: 848px;
   height: calc(90vh - 60px);
   position: relative;
+`;
+
+const HeaderSection = styled.section`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  background-color: skyblue;
+`;
+
+const HeaderTitle = styled.div`
+  margin-left: 16px;
 `;
 
 const VideoContainer = styled.div`
