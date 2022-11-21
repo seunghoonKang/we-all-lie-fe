@@ -7,6 +7,7 @@ const GameReady = () => {
     <ReadyLayout>
       <div>
         <RoomName />
+        준비하기
         <ReadyUsers />
       </div>
     </ReadyLayout>
