@@ -46,10 +46,9 @@ const Room = () => {
         <Box>
           <List>
             <Game>
-              본인 컴포넌트말고 주석하면 돼용
-              <GameReady />
-              {/* <GameStart />
-              <GameVote /> */}
+              {/* <GameReady /> */}
+              <GameStart />
+              {/* <GameVote /> */}
             </Game>
           </List>
           <Chat />
@@ -74,6 +73,13 @@ const List = styled.div`
 const Game = styled.div`
   background-color: lightpink;
   height: calc(90vh - 60px);
+`;
+
+const MakeRoomBtn = styled.button`
+  width: 96px;
+  height: 36px;
+  margin-right: 18px;
+  background-color: #d9d9d9;
 `;
 
 export default Room;

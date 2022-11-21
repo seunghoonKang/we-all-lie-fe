@@ -15,7 +15,7 @@ const RoomItem = ({ roominfo }) => {
       <RoomContents>
         <RoomContentsContainer>
           <div className="flex">
-            <div>{roominfo?._id}</div>
+            <div>{String(roominfo?._id).padStart(3, '00')}</div>
             <RoomTitle>{roominfo?.roomTitle}</RoomTitle>
           </div>
           <RoomInfos>
