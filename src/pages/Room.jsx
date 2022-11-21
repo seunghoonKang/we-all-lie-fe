@@ -9,6 +9,7 @@ import { useCookies } from 'react-cookie';
 import GameReady from '../components/GameReady';
 import GameStart from '../components/GameStart';
 import GameVote from '../components/GameVote';
+import Header from '../elements/Header';
 
 const Room = () => {
   // //새로고침방지
@@ -44,15 +45,11 @@ const Room = () => {
         <Notice />
         <Box>
           <List>
-            <HeaderSection>
-              <HeaderTitle>아마도이미지/게임시작하면 타이머?</HeaderTitle>
-              <MakeRoomBtn>방 나가기</MakeRoomBtn>
-            </HeaderSection>
             <Game>
               본인 컴포넌트말고 주석하면 돼용
               <GameReady />
-              <GameStart />
-              <GameVote />
+              {/* <GameStart />
+              <GameVote /> */}
             </Game>
           </List>
           <Chat />
@@ -72,31 +69,11 @@ const List = styled.div`
   height: 90vh;
   min-height: 650px;
   margin-bottom: 100px;
-  overflow-y: auto;
-`;
-
-const HeaderSection = styled.section`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 60px;
-  background-color: skyblue;
 `;
 
 const Game = styled.div`
   background-color: lightpink;
   height: calc(90vh - 60px);
-`;
-
-const HeaderTitle = styled.div`
-  margin-left: 16px;
-`;
-
-const MakeRoomBtn = styled.button`
-  width: 96px;
-  height: 36px;
-  margin-right: 18px;
-  background-color: #d9d9d9;
 `;
 
 export default Room;

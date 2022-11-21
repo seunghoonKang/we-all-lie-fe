@@ -1,15 +1,22 @@
-import React from 'react';
-import Camera from '../elements/Camera';
+import styled from 'styled-components';
+import RoomName from './gameready/RoomName';
+import ReadyUsers from './gameready/ReadyUsers';
 
 const GameReady = () => {
   return (
-    <div>
-      GameReady
+    <ReadyLayout>
       <div>
-        <Camera />
+        <RoomName />
+        <ReadyUsers />
       </div>
-    </div>
+    </ReadyLayout>
   );
 };
 
 export default GameReady;
+
+const ReadyLayout = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: rosybrown;
+`;
