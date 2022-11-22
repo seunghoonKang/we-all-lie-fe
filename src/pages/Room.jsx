@@ -68,21 +68,11 @@ const List = styled.div`
   height: 90vh;
   min-height: 650px;
   margin-bottom: 100px;
-  overflow-y: auto;
-`;
-
-const HeaderSection = styled.section`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 60px;
-  background-color: skyblue;
 `;
 
 const Game = styled.div`
   background-color: lightpink;
   height: calc(100% - 60px);
 `;
-
 
 export default Room;
