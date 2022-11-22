@@ -67,6 +67,7 @@ const StyledButton = styled.button`
     props.disabled &&
     css`
       :disabled ;
+      background-color: gray;
       &:hover {
         transition: 0.3s ease-in-out;
         background-color: red;

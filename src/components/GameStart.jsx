@@ -4,7 +4,8 @@ import Button from '../elements/Button';
 import Camera from '../elements/Camera';
 import { socket } from '../shared/socket';
 import Timer from './gamestart/Timer';
-
+import { ReactComponent as Megaphone } from '../assets/megaphone.svg';
+import { useParams } from 'react-router-dom';
 /* 
 1. spy랜덤 지정
 어떤 닉네임의 배열이 있다면 (ex. members=['홍길동','키티','반페르시','반다이크']), 배열의.length (4)가 총 인원수가 되겠다.
@@ -37,15 +38,21 @@ const GameStart = () => {
     };
   }, []);
 
+  const param = useParams();
   const voteBtnHandler = () => {
-    alert('투표하기 벝은');
+    alert('방 나가기 소켓 임시로 넣었음');
+    socket.emit('leaveRoom', param.id);
   };
   const items = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
   return (
     <GameEntireContainer>
       <HeaderSection>
         <HeaderTitle>
+          <MegaphoneDiv>
+            <Megaphone width="15" height="13" fill="none" />
+          </MegaphoneDiv>
           <Timer min="8" />
+          <div>[게으른 토끼] 가 [말많은 호랑이] 에게 질문합니다.</div>
         </HeaderTitle>
         <Button
           type={'button'}
@@ -62,17 +69,15 @@ const GameStart = () => {
           {disabledBtn}
         </Button>
       </HeaderSection>
-      <VideoContainer>
-        {items.map((item, index) => (
-          <Camera num={index + 1} />
-        ))}
-      </VideoContainer>
+
       <GameCardSection>
-        <CorrectCard>
-          <p>영화관</p>
-        </CorrectCard>
         <Question>
-          <div>[게으른 토끼] 가 [말많은 호랑이] 에게 질문합니다.</div>
+          <div>
+            <p className=" font-semibold text-[22px]">질문할 차례입니다!</p>
+          </div>
+          <div>
+            <p>질문하고 싶은 유저의 화면을 클릭하세요.</p>
+          </div>
           <Button type={'button'} addStyle={{}} doong>
             테스트
           </Button>
@@ -80,14 +85,21 @@ const GameStart = () => {
             <Timer sec="45" onClick={(e) => console.log(e)} />
           </TimeRemaining>
         </Question>
+        <CorrectCard>
+          <p>영화관</p>
+        </CorrectCard>
       </GameCardSection>
+      <VideoContainer>
+        {items.map((item, index) => (
+          <Camera num={index + 1} />
+        ))}
+      </VideoContainer>
     </GameEntireContainer>
   );
 };
 
 const GameEntireContainer = styled.div`
-  min-width: 848px;
-  height: calc(90vh - 60px);
+  width: 100%;
   position: relative;
 `;
 
@@ -95,46 +107,63 @@ const HeaderSection = styled.section`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 60px;
-  background-color: skyblue;
+  width: 100%;
+  position: absolute;
+  top: 16px;
+  z-index: 999;
+  gap: 10px;
 `;
 
 const HeaderTitle = styled.div`
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  background-color: #ff8217;
+  height: 40px;
+  width: 97%;
+`;
+
+const MegaphoneDiv = styled.div`
   margin-left: 16px;
+  margin-right: 8px;
 `;
 
 const VideoContainer = styled.div`
   display: flex;
-  height: calc(90vh - 60px);
   flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 280px 0;
+  gap: 16px 16px;
+  padding: 16px;
+  background-color: white;
+  border-radius: 10px;
 `;
 
 const GameCardSection = styled.section`
-  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: red;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  //background-color: red;
+  padding-top: 67px;
+  margin-bottom: 16px;
+  /* top: 50%; 
+   left: 50%;
+  transform: translate(-50%, -50%); */
 `;
 
 const CorrectCard = styled.div`
-  width: 26.5rem;
+  width: 27.625rem;
   height: 13.75rem;
-  background-color: #968282;
+  background-color: #fff;
+  border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: end;
 `;
 
 const Question = styled.div`
-  width: 26.5rem;
+  width: 27.625rem;
   height: 13.75rem;
-  background-color: #968282;
+  //background-color: #968282;
+
   display: flex;
   flex-direction: column;
   justify-content: center;

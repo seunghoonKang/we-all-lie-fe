@@ -46,9 +46,9 @@ const Room = () => {
           <List>
             <Game>
               {/* 본인 컴포넌트말고 주석하면 돼용
-              <GameReady />
-              <GameStart /> */}
-              <GameVote />
+              <GameReady /> */}
+              <GameStart />
+              {/* <GameVote /> */}
             </Game>
           </List>
           <Chat />
@@ -71,7 +71,7 @@ const List = styled.div`
 `;
 
 const Game = styled.div`
-  background-color: lightpink;
+  //background-color: lightpink;
   height: calc(100% - 60px);
 `;
 
