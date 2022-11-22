@@ -46,8 +46,8 @@ const Room = () => {
         <Box>
           <List>
             <Game>
-              {/* <GameReady /> */}
-              <GameStart />
+              <GameReady />
+              {/* <GameStart /> */}
               {/* <GameVote /> */}
             </Game>
           </List>

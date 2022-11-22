@@ -10,10 +10,6 @@ const ReadyUsers = () => {
       <Camera />
       <Camera />
       <Camera />
-      <Camera />
-      <Camera />
-      <Camera />
-      <Camera />
     </ReadyUserBox>
   );
 };
