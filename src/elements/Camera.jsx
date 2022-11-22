@@ -1,9 +1,12 @@
 import styled from 'styled-components';
 
-const Camera = () => {
+const Camera = ({ num }) => {
+  const onClickHandler = () => {
+    console.log(num);
+  };
   return (
     <div>
-      <Wrap>
+      <Wrap onClick={onClickHandler}>
         불만이야? 응<Ready>Ready</Ready>
         <NickName>무서운 사자얌</NickName>
       </Wrap>

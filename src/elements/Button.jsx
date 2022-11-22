@@ -4,14 +4,34 @@ import styled, { css } from 'styled-components';
 const Button = ({ children, ...props }) => {
   return (
     <>
-      <StyledButton
+      {children === '투표준비' ? (
+        <StyledButton
+          type={props.type}
+          onClick={props.onClick}
+          addStyle={props.addStyle}
+          doong={props.doong}
+          disabled={props.disabled}
+        >
+          {children}
+        </StyledButton>
+      ) : (
+        <StyledButton
+          type={props.type}
+          onClick={props.onClick}
+          addStyle={props.addStyle}
+          doong={props.doong}
+        >
+          {children}
+        </StyledButton>
+      )}
+      {/* <StyledButton
         type={props.type}
         onClick={props.onClick}
         addStyle={props.addStyle}
         doong={props.doong}
       >
         {children}
-      </StyledButton>
+      </StyledButton> */}
     </>
   );
 };
@@ -41,6 +61,19 @@ const StyledButton = styled.button`
     50%{
         transform:translate(0%,-10%);
     }
+    `}
+
+  ${(props) =>
+    props.disabled &&
+    css`
+      :disabled ;
+      &:hover {
+        transition: 0.3s ease-in-out;
+        background-color: red;
+      }
+      &:not(:hover) {
+        transition: 0.3s ease-out;
+      }
     `}
 `;
 
