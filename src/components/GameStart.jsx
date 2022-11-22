@@ -1,10 +1,42 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Button from '../elements/Button';
 import Camera from '../elements/Camera';
+import { socket } from '../shared/socket';
 import Timer from './gamestart/Timer';
 
+/* 
+1. spy랜덤 지정
+어떤 닉네임의 배열이 있다면 (ex. members=['홍길동','키티','반페르시','반다이크']), 배열의.length (4)가 총 인원수가 되겠다.
+그 값을 max에 넣어주자.
+
+2. 변수를 만들자 
+const SpyNickname = members[pickSpyNumber(members.length)]
+그리고 랜덤으로 나온 숫자 (ex. 1)이라면 socket.emit('selectSpy', SpyNickname)를 넣는다.
+
+const pickSpyNumber = (max) =>{ 
+  return Math.floor(Math.random() * max); 
+}
+socket.emit('selectSpy', SpyNickname)
+
+3. citizens 작성해두자. 이 나머지는 정답 카드를 받아야 하기 때문. 
+const citizens = members.filter((member) => member != SpyNickname);
+
+*/
+
 const GameStart = () => {
+  const [disabledBtn, setDisabledBtn] = useState('투표준비');
+
+  useEffect(() => {
+    const checkNotDisabledBtn = setTimeout(() => {
+      setDisabledBtn('투표하기');
+    }, 5000);
+
+    return () => {
+      clearTimeout(checkNotDisabledBtn);
+    };
+  }, []);
+
   const voteBtnHandler = () => {
     alert('투표하기 벝은');
   };
@@ -25,13 +57,14 @@ const GameStart = () => {
             color: '#fff',
           }}
           onClick={voteBtnHandler}
+          disabled
         >
-          투표하기
+          {disabledBtn}
         </Button>
       </HeaderSection>
       <VideoContainer>
-        {items.map(() => (
-          <Camera />
+        {items.map((item, index) => (
+          <Camera num={index + 1} />
         ))}
       </VideoContainer>
       <GameCardSection>
@@ -44,7 +77,7 @@ const GameStart = () => {
             테스트
           </Button>
           <TimeRemaining>
-            <Timer sec="45" />
+            <Timer sec="45" onClick={(e) => console.log(e)} />
           </TimeRemaining>
         </Question>
       </GameCardSection>
