@@ -9,6 +9,7 @@ import { useCookies } from 'react-cookie';
 import GameReady from '../components/GameReady';
 import GameStart from '../components/GameStart';
 import GameVote from '../components/GameVote';
+import Header from '../elements/Header';
 
 const Room = () => {
   // //새로고침방지
@@ -45,10 +46,10 @@ const Room = () => {
         <Box>
           <List>
             <Game>
-              {/* 본인 컴포넌트말고 주석하면 돼용
+              {/* 본인 컴포넌트말고 주석하면 돼용 */}
               <GameReady />
-              <GameStart /> */}
-              <GameVote />
+              {/* <GameStart />
+              <GameVote /> */}
             </Game>
           </List>
           <Chat />

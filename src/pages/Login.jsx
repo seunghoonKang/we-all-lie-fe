@@ -21,9 +21,11 @@ const Login = () => {
       <Notice />
       <MiniWrap>
         <P>WE ALL LION</P>
+
         <MainImg>
           <img src="/img/lion.png"></img>
         </MainImg>
+
         <BtnWrap>
           <KaKaoBtn onClick={handleLogin}>
             <img
