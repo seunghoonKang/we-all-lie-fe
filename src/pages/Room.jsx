@@ -44,10 +44,6 @@ const Room = () => {
         <Notice />
         <Box>
           <List>
-            <HeaderSection>
-              <HeaderTitle>아마도이미지/게임시작하면 타이머?</HeaderTitle>
-              <MakeRoomBtn>방 나가기</MakeRoomBtn>
-            </HeaderSection>
             <Game>
               {/* 본인 컴포넌트말고 주석하면 돼용
               <GameReady />
@@ -88,15 +84,5 @@ const Game = styled.div`
   height: calc(100% - 60px);
 `;
 
-const HeaderTitle = styled.div`
-  margin-left: 16px;
-`;
-
-const MakeRoomBtn = styled.button`
-  width: 96px;
-  height: 36px;
-  margin-right: 18px;
-  background-color: #d9d9d9;
-`;
 
 export default Room;
