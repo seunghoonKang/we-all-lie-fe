@@ -33,7 +33,7 @@ const GameReady = () => {
 
         <Users userLength={userLength}>
           {userCameras.map((person, index) =>
-            ready ? (
+            !ready ? (
               <Camera />
             ) : (
               <ReadyWrap>
@@ -64,7 +64,7 @@ const ReadyButtonSection = styled.div`
   background-color: #cfcfcf;
   display: flex;
   flex-direction: column;
-  margin: 32px auto;
+  margin: 50px auto;
   align-items: center;
   gap: 5px;
   h1 {
