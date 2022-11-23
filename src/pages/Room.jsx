@@ -9,6 +9,7 @@ import { useCookies } from 'react-cookie';
 import GameReady from '../components/GameReady';
 import GameStart from '../components/GameStart';
 import GameVote from '../components/GameVote';
+import Header from '../elements/Header';
 
 const Room = () => {
   // //새로고침방지
