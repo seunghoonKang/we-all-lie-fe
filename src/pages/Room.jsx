@@ -72,8 +72,9 @@ const List = styled.div`
 `;
 
 const Game = styled.div`
-  background-color: lightpink;
+  //background-color: lightpink;
   height: calc(100% - 60px);
+  width: 100%;
 `;
 
 export default Room;

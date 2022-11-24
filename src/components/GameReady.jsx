@@ -87,28 +87,36 @@ const RoomNameLayout = styled.div`
 `;
 
 const RoomNumber = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: black;
   color: #ffffff;
+  align-content: center;
   min-width: 6%;
   min-height: 40px;
   border-radius: 5px;
   text-align: center;
   font-size: 20px;
-  display: table;
   margin: 0 auto 10px;
 `;
 
 const RoomInitials = styled.div`
+  display: flex;
+  align-items: center;
   background-color: #ffffff;
   width: 90%;
   min-height: 40px;
   border-radius: 5px;
   font-size: 20px;
+  padding-left: 5px;
   margin: 0 auto 10px;
 `;
 
 const Users = styled.div`
   display: flex;
+  justify-content: space-between;
+  align-content: space-between;
   flex-wrap: wrap;
   gap: 16px 16px;
   border-radius: 5px;
