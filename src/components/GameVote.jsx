@@ -1,17 +1,32 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Camera from '../elements/Camera';
+import { socket } from '../shared/socket';
+import arrestedstamp from '../img/arrested.png';
 
 const GameVote = () => {
-  const userCameras = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+  const userCameras = [
+    { nickName: 'a' },
+    { nickName: 'b' },
+    { nickName: 'c' },
+    { nickName: 'd' },
+    { nickName: 'e' },
+    { nickName: 'f' },
+    { nickName: 'g' },
+    { nickName: 'h' },
+  ];
   const userLength = userCameras.length;
+  const [stamp, setStamp] = useState();
+  socket.emit('voteSpy', '뀨띠', () => {
+    //
+  });
+
   return (
     <Layout>
       <HeaderSection>
         <HeaderTitle>
           📌 모든 유저가 투표를 완료하면 스파이의 정체가 공개됩니다!
         </HeaderTitle>
-        {/* <MakeRoomBtn>방 나가기</MakeRoomBtn> */}
       </HeaderSection>
       <Vote>
         <VoteTitle>스파이를 검거하세요</VoteTitle>
@@ -22,9 +37,21 @@ const GameVote = () => {
       </Vote>
       <Users userLength={userLength}>
         {userCameras.map((person, index) => (
-          <Camera key={index} person={person} />
+          // <User onClick={arrestedToggle} key={index} value={index}>
+          <Camera
+            person={person.nickName}
+            key={person.nickaName}
+            index={index}
+            stamp={stamp}
+            setStamp={setStamp}
+          />
+          //   <Arrested arrested={arrested}>
+          //     <img src={arrestedstamp} alt="투Arresopen=ted" />
+          //   </Arrested>
+          // </User>
         ))}
       </Users>
+      {/* <Examples></Examples> */}
     </Layout>
   );
 };
@@ -53,43 +80,25 @@ const HeaderTitle = styled.div`
   margin-left: 16px;
 `;
 
-const MakeRoomBtn = styled.button`
-  width: 96px;
-  height: 36px;
-  margin-right: 18px;
-  background-color: #d9d9d9;
-`;
-
-const Users = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px 16px;
-  /* ${(props) =>
-    props.userLength < 5
-      ? `50%`
-      : `calc(35% / ((${props.userLength} - 3) * 2))`}; */
-  padding: 16px;
-  background-color: white;
-`;
-
 const VoteTitle = styled.h2``;
 const VoteContent = styled.h3``;
 const Timer = styled.div``;
 const Vote = styled.div`
   background-color: lightgray;
   width: 100%;
+  min-height: 280px;
+  height: 40vh;
   text-align: center;
-  padding-bottom: 40px;
+  padding-top: 140px;
+  padding-bottom: 60px;
   position: relative;
   ${VoteTitle} {
     font-size: 22px;
     font-weight: 700;
     text-shadow: 2px 2px 1px #b7b7b7;
-    padding-top: 140px;
   }
   ${VoteContent} {
     margin-top: 10px;
-    padding-bottom: 20px;
   }
   ${Timer} {
     width: 220px;
@@ -104,4 +113,36 @@ const Vote = styled.div`
     bottom: 0;
     left: 0;
   }
+`;
+
+const User = styled.div``;
+const Users = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; //가로 띄우기
+  align-content: space-between; //세로 띄우기
+  min-height: 384px;
+  height: 50vh;
+  gap: 16px;
+  padding: 16px;
+  background-color: white;
+  ${User} {
+    width: 204px;
+    height: 164px;
+    /* width: 100%; */
+    position: relative;
+    /* background-color: green; */
+  }
+`;
+const Arrested = styled.div`
+  ${(props) =>
+    props.arrested
+      ? `position:absolute; top:30px; left:20px; z-index:999;`
+      : `display:none;`}
+`;
+
+const Examples = styled.div`
+  width: 100%;
+  min-height: 384px;
+  background-color: white;
 `;

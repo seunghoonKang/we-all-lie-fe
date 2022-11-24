@@ -2,23 +2,22 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import arrestedstamp from '../img/arrested.png';
 
-const Camera = ({ person, num }) => {
-  const onClickHandler = () => {
-    console.log(num);
-  };
-  const [arrested, setArrested] = useState(false);
+const Camera = ({ person, index, stamp, setStamp }) => {
   const arrestedToggle = () => {
-    setArrested((arrested) => !arrested);
+    console.log(index);
+    setStamp(person);
   };
-  console.log(arrested);
+  console.log(person);
+  // console.log(index);
   return (
     <div>
-      {/* <Wrap onClick={onClickHandler}> */}
-      <Wrap arrested={arrested} onClick={arrestedToggle}>
+      <Wrap onClick={arrestedToggle}>
         <NickName>무서운 승짱{person}</NickName>
-        <Arrested arrested={arrested}>
-          <img src={arrestedstamp} alt="투표 지목된 사람" />
-        </Arrested>
+        {stamp === person && (
+          <Arrested>
+            <img src={arrestedstamp} alt="투표 지목된 사람" />
+          </Arrested>
+        )}
       </Wrap>
     </div>
   );
@@ -35,7 +34,8 @@ const Wrap = styled.div`
   flex-direction: row-reverse;
   border: 1px solid #2b2b2b;
   cursor: pointer;
-  ${(props) => props.arrested && `position:relative`}
+  /* ${(props) => props.arrested && `position:relative`} */
+  position: relative;
 `;
 
 const NickName = styled.div`
@@ -49,8 +49,12 @@ const NickName = styled.div`
 `;
 
 const Arrested = styled.div`
-  ${(props) =>
+  position: absolute;
+  top: 50px;
+  left: 20px;
+  z-index: 999;
+  /* ${(props) =>
     props.arrested
       ? `position:absolute; top:50px; left:20px; z-index:999;`
-      : `display:none;`}
+      : `display:none;`} */
 `;
