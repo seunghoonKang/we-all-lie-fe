@@ -11,8 +11,6 @@ const Wrap = styled.div`
   display: flex;
   top: 60px;
   align-self: flex-start;
-
-  font-family: 'Manrope';
   font-style: normal;
   font-weight: 700;
   font-size: 46px;
