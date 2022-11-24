@@ -1,10 +1,26 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Camera from '../elements/Camera';
+import { socket } from '../shared/socket';
+import arrestedstamp from '../img/arrested.png';
 
 const GameVote = () => {
-  const userCameras = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+  const userCameras = [
+    { nickName: 'a' },
+    { nickName: 'b' },
+    { nickName: 'c' },
+    { nickName: 'd' },
+    { nickName: 'e' },
+    { nickName: 'f' },
+    { nickName: 'g' },
+    { nickName: 'h' },
+  ];
   const userLength = userCameras.length;
+  const [stamp, setStamp] = useState();
+  socket.emit('voteSpy', '뀨띠', () => {
+    //
+  });
+
   return (
     <Layout>
       <HeaderSection>
@@ -22,7 +38,18 @@ const GameVote = () => {
       </Vote>
       <Users userLength={userLength}>
         {userCameras.map((person, index) => (
-          <Camera key={index} person={person} />
+          // <User onClick={arrestedToggle} key={index} value={index}>
+          <Camera
+            person={person.nickName}
+            key={person.nickaName}
+            index={index}
+            stamp={stamp}
+            setStamp={setStamp}
+          />
+          //   <Arrested arrested={arrested}>
+          //     <img src={arrestedstamp} alt="투Arresopen=ted" />
+          //   </Arrested>
+          // </User>
         ))}
       </Users>
     </Layout>
@@ -60,18 +87,6 @@ const MakeRoomBtn = styled.button`
   background-color: #d9d9d9;
 `;
 
-const Users = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px 16px;
-  /* ${(props) =>
-    props.userLength < 5
-      ? `50%`
-      : `calc(35% / ((${props.userLength} - 3) * 2))`}; */
-  padding: 16px;
-  background-color: white;
-`;
-
 const VoteTitle = styled.h2``;
 const VoteContent = styled.h3``;
 const Timer = styled.div``;
@@ -104,4 +119,36 @@ const Vote = styled.div`
     bottom: 0;
     left: 0;
   }
+`;
+
+const User = styled.div``;
+const Users = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; //가로 띄우기
+  align-content: space-between; //세로 띄우기
+  min-height: 384px;
+  height: 50vh;
+  gap: 16px;
+  padding: 16px;
+  background-color: white;
+  ${User} {
+    width: 204px;
+    height: 164px;
+    /* width: 100%; */
+    position: relative;
+    /* background-color: green; */
+  }
+`;
+const Arrested = styled.div`
+  ${(props) =>
+    props.arrested
+      ? `position:absolute; top:30px; left:20px; z-index:999;`
+      : `display:none;`}
+`;
+
+const Examples = styled.div`
+  width: 100%;
+  min-height: 384px;
+  background-color: white;
 `;
