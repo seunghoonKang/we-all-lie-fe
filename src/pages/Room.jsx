@@ -44,14 +44,13 @@ const Room = () => {
       <>
         <Notice />
         <Box>
-          <List>
-            <Game>
-              {/* 본인 컴포넌트말고 주석하면 돼용 */}
-              <GameReady />
-              {/* <GameStart />
-              <GameVote /> */}
-            </Game>
-          </List>
+          <Game>
+            {/* 본인 컴포넌트말고 주석하면 돼용 */}
+            <GameReady />
+            {/* <GameStart /> */}
+            {/* <GameVote /> */}
+          </Game>
+
           <Chat />
         </Box>
       </>
@@ -64,17 +63,13 @@ const Box = styled.div`
   justify-content: space-between;
 `;
 
-const List = styled.div`
+//List 없애고 Game 에 합침
+const Game = styled.div`
+  background-color: lightpink;
+  /* height: 100%; */
   width: calc(100% - 350px);
   height: 90vh;
   min-height: 650px;
-  margin-bottom: 100px;
-`;
-
-const Game = styled.div`
-  //background-color: lightpink;
-  height: calc(100% - 60px);
-  width: 100%;
 `;
 
 export default Room;
