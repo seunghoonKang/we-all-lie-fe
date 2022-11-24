@@ -1,5 +1,4 @@
 import React from 'react';
-import { KAKAO_AUTH_URL } from '../components/login/Oauth';
 import styled from 'styled-components';
 // import { socket } from "../shared/socket";
 import Notice from '../elements/Notice';
