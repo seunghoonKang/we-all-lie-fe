@@ -5,7 +5,7 @@ import Camera from '../elements/Camera';
 import { socket } from '../shared/socket';
 import Timer from './gamestart/Timer';
 import { ReactComponent as Megaphone } from '../assets/megaphone.svg';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 /* 
 1. spy랜덤 지정
 어떤 닉네임의 배열이 있다면 (ex. members=['홍길동','키티','반페르시','반다이크']), 배열의.length (4)가 총 인원수가 되겠다.
@@ -27,7 +27,7 @@ const citizens = members.filter((member) => member != SpyNickname);
 
 const GameStart = () => {
   const [disabledBtn, setDisabledBtn] = useState('투표준비');
-
+  const navigate = useNavigate();
   useEffect(() => {
     const checkNotDisabledBtn = setTimeout(() => {
       setDisabledBtn('투표하기');
@@ -42,6 +42,10 @@ const GameStart = () => {
   const voteBtnHandler = () => {
     alert('방 나가기 소켓 임시로 넣었음');
     socket.emit('leaveRoom', param.id);
+    socket.on('leaveRoom', () => {
+      navigate('/home');
+    });
+    navigate('/home');
   };
   const items = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
   return (
@@ -131,6 +135,7 @@ const MegaphoneDiv = styled.div`
 const VideoContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
   gap: 16px 16px;
   padding: 16px;
   background-color: white;
@@ -141,12 +146,9 @@ const GameCardSection = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
-  //background-color: red;
+  width: 100%;
   padding-top: 67px;
   margin-bottom: 16px;
-  /* top: 50%; 
-   left: 50%;
-  transform: translate(-50%, -50%); */
 `;
 
 const CorrectCard = styled.div`
@@ -157,18 +159,18 @@ const CorrectCard = styled.div`
   display: flex;
   justify-content: center;
   align-items: end;
+  flex-grow: 1;
 `;
 
 const Question = styled.div`
   width: 27.625rem;
   height: 13.75rem;
-  //background-color: #968282;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin-left: 16px;
+  flex-grow: 1;
 `;
 
 const TimeRemaining = styled.div`
