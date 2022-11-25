@@ -1,8 +1,8 @@
 import { io } from 'socket.io-client';
 
-export const socket = io('http://3.36.53.193:3000', {
+export const socket = io('https://tastekim.shop', {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: '*',
   },
   transports: ['websocket', 'polling'],
 });
