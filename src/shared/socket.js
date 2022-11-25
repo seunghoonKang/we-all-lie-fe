@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 
-export const socket = io('https://tastekim.shop', {
+export const socket = io('https://minhyeongi.xyz', {
   cors: {
     origin: 'http://localhost:3000',
   },
