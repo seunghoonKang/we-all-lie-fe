@@ -41,7 +41,7 @@ const GameVote = () => {
           // <User onClick={arrestedToggle} key={index} value={index}>
           <Camera
             person={person.nickName}
-            key={person.nickaName}
+            key={person.nickName}
             index={index}
             stamp={stamp}
             setStamp={setStamp}

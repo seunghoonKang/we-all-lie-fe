@@ -3,7 +3,7 @@ import styled from 'styled-components';
 // import { socket } from "../shared/socket";
 import Notice from '../elements/Notice';
 import { Container } from 'postcss';
-
+import { ReactComponent as WeAllLie } from '../assets/we_all_lie.svg';
 // socket.emit("leave_Room", "하이하이");
 // socket.emit("enter_Room", "하이하이");
 
@@ -22,7 +22,8 @@ const Login = () => {
         <P>WE ALL LION</P>
 
         <MainImg>
-          <img src="/img/lion.png"></img>
+          <WeAllLie />
+          {/* <img src="/img/lion.png"></img> */}
         </MainImg>
 
         <BtnWrap>
