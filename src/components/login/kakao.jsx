@@ -18,7 +18,6 @@ const Kakao = () => {
     try {
       const res = await axios.get(
         `https://minhyeongi.xyz/api/auth/kakao/callback?code=${code}`
-        //`http://3.36.1.72/api/auth/kakao/callback?code=${code}`
       );
       const kakaoToken = res.data.accessToken;
       console.log(kakaoToken);
@@ -26,7 +25,6 @@ const Kakao = () => {
       if (res.status === 200) {
         const res2 = await axios.post(
           `https://minhyeongi.xyz/api/auth/kakao/callback?code=${code}`,
-          //`http://3.36.1.72/api/auth/kakao/callback?code=${code}`,
           {
             kakaoToken, //카카오 토큰
           },
