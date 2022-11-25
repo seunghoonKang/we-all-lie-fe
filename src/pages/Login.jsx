@@ -1,11 +1,10 @@
 import React from 'react';
-import { KAKAO_AUTH_URL } from '../components/login/Oauth';
 import styled from 'styled-components';
 // import { socket } from "../shared/socket";
 import Notice from '../elements/Notice';
 import { Container } from 'postcss';
 
-// socket.emit("leave_Room", "하이하이");
+// socket.emit( "leave_Room", "하이하이");
 // socket.emit("enter_Room", "하이하이");
 
 // const handleMessageSubmit = (e) => {
