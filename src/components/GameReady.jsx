@@ -15,7 +15,14 @@ const GameReady = () => {
   };
   return (
     <ReadyLayout>
-      <div>
+      <div
+        style={{
+          height: '40vh',
+          minHeight: '280px',
+          //  min-height: 280px;
+          //height: 40vh;
+        }}
+      >
         <ReadyHeader />
 
         <RoomNameLayout>
@@ -30,23 +37,22 @@ const GameReady = () => {
             <ReadyButton>준비완료</ReadyButton>
           </div>
         </ReadyButtonSection>
-
-        <Users userLength={userLength}>
-          {userCameras.map((person, index) =>
-            !ready ? (
-              <Camera />
-            ) : (
-              <ReadyWrap>
-                <img
-                  // style={{ transform: 'scale(0.3)' }}
-                  src="/img/ready.png"
-                ></img>
-                <ReadyNickName>게으른 뀨띠</ReadyNickName>
-              </ReadyWrap>
-            )
-          )}
-        </Users>
       </div>
+      <Users userLength={userLength}>
+        {userCameras.map((person, index) =>
+          !ready ? (
+            <Camera />
+          ) : (
+            <ReadyWrap>
+              <img
+                // style={{ transform: 'scale(0.3)' }}
+                src="/img/ready.png"
+              ></img>
+              <ReadyNickName>게으른 뀨띠</ReadyNickName>
+            </ReadyWrap>
+          )
+        )}
+      </Users>
     </ReadyLayout>
   );
 };
@@ -64,9 +70,9 @@ const ReadyButtonSection = styled.div`
   background-color: #cfcfcf;
   display: flex;
   flex-direction: column;
-  margin: 50px auto;
+  //margin: 2vh auto; //50px auto 에서 변경
   align-items: center;
-  gap: 5px;
+  gap: 10px;
   h1 {
     /* background-color: white; */
     font-size: 22px;
@@ -75,7 +81,7 @@ const ReadyButtonSection = styled.div`
     /* background-color: pink; */
     font-size: 16px;
     color: #2b2b2b;
-    margin: 0px 0px 27px;
+    margin: 0px 0px 10px; //27px -> 20px
   }
 `;
 
@@ -118,10 +124,14 @@ const Users = styled.div`
   justify-content: space-between;
   align-content: space-between;
   flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: space-between;
   gap: 16px 16px;
   border-radius: 5px;
   padding: 16px;
   background-color: white;
+  min-height: 384px;
+  height: 50vh;
 `;
 
 const ReadyWrap = styled.div`
