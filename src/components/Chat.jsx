@@ -9,7 +9,7 @@ import { useCookies } from 'react-cookie';
 import { io } from 'socket.io-client';
 export const socket = io('http://3.36.1.72', {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: '*',
   },
   transports: ['websocket', 'polling'],
 });
