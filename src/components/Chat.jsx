@@ -7,7 +7,7 @@ import { useCookies } from 'react-cookie';
 
 //민형님 주소
 import { io } from 'socket.io-client';
-export const socket = io('http://3.36.1.72', {
+export const socket = io('https://minhyeongi.xyz', {
   cors: {
     origin: '*',
   },
