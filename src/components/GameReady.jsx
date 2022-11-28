@@ -1,12 +1,21 @@
 import styled from 'styled-components';
 // import ReadyUsers from './gameready/ReadyUsers';
-import ReadyHeader from './gameready/ReadyHeader';
 import ReadyButton from './gameready/ReadyButton';
 import Camera from '../elements/Camera';
 import { useState } from 'react';
+import ReadyHeader from './gameready/ReadyHeader';
 
 const GameReady = () => {
-  const userCameras = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+  const userCameras = [
+    { nickName: 'a' },
+    { nickName: 'b' },
+    { nickName: 'c' },
+    { nickName: 'd' },
+    { nickName: 'e' },
+    { nickName: 'f' },
+    { nickName: 'g' },
+    { nickName: 'h' },
+  ];
   const userLength = userCameras.length;
   const [ready, useReady] = useState(false);
 
@@ -24,7 +33,6 @@ const GameReady = () => {
         }}
       >
         <ReadyHeader />
-
         <RoomNameLayout>
           <RoomNumber>{String(3).padStart(3, '00')}</RoomNumber>
           <RoomInitials>무서운 사자가 만든 무서운 방</RoomInitials>
@@ -41,14 +49,24 @@ const GameReady = () => {
       <Users userLength={userLength}>
         {userCameras.map((person, index) =>
           !ready ? (
-            <Camera />
+            <Camera
+              person={person.nickName}
+              key={person.nickName}
+              index={index}
+            />
           ) : (
             <ReadyWrap>
               <img
                 // style={{ transform: 'scale(0.3)' }}
                 src="/img/ready.png"
               ></img>
-              <ReadyNickName>게으른 뀨띠</ReadyNickName>
+              <ReadyNickName
+                person={person.nickName}
+                key={person.nickName}
+                index={index}
+              >
+                게으른 뀨띠
+              </ReadyNickName>
             </ReadyWrap>
           )
         )}
@@ -62,20 +80,25 @@ export default GameReady;
 const ReadyLayout = styled.div`
   width: 100%;
   height: 100%;
-  background-color: #cfcfcf;
+  background-color: white;
+  border-radius: 5px;
 `;
 
 const ReadyButtonSection = styled.div`
   /* background-color: #4f9c64; */
-  background-color: #cfcfcf;
+  margin: 1.5%;
+  padding: 3%;
+  background-color: #f5f5f5;
+  border-radius: 5px;
   display: flex;
   flex-direction: column;
   //margin: 2vh auto; //50px auto 에서 변경
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   h1 {
     /* background-color: white; */
     font-size: 22px;
+    font-weight: 700;
   }
   span {
     /* background-color: pink; */
@@ -110,7 +133,8 @@ const RoomNumber = styled.div`
 const RoomInitials = styled.div`
   display: flex;
   align-items: center;
-  background-color: #ffffff;
+  background-color: #222222;
+  color: #ffffff;
   width: 90%;
   min-height: 40px;
   border-radius: 5px;
