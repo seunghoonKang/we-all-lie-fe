@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useContext, useState } from 'react';
+import styled, { ThemeContext } from 'styled-components';
 import Camera from '../elements/Camera';
 import { socket } from '../shared/socket';
-import arrestedstamp from '../img/arrested.png';
 
 const GameVote = () => {
+  const themeContext = useContext(ThemeContext);
   const userCameras = [
     { nickName: 'a' },
     { nickName: 'b' },
@@ -23,7 +23,7 @@ const GameVote = () => {
 
   return (
     <Layout>
-      <HeaderSection>
+      <HeaderSection theme={themeContext}>
         <HeaderTitle>
           📌 모든 유저가 투표를 완료하면 스파이의 정체가 공개됩니다!
         </HeaderTitle>
@@ -67,7 +67,7 @@ const HeaderSection = styled.section`
   justify-content: space-between;
   align-items: center;
   height: 40px;
-  background-color: #ff8217;
+  background-color: ${(props) => props.theme.color.lionOrange};
   border-radius: 10px;
   width: 97%;
   position: absolute;
