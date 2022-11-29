@@ -5,6 +5,9 @@ import Notice from '../elements/Notice';
 import { Container } from 'postcss';
 import { ReactComponent as WeAllLie } from '../assets/we_all_lie.svg';
 // socket.emit("leave_Room", "하이하이");
+
+// socket.emit( "leave_Room", "하이하이");
+
 // socket.emit("enter_Room", "하이하이");
 
 // const handleMessageSubmit = (e) => {
@@ -12,6 +15,7 @@ import { ReactComponent as WeAllLie } from '../assets/we_all_lie.svg';
 // };
 
 const Login = () => {
+  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code`;
   const handleLogin = () => {
     window.location.href = KAKAO_AUTH_URL;
   };

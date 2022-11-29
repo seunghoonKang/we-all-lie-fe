@@ -21,6 +21,13 @@ const Home = () => {
   // //새로고침방지
   useBeforeunload((event) => event.preventDefault());
 
+  useEffect(() => {
+    socket.on('showRoom', (room) => {
+      setRooms(room);
+      console.log(rooms);
+    });
+  }, []);
+
   // useEffect(() => {
   //   const intervalId = setInterval(() => {
   //     socket.on('showRoom', (room) => {

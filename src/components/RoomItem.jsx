@@ -1,12 +1,16 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { getRoomInfo } from '../redux/modules/roomSlice';
 import { socket } from '../shared/socket';
 
 const RoomItem = ({ roominfo }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const enterRoomHandler = () => {
     socket.emit('enterRoom', roominfo?._id);
+    dispatch(getRoomInfo(roominfo));
     navigate(`/room/${roominfo?._id}`);
   };
   console.log(roominfo);

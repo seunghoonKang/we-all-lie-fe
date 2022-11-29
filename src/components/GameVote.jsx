@@ -27,7 +27,6 @@ const GameVote = () => {
         <HeaderTitle>
           📌 모든 유저가 투표를 완료하면 스파이의 정체가 공개됩니다!
         </HeaderTitle>
-        {/* <MakeRoomBtn>방 나가기</MakeRoomBtn> */}
       </HeaderSection>
       <Vote>
         <VoteTitle>스파이를 검거하세요</VoteTitle>
@@ -52,6 +51,7 @@ const GameVote = () => {
           // </User>
         ))}
       </Users>
+      {/* <Examples></Examples> */}
     </Layout>
   );
 };
@@ -93,18 +93,19 @@ const Timer = styled.div``;
 const Vote = styled.div`
   background-color: lightgray;
   width: 100%;
+  min-height: 280px;
+  height: 40vh;
   text-align: center;
-  padding-bottom: 40px;
+  padding-top: 140px;
+  padding-bottom: 60px;
   position: relative;
   ${VoteTitle} {
     font-size: 22px;
     font-weight: 700;
     text-shadow: 2px 2px 1px #b7b7b7;
-    padding-top: 140px;
   }
   ${VoteContent} {
     margin-top: 10px;
-    padding-bottom: 20px;
   }
   ${Timer} {
     width: 220px;
