@@ -35,15 +35,6 @@ const Camera = ({ ...props }) => {
           <NickName>무서운 승짱</NickName>
         </Wrap>
       )}
-
-      {/* <Wrap onClick={arrestedToggle}>
-        <NickName>무서운 승짱{person}</NickName>
-        {stamp === person && (
-          <Arrested>
-            <img src={arrestedstamp} alt="투표 지목된 사람" />
-          </Arrested>
-        )}
-      </Wrap> */}
     </div>
   );
 };
