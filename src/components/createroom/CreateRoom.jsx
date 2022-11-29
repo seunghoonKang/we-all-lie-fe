@@ -223,7 +223,7 @@ const CreateRoomDiv = styled.div`
   align-items: flex-start;
   width: 550px;
   background-color: #fff;
-  //border-radius: 10px;
+  border-radius: 0 0 10px 10px;
   box-shadow: 0 20px 60px -2px rgb(27 33 58 / 40%);
   padding: 0;
 `;
