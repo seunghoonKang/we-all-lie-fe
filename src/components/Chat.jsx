@@ -1,12 +1,17 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import styled from 'styled-components';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import styled, { ThemeContext } from 'styled-components';
 // import { socket } from '../shared/socket';
 import { useRef } from 'react';
 import { useCookies } from 'react-cookie';
 // import { useBeforeunload } from 'react-beforeunload'; // 새로고침방지
+import { ReactComponent as ChatProfileDefault } from '../assets/chat_profile_default.svg';
+import { ReactComponent as ChatProfileLion } from '../assets/chat_profile_lion.svg';
+import { ReactComponent as PersonIcon } from '../assets/icon_person.svg';
+import { ReactComponent as SendIcon } from '../assets/icon_send.svg';
 
 //민형님 주소
 import { io } from 'socket.io-client';
+import { Navigate, useNavigate } from 'react-router-dom';
 export const socket = io('https://minhyeongi.xyz', {
   cors: {
     origin: '*',
@@ -15,14 +20,15 @@ export const socket = io('https://minhyeongi.xyz', {
 });
 
 const Chat = () => {
+  const themeContext = useContext(ThemeContext);
+  const navigate = useNavigate();
   //채팅방 열고닫기 구현하려면 {showChat} props로 받아오기
   let nickname = '익명';
-
   const [cookies, setCookie] = useCookies(['nickname']);
   const [userCnt, setUserCnt] = useState(0);
   const [chat, setChat] = useState([
-    { notice: '뀨띠님이 입장하셨습니다' },
-    { name: '뀨띠', msg: '안눙' },
+    // { notice: '뀨띠님이 입장하셨습니다' },
+    // { name: '뀨띠', msg: '안눙' },
   ]);
 
   nickname = cookies.nickname;
@@ -55,7 +61,7 @@ const Chat = () => {
     //로비 들어왔을 때 실행
     //채팅방에 @@님이 로그인하셨습니다.(?) 띄워주기
     socket.emit('enterLobby', nickname, () => {
-      setChat([...chat, { notice: `${nickname}님이 입장하셨습니다` }]);
+      setChat([...chat, { notice: `${nickname} 님이 입장하셨습니다` }]);
     });
     // //남이 보낸 msg
     // socket.on('receiveLobbyMsg', (msg) => {
@@ -78,9 +84,10 @@ const Chat = () => {
     e.preventDefault();
     const msgValue = msgInput.current.value;
 
+    //내가 적은 msg (나한테만 보임)
     //채팅에 닉네임, 메세지 전송 (emit)
-    const mine = { name: `${nickname}(Me)`, msg: `${msgValue}` };
-    console.log(mine);
+    const mine = { name: `${nickname}`, msg: `${msgValue}` };
+    // console.log(mine);
     myMsg(mine);
 
     //내가 적은 msg
@@ -99,43 +106,68 @@ const Chat = () => {
 
   console.log(chat);
   return (
-    <ChatLayout>
+    <ChatLayout theme={themeContext}>
+      <MyProfile onClick={() => navigate(`/user/`)}>
+        {/* 나중에 user 는 모달로 할수도 */}
+        My ∨
+      </MyProfile>
       <ChatTop>
-        <p style={{ fontSize: '30px' }}>Chat</p>
-        <People>현재 접속 인원수({userCnt})</People>
+        <p style={{ fontSize: '30px' }}>CHAT</p>
+        <People>
+          <PersonIcon style={{ marginRight: '6px' }} />
+          {userCnt}
+        </People>
       </ChatTop>
       <ChatRow ref={scrollRef}>
         <Notice>매너 채팅 안하면 벤먹는다!</Notice>
-        <Msg>
-          <User>
-            <img />
-            <span>🦁</span>
-            <span>닉네임</span>
-          </User>
-          <Word>대화가 뜹니다</Word>
-        </Msg>
 
         {chat.map((a, index) => {
           return a.notice ? (
             <Notice key={index}>{a.notice}</Notice>
           ) : (
-            a.msg && (
-              <Msg key={index}>
-                <p>
-                  <img />
-                  <span>🦁</span>
-                  <span>{a.name}</span>
-                </p>
-                <Word>{a.msg}</Word>
-              </Msg>
-            )
+            a.msg &&
+              (a.name == nickname ? (
+                <Msg
+                  theme={themeContext}
+                  key={index}
+                  style={{ justifyContent: 'flex-end' }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'flex-end',
+                    }}
+                  >
+                    <Nickname>{a.name}</Nickname>
+                    <Word>{a.msg}</Word>
+                  </div>
+                  <User>
+                    <ChatProfileDefault />
+                    {/* <ChatProfileLion /> */}
+                  </User>
+                </Msg>
+              ) : (
+                <Msg theme={themeContext} key={index}>
+                  <User>
+                    <ChatProfileDefault />
+                    {/* <ChatProfileLion /> */}
+                  </User>
+                  <div>
+                    <Nickname>{a.name}</Nickname>
+                    <Word>{a.msg}</Word>
+                  </div>
+                </Msg>
+              ))
           );
         })}
       </ChatRow>
       <Form onSubmit={msgSubmitHandler}>
         {/* <p>프로필?</p> */}
         <input type="text" ref={msgInput} placeholder="여따 할말혀!" required />
-        <button>전송</button>
+        <button>
+          <SendIcon />
+        </button>
       </Form>
     </ChatLayout>
   );
@@ -144,11 +176,15 @@ const Chat = () => {
 export default Chat;
 
 const ChatLayout = styled.div`
-  padding: 10px;
+  padding: 18px;
+  margin-top: 60px;
   width: 350px;
-  height: 90vh;
-  min-height: 650px;
-  background-color: lightgray;
+  height: calc(90vh - 60px);
+  min-height: 590px;
+  background-color: #fff;
+  border-radius: 10px;
+  position: relative;
+  margin-left: 10px;
 
   /* //채팅방 열고 닫기 코드
   position: absolute;
@@ -159,75 +195,117 @@ const ChatLayout = styled.div`
   transition: all 400ms ease-in-out;*/
 `;
 
+const MyProfile = styled.button`
+  width: 60px;
+  height: 40px;
+  position: absolute;
+  top: -52px;
+  right: 0;
+  border: 1px solid #fff;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #fff;
+  /* padding: 20px; */
+`;
+
 const People = styled.p``;
 const ChatTop = styled.div`
   display: flex;
   justify-content: space-between;
-  height: 8%;
-  padding: 0 10px;
+  align-content: center;
+  height: 10%;
+  margin-left: 10px;
+  padding: 3% 0 5% 0;
   p {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-weight: bold;
   }
   ${People} {
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: ${(props) => props.theme.color.gray1};
+    padding: 10px;
+    margin: 4% 0 4% 0;
+    height: 20px;
+    border-radius: 6px;
+    font-size: 12px;
   }
 `;
-
+const Nickname = styled.p``;
 const User = styled.p``;
 const Notice = styled.div``;
 const Msg = styled.div``;
 const Word = styled.p``;
 const ChatRow = styled.div`
-  background-color: lightgreen;
+  /* background-color: lightgreen; */
   width: 100%;
-  height: 85%;
+  height: 80%;
+  /* min-height: 460px; */
   overflow-y: auto;
 
   ${Notice} {
     text-align: center;
-    padding: 5px;
+    line-height: 30px;
+    padding: 1px;
     color: gray;
+    font-size: 12px;
   }
 
   ${Msg} {
     margin: 5px;
+    display: flex;
 
     ${User} {
+      width: 30px;
+      height: 30px;
+      background-color: ${(props) => props.theme.color.gray2};
+      border-radius: 15px;
+      text-align: center;
+      margin-right: 10px;
     }
-  }
 
-  ${Word} {
-    display: inline-block;
-    background-color: white;
-    padding: 2px 6px;
-    word-break: break-all; //띄어쓰기 안해도, 단어 중간에서 줄바꿈 가능하게 함
+    ${Nickname} {
+      font-weight: 700;
+      margin-bottom: 5px;
+      margin-right: 10px;
+      font-size: 14px;
+    }
+
+    ${Word} {
+      display: inline-block;
+      background-color: ${(props) => props.theme.color.gray2};
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-right: 10px;
+      font-size: 14px;
+      word-break: break-all; //띄어쓰기 안해도, 단어 중간에서 줄바꿈 가능하게 함
+    }
   }
 `;
 
 const Form = styled.form`
   display: flex;
-  justify-content: space-between;
-  margin-top: 3%;
-  height: 5%;
-  min-height: 36px;
+  /* justify-content: space-between; */
+  margin: 4% 0 4% 0;
+  padding: 3% 0 3% 0;
+  height: 10%;
+  min-height: 40px;
+
   p {
     padding: 5px 0;
   }
   input {
-    width: 80%;
-    padding: 0 5px;
+    background-color: ${(props) => props.theme.color.gray1};
+    width: 90%;
+    padding: 0 10px;
+    border-radius: 6px 0 0 6px;
     &:focus {
       outline: none;
     }
   }
   button {
-    background-color: pink;
-    padding: 5px;
-    border-radius: 8px;
-    margin-right: 10px;
+    width: 10%;
+    background-color: ${(props) => props.theme.color.gray1};
+    border-radius: 0 6px 6px 0;
   }
 `;
