@@ -45,10 +45,12 @@ const Room = () => {
         <Notice />
         <Box>
           <Game>
+            {/* 본인 컴포넌트말고 주석하면 돼용 */}
             {/* <GameReady /> */}
-            <GameStart />
-            {/* <GameVote /> */}
+            {/* <GameStart /> */}
+            <GameVote />
           </Game>
+
           <Chat />
         </Box>
       </>

@@ -6,6 +6,7 @@ import { socket } from '../shared/socket';
 import Timer from './gamestart/Timer';
 import { ReactComponent as Megaphone } from '../assets/megaphone.svg';
 import { useNavigate, useParams } from 'react-router-dom';
+
 /* 
 1. spy랜덤 지정
 어떤 닉네임의 배열이 있다면 (ex. members=['홍길동','키티','반페르시','반다이크']), 배열의.length (4)가 총 인원수가 되겠다.
@@ -85,7 +86,6 @@ const GameStart = () => {
           {disabledBtn}
         </Button>
       </HeaderSection>
-
       <GameCardSection>
         <Question>
           <div>
@@ -98,7 +98,7 @@ const GameStart = () => {
             테스트
           </Button>
           <TimeRemaining>
-            <Timer sec="45" />
+            <Timer sec="45" onClick={(e) => console.log(e)} />
           </TimeRemaining>
         </Question>
         <CorrectCard>
