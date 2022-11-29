@@ -40,6 +40,7 @@ const Kakao = () => {
           path: '/',
           secure: true,
           sameSite: 'none',
+          // httpOnly: true, 서버에서만 설정이 가능함
         });
         // console.log(cookies);
         if (res2.status == 200) {

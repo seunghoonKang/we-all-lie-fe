@@ -4,6 +4,7 @@ import ReadyButton from './gameready/ReadyButton';
 import Camera from '../elements/Camera';
 import { useState } from 'react';
 import ReadyHeader from './gameready/ReadyHeader';
+import { ReactComponent as Ready } from '../assets/r_eady.svg';
 
 const GameReady = () => {
   const userCameras = [
@@ -19,6 +20,9 @@ const GameReady = () => {
   const userLength = userCameras.length;
   const [ready, useReady] = useState(false);
 
+  //방번호를 주면 소켓에 닉네임 들어있음 레디를 안누른 사람이 눌렀을때
+  //레디 버튼 누른 사람 닉네임
+  //어떤 닉네임을 가진 사람이 true 값으로 바꾼것만 보내면 될듯
   const ReadyHendler = () => {
     useReady(!ready);
   };
@@ -56,10 +60,11 @@ const GameReady = () => {
             />
           ) : (
             <ReadyWrap>
-              <img
+              {/* <img
                 // style={{ transform: 'scale(0.3)' }}
                 src="/img/ready.png"
-              ></img>
+              ></img> */}
+              <Ready />
               <ReadyNickName
                 person={person.nickName}
                 key={person.nickName}
@@ -166,7 +171,6 @@ const ReadyWrap = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border: 1.5px solid #ff8217;
   img {
     align-self: flex-start;
     margin: 5px;
@@ -176,7 +180,8 @@ const ReadyWrap = styled.div`
 const ReadyNickName = styled.div`
   width: 202px;
   height: 28px;
-  background-color: #ff8217;
+  background-color: #222222;
+  color: white;
   align-self: flex-end;
   text-align: center;
   border-radius: 0px 0px 5px 5px;

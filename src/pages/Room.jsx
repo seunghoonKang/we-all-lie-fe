@@ -29,6 +29,9 @@ const Room = () => {
     navigate('/home');
   };
   */
+  socket.on('ready', (room) => {
+    console.log(room);
+  });
 
   useEffect(() => {
     //로그인 안하면 로비입장 못하게 하기 (useEffect 안에 넣어야 navigate 먹어요)

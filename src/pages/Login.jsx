@@ -1,33 +1,42 @@
-import React from 'react';
 import styled from 'styled-components';
-// import { socket } from "../shared/socket";
 import Notice from '../elements/Notice';
-import { Container } from 'postcss';
 import { ReactComponent as WeAllLie } from '../assets/we_all_lie.svg';
-// socket.emit("leave_Room", "하이하이");
-// socket.emit("enter_Room", "하이하이");
-
-// const handleMessageSubmit = (e) => {
-//   e.preventDefaul();
-// };
+import Description from '../components/login/Description';
+import { useState } from 'react';
+import { ReactComponent as Modalimg } from '../assets/play_modal.svg';
 
 const Login = () => {
+  const [playModal, setPlayModal] = useState(false);
+
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code`;
   const handleLogin = () => {
     window.location.href = KAKAO_AUTH_URL;
   };
+
   return (
     <Wrap>
       <Notice />
       <MiniWrap>
-        {/* <P>WE ALL LION</P> */}
-
         <MainImg>
           <WeAllLie />
-          {/* <img src="/img/lion.png"></img> */}
         </MainImg>
 
         <BtnWrap>
+          <Modalimg
+            onClick={() => {
+              setPlayModal(!playModal);
+            }}
+          />
+          {playModal ? (
+            <Description
+              closeDescription={() => {
+                setPlayModal(!playModal);
+              }}
+            />
+          ) : (
+            <></>
+          )}
+
           <KaKaoBtn onClick={handleLogin}>
             <img
               style={{ transform: 'scale(0.3)' }}
@@ -87,6 +96,7 @@ const MainImg = styled.div`
 const BtnWrap = styled.div`
   display: flex;
   justify-content: center;
+  flex-direction: column;
 `;
 
 const KaKaoBtn = styled.div`
