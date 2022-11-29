@@ -51,6 +51,7 @@ const Room = () => {
             {/* <GameStart />
             <GameVote /> */}
           </Game>
+
           <Chat />
         </Box>
       </>

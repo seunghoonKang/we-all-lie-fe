@@ -6,6 +6,7 @@ import { socket } from '../shared/socket';
 import Timer from './gamestart/Timer';
 import { ReactComponent as Megaphone } from '../assets/megaphone.svg';
 import { useNavigate, useParams } from 'react-router-dom';
+
 /* 
 1. spy랜덤 지정
 어떤 닉네임의 배열이 있다면 (ex. members=['홍길동','키티','반페르시','반다이크']), 배열의.length (4)가 총 인원수가 되겠다.
@@ -26,6 +27,8 @@ const citizens = members.filter((member) => member != SpyNickname);
 */
 
 const GameStart = () => {
+  const [answerer, setAnswerer] = useState(false);
+  const [asker, setAsker] = useState(false);
   const [disabledBtn, setDisabledBtn] = useState('투표준비');
   const navigate = useNavigate();
   useEffect(() => {
@@ -47,7 +50,17 @@ const GameStart = () => {
     });
     navigate('/home');
   };
-  const items = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+  const userCameras = [
+    { nickName: '승훈' },
+    { nickName: '연석' },
+    { nickName: '진영' },
+    { nickName: '형석' },
+    { nickName: '민형' },
+    { nickName: '하은' },
+    { nickName: '윤진' },
+    { nickName: '주은' },
+  ];
+
   return (
     <GameEntireContainer>
       <HeaderSection>
@@ -73,7 +86,6 @@ const GameStart = () => {
           {disabledBtn}
         </Button>
       </HeaderSection>
-
       <GameCardSection>
         <Question>
           <div>
@@ -94,8 +106,15 @@ const GameStart = () => {
         </CorrectCard>
       </GameCardSection>
       <VideoContainer>
-        {items.map((item, index) => (
-          <Camera num={index + 1} />
+        {userCameras.map((person) => (
+          <Camera
+            nickname={person.nickName}
+            asker={asker}
+            setAsker={setAsker}
+            answerer={answerer}
+            setAnswerer={setAnswerer}
+            key={person.nickName}
+          />
         ))}
       </VideoContainer>
     </GameEntireContainer>
