@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { socket } from '../shared/socket';
 import { useBeforeunload } from 'react-beforeunload';
 import { useNavigate } from 'react-router-dom';
+import { ReactComponent as WeAllLieLogo } from '../assets/we_all_lie_logo.svg';
 const Home = () => {
   //채팅방 열고 닫기 코드 (나중에 필요없으면 props들과 함께 지우기)
   const [showChat, setShowChat] = useState(false);
@@ -19,6 +20,13 @@ const Home = () => {
 
   // //새로고침방지
   useBeforeunload((event) => event.preventDefault());
+
+  useEffect(() => {
+    socket.on('showRoom', (room) => {
+      setRooms(room);
+      console.log(rooms);
+    });
+  }, []);
 
   // useEffect(() => {
   //   const intervalId = setInterval(() => {
@@ -57,7 +65,9 @@ const Home = () => {
         <Box showChat={showChat}>
           <List>
             <HeaderSection>
-              <LogoImg>아마도이미지</LogoImg>
+              <LogoImg>
+                <WeAllLieLogo />
+              </LogoImg>
               <MakeRoomBtn
                 onClick={() => {
                   setOpenModal(!openModal);
