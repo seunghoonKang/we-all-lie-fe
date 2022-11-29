@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import roomSlice from './modules/roomSlice';
+import game from './modules/gameSlice';
+import room from './modules/roomSlice';
 
 const store = configureStore({
   reducer: {
-    roomSlice,
+    room,
+    game,
   },
 });
 

@@ -26,6 +26,8 @@ const citizens = members.filter((member) => member != SpyNickname);
 */
 
 const GameStart = () => {
+  const [answerer, setAnswerer] = useState(false);
+  const [asker, setAsker] = useState(false);
   const [disabledBtn, setDisabledBtn] = useState('투표준비');
   const navigate = useNavigate();
   useEffect(() => {
@@ -47,7 +49,17 @@ const GameStart = () => {
     });
     navigate('/home');
   };
-  const items = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+  const userCameras = [
+    { nickName: '승훈' },
+    { nickName: '연석' },
+    { nickName: '진영' },
+    { nickName: '형석' },
+    { nickName: '민형' },
+    { nickName: '하은' },
+    { nickName: '윤진' },
+    { nickName: '주은' },
+  ];
+
   return (
     <GameEntireContainer>
       <HeaderSection>
@@ -86,7 +98,7 @@ const GameStart = () => {
             테스트
           </Button>
           <TimeRemaining>
-            <Timer sec="45" onClick={(e) => console.log(e)} />
+            <Timer sec="45" />
           </TimeRemaining>
         </Question>
         <CorrectCard>
@@ -94,8 +106,15 @@ const GameStart = () => {
         </CorrectCard>
       </GameCardSection>
       <VideoContainer>
-        {items.map((item, index) => (
-          <Camera num={index + 1} />
+        {userCameras.map((person) => (
+          <Camera
+            nickname={person.nickName}
+            asker={asker}
+            setAsker={setAsker}
+            answerer={answerer}
+            setAnswerer={setAnswerer}
+            key={person.nickName}
+          />
         ))}
       </VideoContainer>
     </GameEntireContainer>

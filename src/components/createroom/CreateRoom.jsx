@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { getRoomInfo } from '../../redux/modules/roomSlice';
 import { socket } from '../../shared/socket';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
@@ -10,6 +12,7 @@ import CreateRoomTextInput from './CreateRoomTextInput';
 import CreateRoomCheckBox from './CreateRoomCheckBox';
 
 const CreateRoom = ({ closeModal }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   //모달창 닫기
   const closeBtnHandler = () => {
@@ -82,6 +85,7 @@ const CreateRoom = ({ closeModal }) => {
               setTimeout(() => {
                 console.log(values);
                 socket.emit('createRoom', values.gameMode, values.roomTitle);
+                socket.on('createRoom', (room) => dispatch(getRoomInfo(room)));
                 socket.on('createRoom', (room) =>
                   navigate(`/room/${room._id}`)
                 );
