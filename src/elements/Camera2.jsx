@@ -2,14 +2,12 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import arrestedstamp from '../img/arrested.png';
-import { choiceAsker } from '../redux/modules/gameSlice';
+import { choiceAsker, choiceAnswerer } from '../redux/modules/gameSlice';
 
 const Camera = ({ ...props }) => {
   const dispatch = useDispatch();
   const asker = useSelector((state) => state.game.asker);
-  // const arrestedToggle = () => {
-  // setStamp(person);
-  //  };
+  const answerer = useSelector((state) => state.game.answerer);
 
   useEffect(() => {
     if (props.nickname === '승훈') {
@@ -23,17 +21,18 @@ const Camera = ({ ...props }) => {
     if (asker === props.nickname) {
       return;
     } else {
-      console.log(props.nickname);
+      dispatch(choiceAnswerer(props.nickname));
     }
   };
+  console.log(answerer);
   return (
     <div>
-      {asker ? (
-        <Wrap onClick={talker}>
+      {asker === props.nickname ? (
+        <Wrap onClick={talker} borderColor="#ff8217">
           <NickName>{props.nickname}</NickName>
         </Wrap>
       ) : (
-        <Wrap>
+        <Wrap onClick={talker}>
           <NickName>{props.nickname}</NickName>
         </Wrap>
       )}
@@ -44,15 +43,15 @@ const Camera = ({ ...props }) => {
 export default Camera;
 
 const Wrap = styled.div`
-  min-width: 12.75rem;
+  width: 12.75rem;
   min-height: 10.25rem;
   background-color: #e8e8e8;
   border-radius: 5px;
   display: flex;
   flex-direction: row-reverse;
-  border: 1px solid #2b2b2b;
+  border: 1px solid;
+  border-color: ${(props) => props.borderColor || '#2b2b2b'};
   cursor: pointer;
-  /* ${(props) => props.arrested && `position:relative`} */
   pointer-events: ${(props) => (props.asker === true ? 'none' : '')};
   position: relative;
 `;

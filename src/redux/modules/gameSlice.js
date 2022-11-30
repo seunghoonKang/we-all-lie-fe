@@ -12,8 +12,11 @@ const gameSlice = createSlice({
     choiceAsker: (state, action) => {
       state.asker = action.payload;
     },
+    choiceAnswerer: (state, action) => {
+      state.answerer = action.payload;
+    },
   },
 });
 
-export const { choiceAsker } = gameSlice.actions;
+export const { choiceAsker, choiceAnswerer } = gameSlice.actions;
 export default gameSlice.reducer;

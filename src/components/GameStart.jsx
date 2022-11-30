@@ -7,7 +7,8 @@ import Timer from './gamestart/Timer';
 import { ReactComponent as Megaphone } from '../assets/megaphone.svg';
 import { ReactComponent as VoteIcon } from '../assets/voteIcon.svg';
 import { useNavigate, useParams } from 'react-router-dom';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { choiceAsker, choiceAnswerer } from '../redux/modules/gameSlice';
 /* 
 1. spy랜덤 지정
 어떤 닉네임의 배열이 있다면 (ex. members=['홍길동','키티','반페르시','반다이크']), 배열의.length (4)가 총 인원수가 되겠다.
@@ -28,10 +29,11 @@ const citizens = members.filter((member) => member != SpyNickname);
 */
 
 const GameStart = () => {
-  const [answerer, setAnswerer] = useState(false);
-  const [asker, setAsker] = useState(false);
   const [disabledBtn, setDisabledBtn] = useState('투표준비');
   const navigate = useNavigate();
+  const asker = useSelector((state) => state.game.asker);
+  const answerer = useSelector((state) => state.game.answerer);
+
   useEffect(() => {
     const checkNotDisabledBtn = setTimeout(() => {
       setDisabledBtn('투표하기');
@@ -70,8 +72,13 @@ const GameStart = () => {
             <MegaphoneDiv>
               <Megaphone width="15" height="13" fill="none" />
             </MegaphoneDiv>
-
-            <div>[게으른 토끼] 가 [말많은 호랑이] 에게 질문합니다.</div>
+            {answerer === '' ? (
+              <div>[{asker}] (이)가 질문하고 싶은 유저를 찾고 있습니다.</div>
+            ) : (
+              <div>
+                [{asker}] (이)가 [{answerer}] 에게 질문합니다.
+              </div>
+            )}
           </div>
           <div className="flex gap-[6px]">
             <VoteIconDiv>
@@ -175,6 +182,8 @@ const VideoContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  min-height: 384px;
+  height: 50vh;
   gap: 16px 16px;
   padding: 16px;
   background-color: white;
