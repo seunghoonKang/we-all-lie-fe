@@ -22,8 +22,8 @@ const GameVote = () => {
   });
 
   return (
-    <Layout>
-      <HeaderSection theme={themeContext}>
+    <Layout theme={themeContext}>
+      <HeaderSection>
         <HeaderTitle>
           📌 모든 유저가 투표를 완료하면 스파이의 정체가 공개됩니다!
         </HeaderTitle>
@@ -36,12 +36,11 @@ const GameVote = () => {
         <Timer>00:45</Timer>
       </Vote>
       <Users userLength={userLength}>
-        {userCameras.map((person, index) => (
+        {userCameras.map((person) => (
           // <User onClick={arrestedToggle} key={index} value={index}>
           <Camera
             person={person.nickName}
             key={person.nickName}
-            index={index}
             stamp={stamp}
             setStamp={setStamp}
           />
@@ -126,30 +125,33 @@ const User = styled.div``;
 const Users = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between; //가로 띄우기
-  align-content: space-between; //세로 띄우기
+  justify-content: space-evenly; //가로 띄우기
+  align-content: space-evenly; //세로 띄우기
+  width: 100%;
   min-height: 384px;
   height: 50vh;
-  gap: 16px;
-  padding: 16px;
+  /* gap: 16px; */
+  /* padding: 16px; */
   background-color: white;
   ${User} {
-    width: 204px;
-    height: 164px;
-    /* width: 100%; */
+    width: 25%;
+    /* width: 204px;
+    height: 164px; */
+    /* width: 100%;
+    height: auto; */
     position: relative;
     /* background-color: green; */
   }
 `;
-const Arrested = styled.div`
-  ${(props) =>
-    props.arrested
-      ? `position:absolute; top:30px; left:20px; z-index:999;`
-      : `display:none;`}
-`;
+// const Arrested = styled.div`
+//   ${(props) =>
+//     props.arrested
+//       ? `position:absolute; top:30px; left:20px; z-index:999;`
+//       : `display:none;`}
+// `;
 
-const Examples = styled.div`
-  width: 100%;
-  min-height: 384px;
-  background-color: white;
-`;
+// const Examples = styled.div`
+//   width: 100%;
+//   min-height: 384px;
+//   background-color: white;
+// `;
