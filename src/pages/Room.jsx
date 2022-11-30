@@ -48,8 +48,8 @@ const Room = () => {
         <Box>
           <Game>
             <GameReady />
-            {/* <GameStart />
-            <GameVote /> */}
+            {/* <GameStart /> */}
+            {/* <GameVote /> */}
           </Game>
 
           <Chat />

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import arrestedstamp from '../img/arrested.png';
 
-const Camera = () =>
+const Camera = ({ person }) =>
   // { person, index, stamp, setStamp }
   {
     // const arrestedToggle = () => {
@@ -16,10 +16,7 @@ const Camera = () =>
         <Wrap
         // onClick={arrestedToggle}
         >
-          <NickName>
-            무서운 승짱
-            {/* {person} */}
-          </NickName>
+          <NickName>{person}</NickName>
           {/* {stamp === person && (
           <Arrested>
             <img src={arrestedstamp} alt="투표 지목된 사람" />

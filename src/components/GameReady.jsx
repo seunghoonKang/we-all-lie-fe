@@ -1,14 +1,22 @@
 import styled from 'styled-components';
 // import ReadyUsers from './gameready/ReadyUsers';
 import ReadyButton from './gameready/ReadyButton';
+import HeaderSection from './gameready/HeaderSection';
 import Camera from '../elements/Camera';
 import { useState } from 'react';
 import ReadyHeader from './gameready/ReadyHeader';
 import { ReactComponent as Ready } from '../assets/r_eady.svg';
+import { useCookies } from 'react-cookie';
+import { useParams } from 'react-router-dom';
+import { socket } from '../shared/socket';
 
-const GameReady = () => {
+const GameReady = ({}) => {
+  const [ready, useReady] = useState(false);
+  const [cookies, setCookies] = useCookies(['nickname']);
+  const param = useParams();
+
   const userCameras = [
-    { nickName: 'a' },
+    { nickName: cookies.nickname },
     { nickName: 'b' },
     { nickName: 'c' },
     { nickName: 'd' },
@@ -18,12 +26,11 @@ const GameReady = () => {
     { nickName: 'h' },
   ];
   const userLength = userCameras.length;
-  const [ready, useReady] = useState(false);
-
   //방번호를 주면 소켓에 닉네임 들어있음 레디를 안누른 사람이 눌렀을때
   //레디 버튼 누른 사람 닉네임
   //어떤 닉네임을 가진 사람이 true 값으로 바꾼것만 보내면 될듯
   const ReadyHendler = () => {
+    socket.emit('ready', param.id);
     useReady(!ready);
   };
   return (
@@ -37,10 +44,7 @@ const GameReady = () => {
         }}
       >
         <ReadyHeader />
-        <RoomNameLayout>
-          <RoomNumber>{String(3).padStart(3, '00')}</RoomNumber>
-          <RoomInitials>무서운 사자가 만든 무서운 방</RoomInitials>
-        </RoomNameLayout>
+        <HeaderSection />
 
         <ReadyButtonSection>
           <h1>준비 버튼을 클릭하세요 ! </h1>
@@ -58,21 +62,17 @@ const GameReady = () => {
               key={person.nickName}
               index={index}
             />
-          ) : (
+          ) : cookies.nickname === person.nickName ? (
             <ReadyWrap>
               {/* <img
                 // style={{ transform: 'scale(0.3)' }}
                 src="/img/ready.png"
               ></img> */}
               <Ready />
-              <ReadyNickName
-                person={person.nickName}
-                key={person.nickName}
-                index={index}
-              >
-                게으른 뀨띠
-              </ReadyNickName>
+              <ReadyNickName>{person.nickName}</ReadyNickName>
             </ReadyWrap>
+          ) : (
+            <Camera person={person.nickName} />
           )
         )}
       </Users>

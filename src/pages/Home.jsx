@@ -78,7 +78,7 @@ const Home = () => {
             </HeaderSection>
 
             {openModal ? (
-              <CreateRoom closeDescription={() => setOpenModal(!openModal)} />
+              <CreateRoom closeModal={() => setOpenModal(!openModal)} />
             ) : (
               <></>
             )}
