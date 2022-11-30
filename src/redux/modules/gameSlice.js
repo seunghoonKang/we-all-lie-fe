@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  asker: false,
-  answerer: false,
+  asker: '',
+  answerer: '',
 };
 
 const gameSlice = createSlice({

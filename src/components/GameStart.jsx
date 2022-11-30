@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Button from '../elements/Button';
-import Camera from '../elements/Camera';
+import Camera from '../elements/Camera2';
 import { socket } from '../shared/socket';
 import Timer from './gamestart/Timer';
 import { ReactComponent as Megaphone } from '../assets/megaphone.svg';
+import { ReactComponent as VoteIcon } from '../assets/voteIcon.svg';
 import { useNavigate, useParams } from 'react-router-dom';
 
 /* 
@@ -62,20 +63,28 @@ const GameStart = () => {
   ];
 
   return (
-    <GameEntireContainer>
+    <>
       <HeaderSection>
         <HeaderTitle>
-          <MegaphoneDiv>
-            <Megaphone width="15" height="13" fill="none" />
-          </MegaphoneDiv>
-          <Timer min="8" />
-          <div>[게으른 토끼] 가 [말많은 호랑이] 에게 질문합니다.</div>
+          <div className="flex">
+            <MegaphoneDiv>
+              <Megaphone width="15" height="13" fill="none" />
+            </MegaphoneDiv>
+
+            <div>[게으른 토끼] 가 [말많은 호랑이] 에게 질문합니다.</div>
+          </div>
+          <div className="flex gap-[6px]">
+            <VoteIconDiv>
+              <VoteIcon width="16" height="16" fill="none" />
+            </VoteIconDiv>
+            <div className=" pr-2">3/7</div>
+          </div>
         </HeaderTitle>
         <Button
           type={'button'}
           addStyle={{
             backgroundColor: '#2B2B2B',
-            borderRadius: '6px',
+            borderRadius: '10px 10px 0 0',
             width: '113px',
             height: '40px',
             color: '#fff',
@@ -86,44 +95,50 @@ const GameStart = () => {
           {disabledBtn}
         </Button>
       </HeaderSection>
-      <GameCardSection>
-        <Question>
-          <div>
-            <p className=" font-semibold text-[22px]">질문할 차례입니다!</p>
-          </div>
-          <div>
-            <p>질문하고 싶은 유저의 화면을 클릭하세요.</p>
-          </div>
-          <Button type={'button'} addStyle={{}} doong>
-            테스트
-          </Button>
-          <TimeRemaining>
-            <Timer sec="45" onClick={(e) => console.log(e)} />
-          </TimeRemaining>
-        </Question>
-        <CorrectCard>
-          <p>영화관</p>
-        </CorrectCard>
-      </GameCardSection>
-      <VideoContainer>
-        {userCameras.map((person) => (
-          <Camera
-            nickname={person.nickName}
-            asker={asker}
-            setAsker={setAsker}
-            answerer={answerer}
-            setAnswerer={setAnswerer}
-            key={person.nickName}
-          />
-        ))}
-      </VideoContainer>
-    </GameEntireContainer>
+      <GameEntireContainer>
+        <GameCardSection>
+          <Question>
+            <TimerDiv>
+              <Timer min="8" />
+            </TimerDiv>
+            <div className="mt-[77px] pl-[37px]">
+              <div>
+                <p className=" font-semibold text-[22px]">질문할 차례입니다!</p>
+              </div>
+              <div>
+                <p>질문하고 싶은 유저의 화면을 클릭하세요.</p>
+              </div>
+            </div>
+            {/* <Button type={'button'} addStyle={{}} doong>
+              테스트
+            </Button>
+            <TimeRemaining>
+              <Timer sec="45" onClick={(e) => console.log(e)} />
+            </TimeRemaining> */}
+          </Question>
+          <CorrectCard>
+            <CorrectAnswer>
+              <p>카지노/카지노 딜러</p>
+            </CorrectAnswer>
+            <IllustSection>
+              <p>일러스트</p>
+            </IllustSection>
+          </CorrectCard>
+        </GameCardSection>
+        <VideoContainer>
+          {userCameras.map((person) => (
+            <Camera nickname={person.nickName} key={person.nickName} />
+          ))}
+        </VideoContainer>
+      </GameEntireContainer>
+    </>
   );
 };
 
 const GameEntireContainer = styled.div`
   width: 100%;
-  position: relative;
+  height: 86vh;
+  background-color: #fff;
 `;
 
 const HeaderSection = styled.section`
@@ -131,24 +146,29 @@ const HeaderSection = styled.section`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  position: absolute;
-  top: 16px;
   z-index: 999;
-  gap: 10px;
 `;
 
 const HeaderTitle = styled.div`
   display: flex;
   align-items: center;
-  border-radius: 10px;
-  background-color: #ff8217;
+  justify-content: space-between;
+  border-radius: 10px 10px 0 0;
+  background-color: #fff;
   height: 40px;
   width: 97%;
 `;
 
 const MegaphoneDiv = styled.div`
+  display: flex;
+  align-items: center;
   margin-left: 16px;
   margin-right: 8px;
+`;
+
+const VoteIconDiv = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const VideoContainer = styled.div`
@@ -166,30 +186,64 @@ const GameCardSection = styled.section`
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding-top: 67px;
   margin-bottom: 16px;
+  gap: 16px;
+`;
+
+const TimerDiv = styled.div`
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding-left: 34px;
+  width: 100%;
+  height: 40px;
+  border-radius: 6px;
+  color: #fff;
+  background-color: #222;
+`;
+
+const CorrectAnswer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  padding-left: 34px;
+  width: 100%;
+  height: 40px;
+  border-radius: 6px 6px 0 0;
+  background-color: #f5f5f5;
 `;
 
 const CorrectCard = styled.div`
-  width: 27.625rem;
-  height: 13.75rem;
+  width: 26.5rem;
+  height: 14.5625rem;
   background-color: #fff;
   border-radius: 10px;
   display: flex;
-  justify-content: center;
-  align-items: end;
+  flex-direction: column;
   flex-grow: 1;
+  padding-top: 15px;
+  padding-right: 18px;
 `;
 
 const Question = styled.div`
-  width: 27.625rem;
-  height: 13.75rem;
+  width: 26.5rem;
+  height: 14.5625rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   margin-left: 16px;
   flex-grow: 1;
+  padding-top: 15px;
+`;
+
+const IllustSection = styled.div`
+  width: 100%;
+  height: 12.0625rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #dfdfdf;
 `;
 
 const TimeRemaining = styled.div`

@@ -68,11 +68,7 @@ const Home = () => {
               <LogoImg>
                 <WeAllLieLogo />
               </LogoImg>
-              <MakeRoomBtn
-                onClick={() => {
-                  setOpenModal(!openModal);
-                }}
-              >
+              <MakeRoomBtn onClick={() => setOpenModal(!openModal)}>
                 방 만들기
               </MakeRoomBtn>
             </HeaderSection>

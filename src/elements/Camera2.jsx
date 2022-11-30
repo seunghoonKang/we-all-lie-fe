@@ -6,33 +6,35 @@ import { choiceAsker } from '../redux/modules/gameSlice';
 
 const Camera = ({ ...props }) => {
   const dispatch = useDispatch();
-  //const asker = useSelector((state) => state.game.asker);
+  const asker = useSelector((state) => state.game.asker);
   // const arrestedToggle = () => {
   // setStamp(person);
   //  };
 
   useEffect(() => {
     if (props.nickname === '승훈') {
-      //dispatch(choiceAsker(true));
-      props.setAsker(props.nickname);
+      dispatch(choiceAsker(props.nickname));
     }
   }, []);
 
   console.log(props);
+  console.log(asker);
   const talker = () => {
-    if (props.asker === '승훈') {
+    if (asker === props.nickname) {
+      return;
+    } else {
       console.log(props.nickname);
     }
   };
   return (
     <div>
-      {props.asker ? (
-        <Wrap onClick={talker} asker>
-          <NickName>질문자</NickName>
+      {asker ? (
+        <Wrap onClick={talker}>
+          <NickName>{props.nickname}</NickName>
         </Wrap>
       ) : (
         <Wrap>
-          <NickName>무서운 승짱</NickName>
+          <NickName>{props.nickname}</NickName>
         </Wrap>
       )}
     </div>
@@ -42,8 +44,8 @@ const Camera = ({ ...props }) => {
 export default Camera;
 
 const Wrap = styled.div`
-  width: 204px;
-  height: 164px;
+  min-width: 12.75rem;
+  min-height: 10.25rem;
   background-color: #e8e8e8;
   border-radius: 5px;
   display: flex;
@@ -56,13 +58,13 @@ const Wrap = styled.div`
 `;
 
 const NickName = styled.div`
-  width: 204px;
-  height: 28px;
+  min-width: 12.75rem;
+  min-height: 28px;
   background-color: #2b2b2b;
   color: white;
   align-self: flex-end;
   text-align: center;
-  border-radius: 0px 0px 5px 5px;
+  border-radius: 0px 0px 1px 1px;
 `;
 
 const Arrested = styled.div`
