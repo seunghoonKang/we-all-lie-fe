@@ -15,7 +15,7 @@ const HeaderSection = () => {
 export default HeaderSection;
 
 const RoomNameLayout = styled.div`
-  background-color: #cfcfcf;
+  background-color: #222222;
   display: flex;
   justify-content: space-around;
   width: 100%;
@@ -25,7 +25,6 @@ const RoomNumber = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: black;
   color: #ffffff;
   align-content: center;
   min-width: 6%;
@@ -39,7 +38,6 @@ const RoomNumber = styled.div`
 const RoomInitials = styled.div`
   display: flex;
   align-items: center;
-  background-color: #222222;
   color: #ffffff;
   width: 90%;
   min-height: 40px;

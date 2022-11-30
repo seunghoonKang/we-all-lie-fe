@@ -25,11 +25,11 @@ const ReadyHeader = () => {
       <Button
         type={'button'}
         addStyle={{
-          backgroundColor: '#2B2B2B',
+          backgroundColor: '#A5A5A5',
           borderRadius: '6px',
           width: '113px',
           height: '40px',
-          color: '#fff',
+          color: '#222222',
         }}
         onClick={BtnHandler}
       >
@@ -46,7 +46,7 @@ const Section = styled.section`
   justify-content: space-between;
   align-items: center;
   height: 71px;
-  background-color: #cfcfcf;
+  background-color: #222222;
 `;
 
 const LogoImg = styled.div`
