@@ -8,7 +8,6 @@ import { ReactComponent as Megaphone } from '../assets/megaphone.svg';
 import { ReactComponent as VoteIcon } from '../assets/voteIcon.svg';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { choiceAsker, choiceAnswerer } from '../redux/modules/gameSlice';
 /* 
 1. spy랜덤 지정
 어떤 닉네임의 배열이 있다면 (ex. members=['홍길동','키티','반페르시','반다이크']), 배열의.length (4)가 총 인원수가 되겠다.
@@ -105,9 +104,13 @@ const GameStart = () => {
       <GameEntireContainer>
         <GameCardSection>
           <Question>
-            <TimerDiv>
-              <Timer min="8" />
-            </TimerDiv>
+            <TimerContainer>
+              <TimerDiv>
+                <MinWidthTimerDiv>
+                  <Timer min="8" />
+                </MinWidthTimerDiv>
+              </TimerDiv>
+            </TimerContainer>
             <div className="mt-[77px] pl-[37px]">
               <div>
                 <p className=" font-semibold text-[22px]">질문할 차례입니다!</p>
@@ -199,16 +202,43 @@ const GameCardSection = styled.section`
   gap: 16px;
 `;
 
+const TimerContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 40px;
+  background-color: #f5f5f5;
+`;
+
 const TimerDiv = styled.div`
   display: flex;
   align-items: center;
-  position: relative;
-  padding-left: 34px;
+  position: absolute;
   width: 100%;
   height: 40px;
   border-radius: 6px;
   color: #fff;
   background-color: #222;
+  animation-name: progressTimeBar;
+  animation-duration: 10s;
+  animation-iteration-count: 1;
+  animation-direction: reverse;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+
+  @keyframes progressTimeBar {
+    from {
+      width: 0%;
+      background-color: red;
+    }
+    to {
+      width: 100%;
+    }
+  }
+`;
+
+const MinWidthTimerDiv = styled.div`
+  min-width: 70px;
+  margin-left: 37px;
 `;
 
 const CorrectAnswer = styled.div`
@@ -253,16 +283,6 @@ const IllustSection = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #dfdfdf;
-`;
-
-const TimeRemaining = styled.div`
-  width: 12.5rem;
-  height: 2.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid black;
-  margin-top: 5px;
 `;
 
 export default GameStart;
