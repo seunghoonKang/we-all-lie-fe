@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import Header from '../../elements/Header';
 import Button from '../../elements/Button';
 import { useNavigate, useParams } from 'react-router-dom';
 import { socket } from '../../shared/socket';
+import { ReactComponent as WeAllLieLogo } from '../../assets/we_all_lie_white_logo.svg';
 
 const ReadyHeader = () => {
   const param = useParams();
@@ -19,17 +19,17 @@ const ReadyHeader = () => {
 
   return (
     <Section>
-      <HeaderTitle>
-        <Header />
-      </HeaderTitle>
+      <LogoImg>
+        <WeAllLieLogo />
+      </LogoImg>
       <Button
         type={'button'}
         addStyle={{
-          backgroundColor: '#2B2B2B',
+          backgroundColor: '#A5A5A5',
           borderRadius: '6px',
           width: '113px',
           height: '40px',
-          color: '#fff',
+          color: '#222222',
         }}
         onClick={BtnHandler}
       >
@@ -46,9 +46,9 @@ const Section = styled.section`
   justify-content: space-between;
   align-items: center;
   height: 71px;
-  background-color: #cfcfcf;
+  background-color: #222222;
 `;
 
-const HeaderTitle = styled.div`
+const LogoImg = styled.div`
   margin-left: 16px;
 `;
