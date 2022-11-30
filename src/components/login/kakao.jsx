@@ -18,15 +18,17 @@ const Kakao = () => {
     try {
       const res = await axios.get(
         `https://minhyeongi.xyz/api/auth/kakao/callback?code=${code}`
+        //`http://3.36.1.72/api/auth/kakao/callback?code=${code}`
       );
       const kakaoToken = res.data.accessToken;
-      console.log(kakaoToken);
-      localStorage.setItem('kakaotoken', kakaoToken);
       if (res.status === 200) {
         const res2 = await axios.post(
           `https://minhyeongi.xyz/api/auth/kakao/callback?code=${code}`,
+
+          //`http://3.36.1.72/api/auth/kakao/callback?code=${code}`,
           {
             kakaoToken, //카카오 토큰
+            withCredentials: true,
           },
           {
             headers: {
@@ -41,6 +43,7 @@ const Kakao = () => {
           path: '/',
           secure: true,
           sameSite: 'none',
+          // httpOnly: true, 서버에서만 설정이 가능함
         });
         // console.log(cookies);
         if (res2.status == 200) {
