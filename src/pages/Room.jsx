@@ -47,8 +47,9 @@ const Room = () => {
         <Notice />
         <Box>
           <Game>
-            <GameReady />
-            {/* <GameStart /> */}
+            {/* 본인 컴포넌트말고 주석하면 돼용 */}
+            {/* <GameReady /> */}
+            <GameStart />
             {/* <GameVote /> */}
           </Game>
 
