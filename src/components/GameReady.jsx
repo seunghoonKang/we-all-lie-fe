@@ -61,14 +61,7 @@ const GameReady = () => {
 
   return (
     <ReadyLayout>
-      <div
-        style={{
-          height: '40vh',
-          minHeight: '280px',
-          //  min-height: 280px;
-          //height: 40vh;
-        }}
-      >
+      <div>
         <ReadyHeader />
         <HeaderSection />
 
@@ -115,22 +108,28 @@ export default GameReady;
 
 const ReadyLayout = styled.div`
   width: 100%;
-  height: 100%;
+  //height: 100%;
+  height: 90vh;
+  min-height: 650px;
   background-color: white;
   border-radius: 5px;
 `;
 
 const ReadyButtonSection = styled.div`
   /* background-color: #4f9c64; */
-  margin: 1.5%;
-  padding: 3%;
-  background-color: #f5f5f5;
+  min-height: 160px;
+  height: 22vh;
+  margin: 1vh 1.5%;
+  padding: 2vh 3%;
+  //background-color: #f5f5f5;
+  background-color: ${(props) => props.theme.color.gray1};
   border-radius: 5px;
   display: flex;
   flex-direction: column;
   //margin: 2vh auto; //50px auto 에서 변경
-  align-items: flex-start;
-  gap: 10px;
+  align-items: flex;
+  /* gap: 10px; */
+  gap: 2vh;
   h1 {
     /* background-color: white; */
     font-size: 22px;
@@ -140,28 +139,35 @@ const ReadyButtonSection = styled.div`
     /* background-color: pink; */
     font-size: 16px;
     color: #2b2b2b;
-    margin: 0px 0px 10px; //27px -> 20px
+    margin: 0px 0px 1vh; //27px -> 20px
   }
 `;
 
 const Users = styled.div`
-  display: flex;
+  /* display: flex;
   justify-content: space-between;
   align-content: space-between;
   flex-wrap: wrap;
-  justify-content: space-between;
-  align-content: space-between;
+  justify-content: space-evenly;
+  align-content: space-evenly;
   gap: 16px 16px;
   border-radius: 5px;
   padding: 16px;
   background-color: white;
   min-height: 384px;
+  height: 50vh; */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly; //가로 띄우기
+  align-content: space-evenly; //세로 띄우기
+  width: 100%;
   height: 50vh;
+  min-height: 312px;
 `;
 
 const ReadyWrap = styled.div`
-  width: 204px;
-  height: 164px;
+  width: 24%;
+  height: 45%;
   background-color: #e8e8e8;
   border-radius: 5px;
   display: flex;
@@ -169,12 +175,12 @@ const ReadyWrap = styled.div`
   justify-content: space-between;
   img {
     align-self: flex-start;
-    margin: 5px;
+    /* margin: 5px; */
   }
 `;
 
 const ReadyNickName = styled.div`
-  width: 202px;
+  width: 100%;
   height: 28px;
   background-color: #222222;
   color: white;
