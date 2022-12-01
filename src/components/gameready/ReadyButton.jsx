@@ -14,13 +14,14 @@ export default ReadyButton;
 const StyledButton = styled.button`
   width: 200px;
   height: 40px;
-  background-color: #ff8217;
+  background-color: #f5f5f5;
   border-radius: 6px;
-  color: #1f1f1f;
+  color: #ff8217;
   font-weight: 500;
+  border: 1px solid #ff8217;
   &:hover {
     transition: 0.3s ease-in-out;
-    background-color: #1f1f1f;
+    background-color: #ff8217;
     color: #ffffff;
   }
   &:not(:hover) {
