@@ -2,48 +2,43 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import arrestedstamp from '../img/arrested.png';
 
-const Camera = ({ person }) =>
-  // { person, index, stamp, setStamp }
+const Camera = ({ person, stamp, setStamp }) =>
+  // { person, stamp, setStamp }
   {
-    // const arrestedToggle = () => {
-    //   console.log(index);
-    //   setStamp(person);
-    // };
-    // console.log(person);
-    // console.log(index);
+    const arrestedToggle = () => {
+      setStamp(person);
+    };
+    console.log(person);
+
     return (
-      <div>
-        <Wrap
-        // onClick={arrestedToggle}
-        >
-          <NickName>{person}</NickName>
-          {/* {stamp === person && (
+      <Wrap onClick={arrestedToggle}>
+        <NickName>{person}</NickName>
+        {stamp === person && (
           <Arrested>
             <img src={arrestedstamp} alt="투표 지목된 사람" />
           </Arrested>
-        )} */}
-        </Wrap>
-      </div>
+        )}
+      </Wrap>
     );
   };
 
 export default Camera;
 
 const Wrap = styled.div`
-  width: 204px;
-  height: 164px;
+  /* width: 204px; */
+  width: 24%;
+  height: 45%;
   background-color: #e8e8e8;
   border-radius: 5px;
   display: flex;
   flex-direction: row-reverse;
-  /* border: 1px solid #2b2b2b; */
   cursor: pointer;
-  /* ${(props) => props.arrested && `position:relative`} */
   position: relative;
 `;
 
 const NickName = styled.div`
-  width: 204px;
+  /* width: 204px; */
+  width: 100%;
   height: 28px;
   background-color: #dfdfdf;
   color: #2b2b2b;
@@ -54,12 +49,12 @@ const NickName = styled.div`
 `;
 
 const Arrested = styled.div`
+  width: 100%;
+  height: 100%;
   position: absolute;
-  top: 50px;
-  left: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-25%);
+  margin-left: -80px;
   z-index: 999;
-  /* ${(props) =>
-    props.arrested
-      ? `position:absolute; top:50px; left:20px; z-index:999;`
-      : `display:none;`} */
 `;

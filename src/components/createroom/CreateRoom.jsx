@@ -93,7 +93,7 @@ const CreateRoom = ({ closeModal }) => {
                   navigate(`/room/${room._id}`)
                 );
                 setSubmitting(false);
-              }, 400);
+              }, 100);
             }}
           >
             <Form className=" flex flex-col pt-[17px] w-full">
