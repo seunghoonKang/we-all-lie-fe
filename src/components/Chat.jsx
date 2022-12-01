@@ -63,11 +63,6 @@ const Chat = () => {
     socket.emit('enterLobby', nickname, () => {
       setChat([...chat, { notice: `${nickname} 님이 입장하셨습니다` }]);
     });
-    // //남이 보낸 msg
-    // socket.on('receiveLobbyMsg', (msg) => {
-    //   // console.log(msg);
-    //   setChat([...chat, msg]);
-    // });
   }, []);
 
   //남이 보낸 msg
