@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Camera from '../elements/Camera2';
 import { socket } from '../shared/socket';
 import Timer from '../elements/Timer';
 import GameStartHeader from './gamestart/GameStartHeader';
+import { useNavigate } from 'react-router-dom';
 
 const GameStart = () => {
   const userCameras = [
@@ -22,8 +23,23 @@ const GameStart = () => {
   const answerWord = useSelector((state) => state.game.answerWord);
   const category = useSelector((state) => state.game.category);
   const spy = useSelector((state) => state.game.spy);
-
+  const navigate = useNavigate();
   console.log(words, answerWord, category, spy);
+
+  /* 시간 다되면 알아서 투표페이지로 이동하기
+  const votePage = () =>
+    setTimeout(() => {
+      alert('시간이 다 되어 투표페이지로 이동합니다.');
+      navigate('/home');
+    }, 10000);
+
+  useEffect(() => {
+    votePage();
+    return () => {
+      clearTimeout(votePage);
+    };
+  }, []);
+ */
 
   return (
     <>
