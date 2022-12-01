@@ -124,9 +124,6 @@ const Users = styled.div`
   justify-content: space-evenly; //가로 띄우기
   align-content: space-evenly; //세로 띄우기
   width: 100%;
-  /* min-height: 384px; */
-  /* min-height: 400px; */
   height: 50vh;
   min-height: 312px;
-  /* background-color: pink; */
 `;

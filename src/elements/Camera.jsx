@@ -28,13 +28,10 @@ const Wrap = styled.div`
   /* width: 204px; */
   width: 24%;
   height: 45%;
-  /* min-height: 164px; */
-  /* height: auto; */
   background-color: #e8e8e8;
   border-radius: 5px;
   display: flex;
   flex-direction: row-reverse;
-  /* border: 1px solid #2b2b2b; */
   cursor: pointer;
   position: relative;
 `;
