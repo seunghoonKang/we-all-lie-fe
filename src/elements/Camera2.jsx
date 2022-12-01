@@ -23,7 +23,7 @@ const Camera = ({ ...props }) => {
     }
   };
   return (
-    <div>
+    <>
       {asker === props.nickname ? (
         <Wrap onClick={talker} borderColor="#ff8217">
           <NickName>{props.nickname}</NickName>
@@ -33,20 +33,19 @@ const Camera = ({ ...props }) => {
           <NickName>{props.nickname}</NickName>
         </Wrap>
       )}
-    </div>
+    </>
   );
 };
 
 export default Camera;
 
 const Wrap = styled.div`
-  width: 12.75rem;
-  min-height: 10.25rem;
+  width: 24%;
+  height: 45%;
   background-color: #e8e8e8;
   border-radius: 5px;
   display: flex;
   flex-direction: row-reverse;
-  border: 1px solid;
   border-color: ${(props) => props.borderColor || '#2b2b2b'};
   cursor: pointer;
   pointer-events: ${(props) => (props.asker === true ? 'none' : '')};
@@ -54,22 +53,12 @@ const Wrap = styled.div`
 `;
 
 const NickName = styled.div`
-  min-width: 12.75rem;
-  min-height: 28px;
-  background-color: #2b2b2b;
-  color: white;
+  width: 100%;
+  height: 28px;
+  background-color: #dfdfdf;
+  color: #2b2b2b;
+  font-weight: 600;
   align-self: flex-end;
   text-align: center;
-  border-radius: 0px 0px 1px 1px;
-`;
-
-const Arrested = styled.div`
-  position: absolute;
-  top: 50px;
-  left: 20px;
-  z-index: 999;
-  /* ${(props) =>
-    props.arrested
-      ? `position:absolute; top:50px; left:20px; z-index:999;`
-      : `display:none;`} */
+  border-radius: 0px 0px 5px 5px;
 `;
