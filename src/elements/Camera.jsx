@@ -26,7 +26,7 @@ const Wrap = styled.div`
   /* width: 204px; */
   width: 24%;
   height: 45%;
-  min-height: 164px;
+  /* min-height: 164px; */
   /* height: auto; */
   background-color: #e8e8e8;
   border-radius: 5px;
@@ -49,8 +49,11 @@ const NickName = styled.div`
 `;
 
 const Arrested = styled.div`
+  width: 100%;
+  height: 100%;
   position: absolute;
-  top: 50px;
-  left: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-37%, -25%);
   z-index: 999;
 `;
