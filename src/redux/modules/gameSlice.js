@@ -32,6 +32,7 @@ const initialState = {
   ],
   answerWord: '골프',
   category: '스포츠',
+  spy: '승훈',
 };
 
 const gameSlice = createSlice({

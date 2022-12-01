@@ -15,8 +15,6 @@ const Camera = ({ ...props }) => {
     }
   }, []);
 
-  console.log(props);
-  console.log(asker);
   const talker = () => {
     if (asker === props.nickname) {
       return;
@@ -24,7 +22,6 @@ const Camera = ({ ...props }) => {
       dispatch(choiceAnswerer(props.nickname));
     }
   };
-  console.log(answerer);
   return (
     <div>
       {asker === props.nickname ? (
