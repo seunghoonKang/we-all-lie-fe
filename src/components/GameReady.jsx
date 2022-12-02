@@ -8,13 +8,19 @@ import { ReactComponent as Ready } from '../assets/r_eady.svg';
 import { useCookies } from 'react-cookie';
 import { useParams } from 'react-router-dom';
 import { socket } from '../shared/socket';
+import { useSelector } from 'react-redux';
 
 const GameReady = () => {
   const [ready, useReady] = useState(false);
+  const userNickname = useSelector((state) => state.room);
   const [pendingReady, setPendingReady] = useState([]);
   const [cookies] = useCookies(['nickname']);
   const param = useParams();
+  // const dispatch = useDispatch();
+  console.log('받아오는 닉네임 확인', userNickname);
 
+  //console.log(people);
+  console.log(pendingReady);
   const ReadyHandler = () => {
     socket.emit('ready', param.id);
     useReady(!ready);
@@ -24,36 +30,54 @@ const GameReady = () => {
     setPendingReady([
       ...pendingReady,
       { nickname: `${nic}`, boolkey: `${bool}` },
+      // { nickname: 123, boolkey: true },
     ]);
     console.log('받아오는 pendingReady 값 확인', pendingReady);
+    // console.log('쫄았냐?', pendingReady[0]?.nickname);
+    // console.log('타입', typeof pendingReady[0].nickname);
   });
-
-  // 가설 1 : 받아오는 닉네임 정보를 맵 돌린다. / 근데 맵 돌리니까 흰 화면 뜸 ;
 
   // pendingReady.map((h, i) => {
   //   console.log('들어온 사람~', h);
-  //   if (h.nickname !== h.nickname) {
-  //     const a = h.nickname;
-  //     console.log(a);
-  //   }
-  //   let obj = {};
-  //   obj['nickname'] = h.nickname;
-  //   obj['boolkey'] = h.boolkey;
-  //   console.log(obj);
+  //   setNewUser([...newUser, { nickname: `${h.nickname}` }]);
+  //   console.log(newUser);
   // });
 
   const userCameras = [
-    { nickName: cookies.nickname },
-    { nickName: 'b' },
-    { nickName: 'c' },
-    { nickName: 'd' },
-    { nickName: 'e' },
-    { nickName: 'f' },
-    { nickName: 'g' },
-    { nickName: 'h' },
+    //   { nickName: cookies.nickname },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
   ];
 
+  // userCameras.for((nickName) => {
+  //   if (nickName === '빈자리') {
+  //     nickName = pendingReady.nickname;
+  //     return;
+  //   }
+  // });
+
+  const ha = () => {
+    for (let step = 0; step < 8; step++) {
+      if (userCameras[step].nickName === '빈자리') {
+        userCameras[step].nickName = pendingReady?.nickname;
+        return;
+      }
+    }
+  };
+  ha();
+  console.log(userCameras);
+
   // const userLength = userCameras.length;
+
+  // useEffect(() => {
+  //   dispatch(checkPeople(cookies));
+  // }, [dispatch]);
 
   socket.on('gameStart', (gameStart) => {
     console.log('게임시작됐는지 확인', gameStart);
@@ -76,7 +100,9 @@ const GameReady = () => {
       <Users
       // userLength={userLength}
       >
-        {userCameras.map((person) =>
+        {/* 첫번째 방법 */}
+
+        {/* {userCameras.map((person) =>
           !ready ? (
             <Camera person={person.nickName} key={person.nickName} />
           ) : cookies.nickname === person.nickName ? (
@@ -87,7 +113,9 @@ const GameReady = () => {
           ) : (
             <Camera person={person.nickName} key={person.nickName} />
           )
-        )}
+        )} */}
+
+        {/* 두번째 방법  */}
 
         {/* {pendingReady.map((person, i) =>
           !ready ? (
@@ -99,6 +127,21 @@ const GameReady = () => {
             </ReadyWrap>
           )
         )} */}
+
+        {/* 세번쨰 방법 */}
+        {userCameras.map((person, i) =>
+          !ready ? (
+            <Camera person={person.nickName} key={i} />
+          ) : pendingReady.nickname === person.nickName ||
+            pendingReady.boolkey === 'true' ? (
+            <ReadyWrap person={person.nickName} key={i}>
+              <Ready />
+              <ReadyNickName>{person.nickName}</ReadyNickName>
+            </ReadyWrap>
+          ) : (
+            <Camera person={person.nickName} key={i} />
+          )
+        )}
       </Users>
     </ReadyLayout>
   );
