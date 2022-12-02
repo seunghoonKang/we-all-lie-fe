@@ -12,15 +12,12 @@ import { useSelector } from 'react-redux';
 
 const GameReady = () => {
   const [ready, useReady] = useState(false);
-  const userNickname = useSelector((state) => state.room);
   const [pendingReady, setPendingReady] = useState([]);
   const [cookies] = useCookies(['nickname']);
   const param = useParams();
-  // const dispatch = useDispatch();
+  const userNickname = useSelector((state) => state.room.userNickname);
   console.log('받아오는 닉네임 확인', userNickname);
 
-  //console.log(people);
-  console.log(pendingReady);
   const ReadyHandler = () => {
     socket.emit('ready', param.id);
     useReady(!ready);
@@ -30,18 +27,8 @@ const GameReady = () => {
     setPendingReady([
       ...pendingReady,
       { nickname: `${nic}`, boolkey: `${bool}` },
-      // { nickname: 123, boolkey: true },
     ]);
-    console.log('받아오는 pendingReady 값 확인', pendingReady);
-    // console.log('쫄았냐?', pendingReady[0]?.nickname);
-    // console.log('타입', typeof pendingReady[0].nickname);
   });
-
-  // pendingReady.map((h, i) => {
-  //   console.log('들어온 사람~', h);
-  //   setNewUser([...newUser, { nickname: `${h.nickname}` }]);
-  //   console.log(newUser);
-  // });
 
   const userCameras = [
     //   { nickName: cookies.nickname },
@@ -55,18 +42,10 @@ const GameReady = () => {
     { nickName: '빈자리' },
   ];
 
-  // userCameras.for((nickName) => {
-  //   if (nickName === '빈자리') {
-  //     nickName = pendingReady.nickname;
-  //     return;
-  //   }
-  // });
-
   const ha = () => {
     for (let step = 0; step < 8; step++) {
       if (userCameras[step].nickName === '빈자리') {
-        userCameras[step].nickName = pendingReady?.nickname;
-        return;
+        userCameras[step].nickName = userNickname[step];
       }
     }
   };

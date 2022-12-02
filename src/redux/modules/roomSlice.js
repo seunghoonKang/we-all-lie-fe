@@ -13,7 +13,8 @@ const roomSlice = createSlice({
       state.roomInfos = action.payload;
     },
     getUserNickname: (state, action) => {
-      state.userNickname.push(action.payload);
+      state.userNickname = action.payload;
+      // console.log('난 리듀서 액션', state.userNickname);
     },
   },
 });

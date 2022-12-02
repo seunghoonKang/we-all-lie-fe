@@ -7,12 +7,14 @@ import { getRoomInfo, getUserNickname } from '../redux/modules/roomSlice';
 import { socket } from '../shared/socket';
 
 const RoomItem = ({ roominfo }) => {
-  //진영 코드 추가
-  const [players, setPlayers] = useState();
+  // const initialState = {
+  //   userName: [],
+  // };
+  // const [players, setPlayers] = useState(initialState);
   const [cookies, setCookie] = useCookies(['nickname']);
-  //여기 위까지
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const enterRoomHandler = () => {
     socket.emit('enterRoom', roominfo?._id, cookies);
     dispatch(getRoomInfo(roominfo));
@@ -21,12 +23,12 @@ const RoomItem = ({ roominfo }) => {
       // console.log('타입', typeof 'userNickname');
       // setPlayers([...players, userNickname]);
       // console.log('플레이어', players);
-      console.log('유저', userNickname);
+      // // console.log('유저', userNickname);
+      // setPlayers(...players, userNickname);
+      // console.log('player 드러가 !', players);
       dispatch(getUserNickname(userNickname));
     });
     navigate(`/room/${roominfo?._id}`);
-    // setPlayers(...players, cookies.nickname); //진영 코드 추가 여기에 닉네임 받아와서 쌓아야함
-    // console.log('입장시 테스트중', players);
   };
   // console.log(roominfo);
   return (
