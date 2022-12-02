@@ -37,7 +37,7 @@ const StyledButton = styled.button`
   color: ${(props) => props?.addStyle.color || '#1F1F1F'};
   &:hover {
     transition: 0.3s ease-in-out;
-    background-color: #ff8217;
+    background-color: #ff7300;
   }
   &:not(:hover) {
     transition: 0.3s ease-out;
@@ -60,7 +60,7 @@ const StyledButton = styled.button`
     props.disabled &&
     css`
       :disabled ;
-      background-color: gray;
+      background-color: #a5a5a5;
       &:hover {
         transition: 0.3s ease-in-out;
         background-color: red;

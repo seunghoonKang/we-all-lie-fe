@@ -5,7 +5,7 @@ import Camera from '../elements/Camera2';
 import { socket } from '../shared/socket';
 import Timer from '../elements/Timer';
 import GameStartHeader from './gamestart/GameStartHeader';
-import { useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 
 const GameStart = () => {
   const userCameras = [
@@ -18,19 +18,21 @@ const GameStart = () => {
     { nickName: '윤진' },
     { nickName: '주은' },
   ];
-
+  const [cookies, setCookies] = useCookies(['nickname']);
+  userCameras[0].nickName = cookies.nickname;
+  console.log(cookies);
   const words = useSelector((state) => state.game.words);
   const answerWord = useSelector((state) => state.game.answerWord);
   const category = useSelector((state) => state.game.category);
   const spy = useSelector((state) => state.game.spy);
-  const navigate = useNavigate();
+
   console.log(words, answerWord, category, spy);
 
   /* 시간 다되면 알아서 투표페이지로 이동하기
   const votePage = () =>
     setTimeout(() => {
       alert('시간이 다 되어 투표페이지로 이동합니다.');
-      navigate('/home');
+      state 변경하기
     }, 10000);
 
   useEffect(() => {
@@ -44,61 +46,61 @@ const GameStart = () => {
   return (
     <>
       <GameStartHeader />
-      {userCameras.map((person) => (
-        <GameEntireContainer key={person.nickName}>
-          <GameCardSection>
-            <Question>
-              <TimerContainer>
-                <TimerDiv>
-                  <MinWidthTimerDiv>
-                    <Timer min="8" />
-                  </MinWidthTimerDiv>
-                </TimerDiv>
-              </TimerContainer>
-              <div className="mt-[77px] pl-[37px]">
-                <div>
-                  <p className=" font-semibold text-[22px]">
-                    질문할 차례입니다!
-                  </p>
-                </div>
-                <div>
-                  <p>질문하고 싶은 유저의 화면을 클릭하세요.</p>
-                </div>
+
+      <GameEntireContainer>
+        <GameCardSection>
+          <Question>
+            <TimerContainer>
+              <TimerDiv>
+                <MinWidthTimerDiv>
+                  <Timer min="8" />
+                </MinWidthTimerDiv>
+              </TimerDiv>
+            </TimerContainer>
+            <div className="mt-[77px] pl-[37px]">
+              <div>
+                <p className=" font-semibold text-[22px]">질문할 차례입니다!</p>
               </div>
-            </Question>
-            {spy === person.nickName ? (
-              <CorrectCard>
-                <CorrectAnswer>
-                  <p>비밀임</p>
-                </CorrectAnswer>
-                <IllustSection>
-                  <p>{category}</p>
-                </IllustSection>
-              </CorrectCard>
-            ) : (
-              <CorrectCard>
-                <CorrectAnswer>
-                  <p>{answerWord}</p>
-                </CorrectAnswer>
-                <IllustSection>
-                  <p>{category}</p>
-                </IllustSection>
-              </CorrectCard>
-            )}
-          </GameCardSection>
-          <VideoContainer>
-            <Camera nickname={person.nickName} />
-          </VideoContainer>
-        </GameEntireContainer>
-      ))}
+              <div>
+                <p>질문하고 싶은 유저의 화면을 클릭하세요.</p>
+              </div>
+            </div>
+          </Question>
+          {spy === cookies.nickname ? (
+            <CorrectCard>
+              <CorrectAnswer>
+                <p>비밀임</p>
+              </CorrectAnswer>
+              <IllustSection>
+                <p>{category}</p>
+              </IllustSection>
+            </CorrectCard>
+          ) : (
+            <CorrectCard>
+              <CorrectAnswer>
+                <p>{answerWord}</p>
+              </CorrectAnswer>
+              <IllustSection>
+                <p>{category}</p>
+              </IllustSection>
+            </CorrectCard>
+          )}
+        </GameCardSection>
+        <VideoContainer>
+          {userCameras.map((person) => (
+            <Camera nickname={person.nickName} key={person.nickName} />
+          ))}
+        </VideoContainer>
+      </GameEntireContainer>
     </>
   );
 };
 
 const GameEntireContainer = styled.div`
   width: 100%;
-  height: 86vh;
+  //height: 86vh;
   background-color: #fff;
+  border-radius: 0 0 10px 10px;
 `;
 
 const VideoContainer = styled.div`
@@ -106,8 +108,8 @@ const VideoContainer = styled.div`
   flex-wrap: wrap;
   justify-content: space-between;
   min-height: 384px;
-  height: 50vh;
-  gap: 16px 16px;
+  height: 54vh;
+  //gap: 16px 16px;
   padding: 16px;
   background-color: white;
   border-radius: 10px;
@@ -117,6 +119,7 @@ const GameCardSection = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 30vh;
   width: 100%;
   margin-bottom: 16px;
   gap: 16px;

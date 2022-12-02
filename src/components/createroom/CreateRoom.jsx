@@ -88,10 +88,14 @@ const CreateRoom = ({ closeModal }) => {
               setTimeout(() => {
                 console.log(values);
                 socket.emit('createRoom', values.gameMode, values.roomTitle);
-                socket.on('createRoom', (room) => dispatch(getRoomInfo(room)));
-                socket.on('createRoom', (room) =>
-                  navigate(`/room/${room._id}`)
-                );
+                socket.on('createRoom', (room) => {
+                  dispatch(getRoomInfo(room));
+                  navigate(`/room/${room._id}`);
+                });
+                socket.on('userNickname', (nick) => {});
+                // socket.on('createRoom', (room) =>
+                //   navigate(`/room/${room._id}`)
+                // );
                 setSubmitting(false);
               }, 100);
             }}

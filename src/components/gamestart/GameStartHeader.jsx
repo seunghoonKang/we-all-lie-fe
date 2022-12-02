@@ -59,7 +59,7 @@ const GameStartHeader = () => {
       <Button
         type={'button'}
         addStyle={{
-          backgroundColor: '#2B2B2B',
+          backgroundColor: '#FF7300',
           borderRadius: '10px 10px 0 0',
           width: '113px',
           height: '40px',
