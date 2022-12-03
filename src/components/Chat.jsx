@@ -122,7 +122,7 @@ const Chat = () => {
     msgInput.current.value = '';
   };
 
-  console.log('param확인', param.id);
+  // console.log('param확인', param.id);
   return (
     <ChatLayout theme={themeContext}>
       <MyProfile onClick={() => navigate(`/user/`)}>

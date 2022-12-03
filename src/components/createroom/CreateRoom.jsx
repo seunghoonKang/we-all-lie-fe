@@ -86,11 +86,10 @@ const CreateRoom = ({ closeModal }) => {
             })}
             onSubmit={(values, { setSubmitting }) => {
               setTimeout(() => {
-                console.log(values);
+                // console.log(values);
                 socket.emit('createRoom', values.gameMode, values.roomTitle);
                 socket.on('createRoom', (room) => dispatch(getRoomInfo(room)));
                 socket.on('userNickname', (userNickname) => {
-                  console.log('여기는 userNickname', userNickname);
                   dispatch(getUserNickname(userNickname));
                 });
                 socket.on('createRoom', (room) =>

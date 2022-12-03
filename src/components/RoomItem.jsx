@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useCookies } from 'react-cookie';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -7,30 +6,19 @@ import { getRoomInfo, getUserNickname } from '../redux/modules/roomSlice';
 import { socket } from '../shared/socket';
 
 const RoomItem = ({ roominfo }) => {
-  // const initialState = {
-  //   userName: [],
-  // };
-  // const [players, setPlayers] = useState(initialState);
-  const [cookies, setCookie] = useCookies(['nickname']);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const enterRoomHandler = () => {
-    socket.emit('enterRoom', roominfo?._id, cookies);
+    socket.emit('enterRoom', roominfo?._id);
     dispatch(getRoomInfo(roominfo));
     //방에 들어간 사람 확인
     socket.on('userNickname', (userNickname) => {
-      // console.log('타입', typeof 'userNickname');
-      // setPlayers([...players, userNickname]);
-      // console.log('플레이어', players);
-      // // console.log('유저', userNickname);
-      // setPlayers(...players, userNickname);
-      // console.log('player 드러가 !', players);
       dispatch(getUserNickname(userNickname));
     });
     navigate(`/room/${roominfo?._id}`);
   };
-  // console.log(roominfo);
+
   return (
     <RoomContainer>
       <RoomContents>

@@ -3,18 +3,19 @@ import ReadyButton from './gameready/ReadyButton';
 import ReadyHeader from './gameready/ReadyHeader';
 import HeaderSection from './gameready/HeaderSection';
 import Camera from '../elements/Camera1';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ReactComponent as Ready } from '../assets/r_eady.svg';
-import { useCookies } from 'react-cookie';
 import { useParams } from 'react-router-dom';
 import { socket } from '../shared/socket';
 import { useSelector } from 'react-redux';
+import { useCookies } from 'react-cookie';
 
 const GameReady = () => {
   const [ready, useReady] = useState(false);
   const [pendingReady, setPendingReady] = useState([]);
-  const [cookies] = useCookies(['nickname']);
   const param = useParams();
+  const [cookies] = useCookies(['nickname']);
+
   const userNickname = useSelector((state) => state.room.userNickname);
   console.log('받아오는 닉네임 확인', userNickname);
 
@@ -23,41 +24,39 @@ const GameReady = () => {
     useReady(!ready);
   };
 
+  //게임레디 확인
   socket.on('ready', (nic, bool) => {
     setPendingReady([
       ...pendingReady,
       { nickname: `${nic}`, boolkey: `${bool}` },
     ]);
   });
+  console.log(pendingReady);
 
-  const userCameras = [
-    //   { nickName: cookies.nickname },
-    { nickName: '빈자리' },
-    { nickName: '빈자리' },
-    { nickName: '빈자리' },
-    { nickName: '빈자리' },
-    { nickName: '빈자리' },
-    { nickName: '빈자리' },
-    { nickName: '빈자리' },
-    { nickName: '빈자리' },
+  let userCameras = [
+    '빈자리',
+    '빈자리',
+    '빈자리',
+    '빈자리',
+    '빈자리',
+    '빈자리',
+    '빈자리',
+    '빈자리',
   ];
 
+  //입장하는 유저들
   const ha = () => {
-    for (let step = 0; step < 8; step++) {
-      if (userCameras[step].nickName === '빈자리') {
-        userCameras[step].nickName = userNickname[step];
+    for (let step = 0; step < userNickname.length; step++) {
+      if (userCameras[step] === '빈자리') {
+        userCameras[step] = userNickname[step];
       }
     }
+    return userCameras;
   };
   ha();
-  console.log(userCameras);
+  console.log('8개의 배열형태', userCameras);
 
-  // const userLength = userCameras.length;
-
-  // useEffect(() => {
-  //   dispatch(checkPeople(cookies));
-  // }, [dispatch]);
-
+  //4명 이상이 준비시 카테고리 받아옴
   socket.on('gameStart', (gameStart) => {
     console.log('게임시작됐는지 확인', gameStart);
   });
@@ -79,21 +78,6 @@ const GameReady = () => {
       <Users
       // userLength={userLength}
       >
-        {/* 첫번째 방법 */}
-
-        {/* {userCameras.map((person) =>
-          !ready ? (
-            <Camera person={person.nickName} key={person.nickName} />
-          ) : cookies.nickname === person.nickName ? (
-            <ReadyWrap>
-              <Ready />
-              <ReadyNickName>{person.nickName}</ReadyNickName>
-            </ReadyWrap>
-          ) : (
-            <Camera person={person.nickName} key={person.nickName} />
-          )
-        )} */}
-
         {/* 두번째 방법  */}
 
         {/* {pendingReady.map((person, i) =>
@@ -110,15 +94,15 @@ const GameReady = () => {
         {/* 세번쨰 방법 */}
         {userCameras.map((person, i) =>
           !ready ? (
-            <Camera person={person.nickName} key={i} />
-          ) : pendingReady.nickname === person.nickName ||
+            <Camera person={person} key={i} />
+          ) : pendingReady.nickname === cookies.nickname ||
             pendingReady.boolkey === 'true' ? (
-            <ReadyWrap person={person.nickName} key={i}>
+            <ReadyWrap person={person} key={i}>
               <Ready />
-              <ReadyNickName>{person.nickName}</ReadyNickName>
+              <ReadyNickName>{person}</ReadyNickName>
             </ReadyWrap>
           ) : (
-            <Camera person={person.nickName} key={i} />
+            <Camera person={person} key={i} />
           )
         )}
       </Users>
@@ -166,18 +150,6 @@ const ReadyButtonSection = styled.div`
 `;
 
 const Users = styled.div`
-  /* display: flex;
-  justify-content: space-between;
-  align-content: space-between;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  align-content: space-evenly;
-  gap: 16px 16px;
-  border-radius: 5px;
-  padding: 16px;
-  background-color: white;
-  min-height: 384px;
-  height: 50vh; */
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly; //가로 띄우기
