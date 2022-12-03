@@ -45,7 +45,7 @@ const GameReady = () => {
   ];
 
   //입장하는 유저들
-  const ha = () => {
+  const vacancy = () => {
     for (let step = 0; step < userNickname.length; step++) {
       if (userCameras[step] === '빈자리') {
         userCameras[step] = userNickname[step];
@@ -53,7 +53,7 @@ const GameReady = () => {
     }
     return userCameras;
   };
-  ha();
+  vacancy();
   console.log('8개의 배열형태', userCameras);
 
   //4명 이상이 준비시 카테고리 받아옴
