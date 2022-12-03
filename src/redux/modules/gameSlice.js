@@ -8,9 +8,6 @@ const initialState = {
     '농구',
     '클라이밍',
     '야구',
-    '역도',
-    '승마',
-    '유도',
     '배구',
     '다이빙',
     '하키',
@@ -23,16 +20,16 @@ const initialState = {
     '서핑',
     '펜싱',
     '마라톤',
-    '씨름',
     '사이클',
     '축구',
     '태권도',
     '피겨스케이팅',
-    '주짓수',
   ],
   answerWord: '골프',
   category: '스포츠',
   spy: 'Agent_프리티강',
+  goFromStartToVote: false,
+  goFromReadyToStart: false,
 };
 
 const gameSlice = createSlice({
@@ -45,8 +42,15 @@ const gameSlice = createSlice({
     choiceAnswerer: (state, action) => {
       state.answerer = action.payload;
     },
+    goFromGameStartToGameVote: (state, action) => {
+      state.goFromStartToVote = action.payload;
+    },
+    goFromGameReadyToGameStart: (state, action) => {
+      state.goFromStartToVote = action.payload;
+    },
   },
 });
 
-export const { choiceAsker, choiceAnswerer } = gameSlice.actions;
+export const { choiceAsker, choiceAnswerer, goFromGameStartToGameVote } =
+  gameSlice.actions;
 export default gameSlice.reducer;

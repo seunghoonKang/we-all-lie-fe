@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Camera from '../elements/Camera2';
 import { socket } from '../shared/socket';
@@ -7,8 +7,10 @@ import Timer from '../elements/Timer';
 import GameStartHeader from './gamestart/GameStartHeader';
 import { useCookies } from 'react-cookie';
 import { useParams } from 'react-router-dom';
+import { goFromGameStartToGameVote } from '../redux/modules/gameSlice';
 
 const GameStart = () => {
+  const dispatch = useDispatch();
   const userNickname = useSelector((state) => state.room.userNickname);
   const words = useSelector((state) => state.game.words);
   const answerWord = useSelector((state) => state.game.answerWord);
@@ -17,7 +19,9 @@ const GameStart = () => {
   const [cookies, setCookies] = useCookies(['nickname']);
   const param = useParams();
   const [earlyVote, setEarlyVote] = useState(false);
-
+  const goFromStartToVote = useSelector(
+    (state) => state.game.goFromStartToVote
+  );
   const userCameras = [
     { nickName: '빈자리' },
     { nickName: '빈자리' },
@@ -45,12 +49,13 @@ const GameStart = () => {
   }, []);
 
   console.log(words, answerWord, category, spy);
+  console.log(goFromStartToVote);
 
-  /* 시간 다되면 알아서 투표페이지로 이동하기
+  /* 시간 다되면 알아서 투표페이지로 이동하기 
   const votePage = () =>
     setTimeout(() => {
       alert('시간이 다 되어 투표페이지로 이동합니다.');
-      state 변경하기
+      dispatch(goFromGameStartToGameVote(true));
     }, 10000);
 
   useEffect(() => {
@@ -59,7 +64,7 @@ const GameStart = () => {
       clearTimeout(votePage);
     };
   }, []);
- */
+  */
 
   return (
     <>

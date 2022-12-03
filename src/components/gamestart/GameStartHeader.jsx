@@ -14,30 +14,36 @@ const GameStartHeader = ({ earlyVote, setEarlyVote }) => {
   const [cookies, setCookies] = useCookies(['nickname']);
   const navigate = useNavigate();
   const param = useParams();
-  let earlyVoteCount = 0;
-  const voteBtnHandler = () => {
+  const [earlyVoteCount, setEarlyVoteCount] = useState(0);
+
+  const tempGoOutBtn = () => {
     alert('방 나가기 소켓 임시로 넣었음');
     socket.emit('leaveRoom', param.id);
     socket.on('leaveRoom', () => {
       navigate('/home');
     });
     navigate('/home');
-    console.log(userNickname, cookies);
+  };
 
+  const voteBtnHandler = () => {
     //방에 들어온 인원이 for문을 돌며,
     //cookies에 있는 닉네임과 같은 사람이라면 투표
     //투표완료 되면 버튼 다시 비활성화
     for (let i = 0; i < userNickname.length; i++) {
       if (userNickname[i] === cookies.nickname) {
-        earlyVoteCount++;
+        setEarlyVoteCount((prev) => prev + 1);
         setEarlyVote(true);
+        socket.emit('nowVote', param.id, true);
         setDisabledBtn('투표완료');
       }
-      console.log(earlyVoteCount);
-      console.log(earlyVote);
     }
-    if (earlyVoteCount > userNickname.length / 2) {
-      console.log(userNickname.length);
+
+    //방 인원이 투표한 숫자가 게임 인원의 과반수 이상이라면
+    //voteStart emit 해주고 투표페이지로 이동하면 될거같음
+    if (earlyVoteCount >= userNickname.length / 2) {
+      socket.emit('voteStart', (curr) => {
+        console.log(curr);
+      });
       alert('이제 투표페이지 가야지?');
     }
   };
@@ -70,9 +76,14 @@ const GameStartHeader = ({ earlyVote, setEarlyVote }) => {
           <VoteIconDiv>
             <VoteIcon width="16" height="16" fill="none" />
           </VoteIconDiv>
-          <div className=" pr-2">3/7</div>
+          <div className=" pr-2">
+            {earlyVoteCount}/{userNickname.length}
+          </div>
         </div>
       </HeaderTitle>
+      <Button type={'button'} addStyle={{}} onClick={tempGoOutBtn}>
+        나가기 임시
+      </Button>
       <Button
         type={'button'}
         addStyle={{
