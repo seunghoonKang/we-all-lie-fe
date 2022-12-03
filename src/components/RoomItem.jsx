@@ -21,7 +21,7 @@ const RoomItem = ({ roominfo }) => {
       navigate(`/room/${roominfo?._id}`);
     }
   };
-  // console.log(roominfo);
+
   return (
     <RoomContainer>
       <RoomContents>
