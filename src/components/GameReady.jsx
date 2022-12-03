@@ -2,29 +2,23 @@ import styled from 'styled-components';
 import ReadyButton from './gameready/ReadyButton';
 import ReadyHeader from './gameready/ReadyHeader';
 import HeaderSection from './gameready/HeaderSection';
-import Camera from '../elements/Camera';
+import Camera from '../elements/Camera1';
 import { useState, useEffect } from 'react';
 import { ReactComponent as Ready } from '../assets/r_eady.svg';
 import { useCookies } from 'react-cookie';
 import { useParams } from 'react-router-dom';
 import { socket } from '../shared/socket';
+import { useSelector } from 'react-redux';
 
 const GameReady = () => {
   const [ready, useReady] = useState(false);
-  const initialState = [
-    // {
-    //   nickname: '',
-    //   boolkey: '',
-    // },
-  ];
-  const [pendingReady, setPendingReady] = useState(initialState);
-  const [cookies, setCookies] = useCookies(['nickname']);
+  const [pendingReady, setPendingReady] = useState([]);
+  const [cookies] = useCookies(['nickname']);
   const param = useParams();
+  const userNickname = useSelector((state) => state.room.userNickname);
+  console.log('받아오는 닉네임 확인', userNickname);
 
-  //방번호를 주면 소켓에 닉네임 들어있음 레디를 안누른 사람이 눌렀을때
-  //레디 버튼 누른 사람 닉네임
-  //어떤 닉네임을 가진 사람이 true 값으로 바꾼것만 보내면 될듯
-  const ReadyHendler = () => {
+  const ReadyHandler = () => {
     socket.emit('ready', param.id);
     useReady(!ready);
   };
@@ -34,22 +28,35 @@ const GameReady = () => {
       ...pendingReady,
       { nickname: `${nic}`, boolkey: `${bool}` },
     ]);
-    console.log('받아오는 pendingReady 값 확인', pendingReady);
   });
 
-  // 가설 1 : 받아오는 닉네임 정보를 맵 돌린다.
-  // pendingReady.map(personReady, i);
   const userCameras = [
-    { nickName: cookies.nickname },
-    { nickName: 'b' },
-    { nickName: 'c' },
-    { nickName: 'd' },
-    { nickName: 'e' },
-    { nickName: 'f' },
-    { nickName: 'g' },
-    { nickName: 'h' },
+    //   { nickName: cookies.nickname },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
   ];
-  const userLength = userCameras.length;
+
+  const ha = () => {
+    for (let step = 0; step < 8; step++) {
+      if (userCameras[step].nickName === '빈자리') {
+        userCameras[step].nickName = userNickname[step];
+      }
+    }
+  };
+  ha();
+  console.log(userCameras);
+
+  // const userLength = userCameras.length;
+
+  // useEffect(() => {
+  //   dispatch(checkPeople(cookies));
+  // }, [dispatch]);
 
   socket.on('gameStart', (gameStart) => {
     console.log('게임시작됐는지 확인', gameStart);
@@ -64,26 +71,54 @@ const GameReady = () => {
         <ReadyButtonSection>
           <h1>준비 버튼을 클릭하세요 ! </h1>
           <span>모든 플레이어가 준비되면 자동으로 게임이 시작됩니다.</span>
-          <div onClick={ReadyHendler}>
+          <div onClick={ReadyHandler}>
             <ReadyButton>준비완료 </ReadyButton>
           </div>
         </ReadyButtonSection>
       </div>
-      <Users userLength={userLength}>
-        {userCameras.map((person) =>
+      <Users
+      // userLength={userLength}
+      >
+        {/* 첫번째 방법 */}
+
+        {/* {userCameras.map((person) =>
           !ready ? (
             <Camera person={person.nickName} key={person.nickName} />
           ) : cookies.nickname === person.nickName ? (
             <ReadyWrap>
-              {/* <img
-                // style={{ transform: 'scale(0.3)' }}
-                src="/img/ready.png"
-              ></img> */}
               <Ready />
               <ReadyNickName>{person.nickName}</ReadyNickName>
             </ReadyWrap>
           ) : (
             <Camera person={person.nickName} key={person.nickName} />
+          )
+        )} */}
+
+        {/* 두번째 방법  */}
+
+        {/* {pendingReady.map((person, i) =>
+          !ready ? (
+            <Camera person={person.nickname} key={i} />
+          ) : (
+            <ReadyWrap>
+              <Ready />
+              <ReadyNickName>{person.nickname}</ReadyNickName>
+            </ReadyWrap>
+          )
+        )} */}
+
+        {/* 세번쨰 방법 */}
+        {userCameras.map((person, i) =>
+          !ready ? (
+            <Camera person={person.nickName} key={i} />
+          ) : pendingReady.nickname === person.nickName ||
+            pendingReady.boolkey === 'true' ? (
+            <ReadyWrap person={person.nickName} key={i}>
+              <Ready />
+              <ReadyNickName>{person.nickName}</ReadyNickName>
+            </ReadyWrap>
+          ) : (
+            <Camera person={person.nickName} key={i} />
           )
         )}
       </Users>

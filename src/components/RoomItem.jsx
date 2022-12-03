@@ -1,23 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { getRoomInfo } from '../redux/modules/roomSlice';
+import { getRoomInfo, getUserNickname } from '../redux/modules/roomSlice';
 import { socket } from '../shared/socket';
 
 const RoomItem = ({ roominfo }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const enterRoomHandler = () => {
     if (roominfo?.currentCount > 8) {
       alert('정원이 초과되었습니다.');
     } else {
       socket.emit('enterRoom', roominfo?._id);
       dispatch(getRoomInfo(roominfo));
+      socket.on('userNickname', (userNickname) => {
+        dispatch(getUserNickname(userNickname));
+      });
       navigate(`/room/${roominfo?._id}`);
     }
   };
-  console.log(roominfo);
+  // console.log(roominfo);
   return (
     <RoomContainer>
       <RoomContents>
