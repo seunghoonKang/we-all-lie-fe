@@ -9,9 +9,13 @@ const RoomItem = ({ roominfo }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const enterRoomHandler = () => {
-    socket.emit('enterRoom', roominfo?._id);
-    dispatch(getRoomInfo(roominfo));
-    navigate(`/room/${roominfo?._id}`);
+    if (roominfo?.currentCount > 8) {
+      alert('정원이 초과되었습니다.');
+    } else {
+      socket.emit('enterRoom', roominfo?._id);
+      dispatch(getRoomInfo(roominfo));
+      navigate(`/room/${roominfo?._id}`);
+    }
   };
   console.log(roominfo);
   return (
