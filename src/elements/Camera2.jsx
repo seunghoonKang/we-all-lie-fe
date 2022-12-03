@@ -4,33 +4,33 @@ import styled from 'styled-components';
 import arrestedstamp from '../img/arrested.png';
 import { choiceAsker, choiceAnswerer } from '../redux/modules/gameSlice';
 
-const Camera = ({ ...props }) => {
+const Camera = ({ nickname }) => {
   const dispatch = useDispatch();
   const asker = useSelector((state) => state.game.asker);
   const answerer = useSelector((state) => state.game.answerer);
 
   useEffect(() => {
-    if (props.nickname === '승훈') {
-      dispatch(choiceAsker(props.nickname));
-    }
+    // if (props.nickname === '승훈') {
+    //   dispatch(choiceAsker(props.nickname));
+    // }
   }, []);
 
   const talker = () => {
-    if (asker === props.nickname) {
-      return;
-    } else {
-      dispatch(choiceAnswerer(props.nickname));
-    }
+    // if (asker === props.nickname) {
+    //   return;
+    // } else {
+    //   dispatch(choiceAnswerer(props.nickname));
+    // }
   };
   return (
     <>
-      {asker === props.nickname ? (
+      {asker === nickname ? (
         <Wrap onClick={talker} borderColor="#ff8217">
-          <NickName>{props.nickname}</NickName>
+          <NickName>{nickname}</NickName>
         </Wrap>
       ) : (
         <Wrap onClick={talker}>
-          <NickName>{props.nickname}</NickName>
+          <NickName>{nickname}</NickName>
         </Wrap>
       )}
     </>
