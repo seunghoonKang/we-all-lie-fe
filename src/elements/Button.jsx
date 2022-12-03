@@ -5,7 +5,17 @@ const Button = ({ children, ...props }) => {
   return (
     <>
       {/* 투표때 필요해서 넣었음.. */}
-      {children === '투표준비' ? (
+      {children === '투표완료' ? (
+        <StyledButton
+          type={props.type}
+          onClick={props.onClick}
+          addStyle={props.addStyle}
+          doong={props.doong}
+          disabled={props.disabled}
+        >
+          {children}
+        </StyledButton>
+      ) : children === '투표준비' ? (
         <StyledButton
           type={props.type}
           onClick={props.onClick}

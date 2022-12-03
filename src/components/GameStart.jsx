@@ -6,25 +6,43 @@ import { socket } from '../shared/socket';
 import Timer from '../elements/Timer';
 import GameStartHeader from './gamestart/GameStartHeader';
 import { useCookies } from 'react-cookie';
+import { useParams } from 'react-router-dom';
 
 const GameStart = () => {
-  const userCameras = [
-    { nickName: '승훈' },
-    { nickName: '연석' },
-    { nickName: '진영' },
-    { nickName: '형석' },
-    { nickName: '민형' },
-    { nickName: '하은' },
-    { nickName: '윤진' },
-    { nickName: '주은' },
-  ];
-  const [cookies, setCookies] = useCookies(['nickname']);
-  userCameras[0].nickName = cookies.nickname;
-  console.log(cookies);
+  const userNickname = useSelector((state) => state.room.userNickname);
   const words = useSelector((state) => state.game.words);
   const answerWord = useSelector((state) => state.game.answerWord);
   const category = useSelector((state) => state.game.category);
   const spy = useSelector((state) => state.game.spy);
+  const [cookies, setCookies] = useCookies(['nickname']);
+  const param = useParams();
+  const [earlyVote, setEarlyVote] = useState(false);
+
+  const userCameras = [
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+  ];
+  const fillInTheEmptySeats = () => {
+    for (let step = 0; step < 8; step++) {
+      if (userCameras[step].nickName === '빈자리') {
+        userCameras[step].nickName = userNickname[step];
+      }
+    }
+    return userCameras;
+  };
+  fillInTheEmptySeats();
+
+  // userCameras[0].nickName = cookies.nickname;
+
+  useEffect(() => {
+    socket.emit('setNowVote', param.id);
+  }, []);
 
   console.log(words, answerWord, category, spy);
 
@@ -45,8 +63,7 @@ const GameStart = () => {
 
   return (
     <>
-      <GameStartHeader />
-
+      <GameStartHeader earlyVote={earlyVote} setEarlyVote={setEarlyVote} />
       <GameEntireContainer>
         <GameCardSection>
           <Question>
@@ -87,8 +104,8 @@ const GameStart = () => {
           )}
         </GameCardSection>
         <VideoContainer>
-          {userCameras.map((person) => (
-            <Camera nickname={person.nickName} key={person.nickName} />
+          {userCameras.map((person, i) => (
+            <Camera nickname={person.nickName} key={i} />
           ))}
         </VideoContainer>
       </GameEntireContainer>

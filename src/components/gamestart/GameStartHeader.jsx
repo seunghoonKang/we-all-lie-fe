@@ -4,16 +4,17 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { socket } from '../../shared/socket';
 import { ReactComponent as Megaphone } from '../../assets/megaphone.svg';
 import { ReactComponent as VoteIcon } from '../../assets/voteIcon.svg';
+import { useCookies } from 'react-cookie';
 import Button from '../../elements/Button';
 import styled from 'styled-components';
 
-const GameStartHeader = () => {
+const GameStartHeader = ({ earlyVote, setEarlyVote }) => {
   const [disabledBtn, setDisabledBtn] = useState('투표준비');
-  const asker = useSelector((state) => state.game.asker);
-  const answerer = useSelector((state) => state.game.answerer);
+  const userNickname = useSelector((state) => state.room.userNickname);
+  const [cookies, setCookies] = useCookies(['nickname']);
   const navigate = useNavigate();
   const param = useParams();
-
+  let earlyVoteCount = 0;
   const voteBtnHandler = () => {
     alert('방 나가기 소켓 임시로 넣었음');
     socket.emit('leaveRoom', param.id);
@@ -21,9 +22,31 @@ const GameStartHeader = () => {
       navigate('/home');
     });
     navigate('/home');
+    console.log(userNickname, cookies);
+
+    //방에 들어온 인원이 for문을 돌며,
+    //cookies에 있는 닉네임과 같은 사람이라면 투표
+    //투표완료 되면 버튼 다시 비활성화
+    for (let i = 0; i < userNickname.length; i++) {
+      if (userNickname[i] === cookies.nickname) {
+        earlyVoteCount++;
+        setEarlyVote(true);
+        setDisabledBtn('투표완료');
+      }
+      console.log(earlyVoteCount);
+      console.log(earlyVote);
+    }
+    if (earlyVoteCount > userNickname.length / 2) {
+      console.log(userNickname.length);
+      alert('이제 투표페이지 가야지?');
+    }
   };
 
-  //투표하기 활성화 btn
+  // useEffect(() => {
+
+  // }, [voteBtnHandler]);
+
+  //투표하기 활성화 btn -> 시간은 3분으로 변경 예정
   useEffect(() => {
     const checkNotDisabledBtn = setTimeout(() => {
       setDisabledBtn('투표하기');
@@ -41,13 +64,7 @@ const GameStartHeader = () => {
           <MegaphoneDiv>
             <Megaphone width="15" height="13" fill="none" />
           </MegaphoneDiv>
-          {answerer === '' ? (
-            <div>[{asker}] (이)가 질문하고 싶은 유저를 찾고 있습니다.</div>
-          ) : (
-            <div>
-              [{asker}] (이)가 [{answerer}] 에게 질문합니다.
-            </div>
-          )}
+          <div>스파이가 알아채지 못하게 답변해야해요 !</div>
         </div>
         <div className="flex gap-[6px]">
           <VoteIconDiv>
