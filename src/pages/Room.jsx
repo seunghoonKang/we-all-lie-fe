@@ -30,7 +30,7 @@ const Room = () => {
   };
   */
   socket.on('ready', (room) => {
-    console.log(room);
+    // console.log(room);
   });
 
   useEffect(() => {
@@ -59,24 +59,6 @@ const Room = () => {
     );
   }
 };
-
-// const Box = styled.div`
-//   display: flex;
-//   justify-content: space-between;
-// `;
-
-// const List = styled.div`
-//   width: calc(100% - 350px);
-//   height: 90vh;
-//   min-height: 650px;
-//   margin-bottom: 100px;
-// `;
-
-// const Game = styled.div`
-//   //background-color: lightpink;
-//   height: calc(100% - 60px);
-//   width: 100%;
-// `;
 
 const Box = styled.div`
   display: flex;

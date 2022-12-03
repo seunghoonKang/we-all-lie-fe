@@ -3,8 +3,6 @@ import styled from 'styled-components';
 import arrestedstamp from '../img/arrested.png';
 
 const Camera = ({ person }) => {
-  console.log(person);
-
   return (
     <Wrap>
       <NickName>{person}</NickName>
