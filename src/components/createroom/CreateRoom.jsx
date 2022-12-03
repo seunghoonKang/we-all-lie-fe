@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { getRoomInfo } from '../../redux/modules/roomSlice';
+import { getRoomInfo, getUserNickname } from '../../redux/modules/roomSlice';
 import { ReactComponent as XIcon } from '../../assets/xIcon.svg';
 import { socket } from '../../shared/socket';
 import { Formik, Form, Field } from 'formik';
@@ -89,6 +89,10 @@ const CreateRoom = ({ closeModal }) => {
                 console.log(values);
                 socket.emit('createRoom', values.gameMode, values.roomTitle);
                 socket.on('createRoom', (room) => dispatch(getRoomInfo(room)));
+                socket.on('userNickname', (userNickname) => {
+                  console.log('여기는 userNickname', userNickname);
+                  dispatch(getUserNickname(userNickname));
+                });
                 socket.on('createRoom', (room) =>
                   navigate(`/room/${room._id}`)
                 );
@@ -156,7 +160,7 @@ const CreateRoom = ({ closeModal }) => {
                 {/* 추가구현예정 */}
                 <div className="w-full ">
                   <p className="mt-[10px] text-[14px] font-bold">비밀방 설정</p>
-                  <div className=" flex gap-5 ">
+                  <div className="flex gap-5 ">
                     <CreateRoomCheckBox
                       name="privateRoom"
                       className="appearance-none w-[40px] h-[40px] border-solid border-black border-[0.5px] rounded-md flex checked:bg-[#a5a5a5]"
