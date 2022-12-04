@@ -17,7 +17,7 @@ const GameReady = () => {
   const [cookies] = useCookies(['nickname']);
 
   const userNickname = useSelector((state) => state.room.userNickname);
-  console.log('받아오는 닉네임 확인', userNickname);
+  // console.log('받아오는 닉네임 확인', userNickname);
 
   const ReadyHandler = () => {
     socket.emit('ready', param.id);
@@ -27,7 +27,7 @@ const GameReady = () => {
   //게임레디 확인
   socket.on('ready', (nic, bool) => {
     setPendingReady([
-      ...pendingReady,
+      // ...pendingReady,
       { nickname: `${nic}`, boolkey: `${bool}` },
     ]);
   });
@@ -54,7 +54,7 @@ const GameReady = () => {
     return userCameras;
   };
   vacancy();
-  console.log('8개의 배열형태', userCameras);
+  // console.log('8개의 배열형태', userCameras);
 
   //4명 이상이 준비시 카테고리 받아옴
   socket.on('gameStart', (gameStart) => {
@@ -92,17 +92,38 @@ const GameReady = () => {
         )} */}
 
         {/* 세번쨰 방법 */}
-        {userCameras.map((person, i) =>
+        {/* {userCameras.map((person, i) =>
           !ready ? (
             <Camera person={person} key={i} />
           ) : pendingReady.nickname === cookies.nickname ||
-            pendingReady.boolkey === 'true' ? (
+            (pendingReady.boolkey && 'true') ? (
             <ReadyWrap person={person} key={i}>
               <Ready />
               <ReadyNickName>{person}</ReadyNickName>
             </ReadyWrap>
           ) : (
             <Camera person={person} key={i} />
+          )
+        )} */}
+
+        {/* 네번째 방법 */}
+        {userCameras.map((person, a) =>
+          !ready ? (
+            <Camera person={person} key={person} />
+          ) : (
+            pendingReady.map((per, b) => {
+              console.log(per);
+              console.log('닉네임이라네~', per.nickname);
+              console.log('불키', per.boolkey);
+              per.nickname === person[a] && per.boolkey === 'true' ? (
+                <ReadyWrap person={person[a]} key={person}>
+                  <Ready />
+                  <ReadyNickName>{person}</ReadyNickName>
+                </ReadyWrap>
+              ) : (
+                <></>
+              );
+            })
           )
         )}
       </Users>
