@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import Notice from '../elements/Notice';
 import Chat from '../components/Chat';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { socket } from '../shared/socket';
 import { useBeforeunload } from 'react-beforeunload';
 import styled from 'styled-components';
@@ -14,9 +15,11 @@ const Room = () => {
   // 새로고침방지
   useBeforeunload((event) => event.preventDefault());
   const param = useParams();
-  console.log(param.id);
   const [cookies, setCookies] = useCookies(['nickname']);
   const navigate = useNavigate();
+  const goFromStartToVote = useSelector(
+    (state) => state.game.goFromStartToVote
+  );
   /*
   useEffect(() => {
     return () => {
@@ -48,8 +51,9 @@ const Room = () => {
         <Box>
           <Game>
             {/* 본인 컴포넌트말고 주석하면 돼용 */}
-            <GameReady />
-            {/* <GameStart /> */}
+            {/* <GameReady /> */}
+            <GameStart />
+            {/* {goFromStartToVote ? <GameVote /> : <GameStart />} */}
             {/* <GameVote /> */}
           </Game>
 

@@ -10,13 +10,16 @@ const RoomItem = ({ roominfo }) => {
   const dispatch = useDispatch();
 
   const enterRoomHandler = () => {
-    socket.emit('enterRoom', roominfo?._id);
-    dispatch(getRoomInfo(roominfo));
-    //방에 들어간 사람 확인
-    socket.on('userNickname', (userNickname) => {
-      dispatch(getUserNickname(userNickname));
-    });
-    navigate(`/room/${roominfo?._id}`);
+    if (roominfo?.currentCount > 8) {
+      alert('정원이 초과되었습니다.');
+    } else {
+      socket.emit('enterRoom', roominfo?._id);
+      dispatch(getRoomInfo(roominfo));
+      socket.on('userNickname', (userNickname) => {
+        dispatch(getUserNickname(userNickname));
+      });
+      navigate(`/room/${roominfo?._id}`);
+    }
   };
 
   return (

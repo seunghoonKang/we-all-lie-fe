@@ -5,7 +5,17 @@ const Button = ({ children, ...props }) => {
   return (
     <>
       {/* 투표때 필요해서 넣었음.. */}
-      {children === '투표준비' ? (
+      {children === '투표완료' ? (
+        <StyledButton
+          type={props.type}
+          onClick={props.onClick}
+          addStyle={props.addStyle}
+          doong={props.doong}
+          disabled={props.disabled}
+        >
+          {children}
+        </StyledButton>
+      ) : children === '투표준비' ? (
         <StyledButton
           type={props.type}
           onClick={props.onClick}
@@ -37,7 +47,7 @@ const StyledButton = styled.button`
   color: ${(props) => props?.addStyle.color || '#1F1F1F'};
   &:hover {
     transition: 0.3s ease-in-out;
-    background-color: #ff8217;
+    background-color: #ff7300;
   }
   &:not(:hover) {
     transition: 0.3s ease-out;
@@ -60,7 +70,7 @@ const StyledButton = styled.button`
     props.disabled &&
     css`
       :disabled ;
-      background-color: gray;
+      background-color: #a5a5a5;
       &:hover {
         transition: 0.3s ease-in-out;
         background-color: red;
