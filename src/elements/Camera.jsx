@@ -8,7 +8,7 @@ const Camera = ({ person, stamp, setStamp }) =>
     const arrestedToggle = () => {
       setStamp(person);
     };
-    console.log(person);
+    //console.log(person);
 
     return (
       <Wrap onClick={arrestedToggle}>

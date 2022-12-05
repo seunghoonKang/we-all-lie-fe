@@ -1,5 +1,4 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 import styled, { ThemeContext } from 'styled-components';
 // import { socket } from '../shared/socket';
 import { useRef } from 'react';
@@ -12,6 +11,7 @@ import { ReactComponent as SendIcon } from '../assets/icon_send.svg';
 
 //민형님 주소
 import { io } from 'socket.io-client';
+import { Navigate, useNavigate } from 'react-router-dom';
 export const socket = io('https://minhyeongi.xyz', {
   cors: {
     origin: '*',
@@ -20,19 +20,18 @@ export const socket = io('https://minhyeongi.xyz', {
 });
 
 const Chat = () => {
-  const param = useParams();
   const themeContext = useContext(ThemeContext);
   const navigate = useNavigate();
   //채팅방 열고닫기 구현하려면 {showChat} props로 받아오기
+  let nickname = '익명';
   const [cookies, setCookie] = useCookies(['nickname']);
-  const nickname = cookies.nickname;
   const [userCnt, setUserCnt] = useState(0);
   const [chat, setChat] = useState([
     // { notice: '뀨띠님이 입장하셨습니다' },
     // { name: '뀨띠', msg: '안눙' },
   ]);
-  const [roomChat, setRoomChat] = useState([]);
 
+  nickname = cookies.nickname;
   const msgInput = useRef();
 
   //접속 인원 수
@@ -55,21 +54,27 @@ const Chat = () => {
     scrollToBottom();
   }, [chat]);
 
+  // //새로고침방지
+  // useBeforeunload((event) => event.preventDefault());
+
   useEffect(() => {
-    if (param.id === undefined) {
-      console.log('로비얌');
-      //로비 들어왔을 때 실행
-      socket.emit('enterLobby', nickname, () => {
-        setChat([...chat, { notice: `${nickname} 님이 입장하셨습니다` }]);
-      });
-    } else {
-      console.log('룸이얌');
-      //룸 들어왔을 때 실행
-      socket.emit('enterRoomMsg', param.id, nickname, () => {
-        setChat([...chat, { notice: `${nickname} 님이 입장하셨습니다` }]);
-      });
-    }
+    //로비 들어왔을 때 실행
+    //채팅방에 @@님이 로그인하셨습니다.(?) 띄워주기
+    socket.emit('enterLobby', nickname, () => {
+      setChat([...chat, { notice: `${nickname} 님이 입장하셨습니다` }]);
+    });
+    // //남이 보낸 msg
+    // socket.on('receiveLobbyMsg', (msg) => {
+    //   // console.log(msg);
+    //   setChat([...chat, msg]);
+    // });
   }, []);
+
+  //남이 보낸 msg
+  socket.on('receiveLobbyMsg', (msg) => {
+    // console.log(msg);
+    setChat([...chat, msg]);
+  });
 
   const myMsg = (a) => {
     setChat([...chat, a]);
@@ -85,48 +90,21 @@ const Chat = () => {
     // console.log(mine);
     myMsg(mine);
 
-    if (param.id === undefined) {
-      //내가 적은 msg
-      //나를 제외한 모든 사람들한테 메세지를 보여주도록 emit
-      socket.emit(
-        'sendLobbyMsg',
-        { name: `${nickname}`, msg: `${msgValue}` },
-        () => {
-          //나한테 띄워줄 내가 보낸 메세지 추가
-          myMsg(mine);
-        }
-      );
-      msgInput.current.value = '';
-    } else {
-      socket.emit(
-        'sendRoomMsg',
-        { name: `${nickname}`, msg: `${msgValue}` },
-        param.id,
-        () => {
-          //나한테 띄워줄 내가 보낸 메세지 추가
-          myMsg(mine);
-        }
-      );
-      msgInput.current.value = '';
-    }
+    //내가 적은 msg
+    //나를 제외한 모든 사람들한테 메세지를 보여주도록 emit
+    socket.emit(
+      'sendLobbyMsg',
+      { name: `${nickname}`, msg: `${msgValue}` },
+      () => {
+        //나한테 띄워줄 내가 보낸 메세지 추가
+        myMsg(mine);
+      }
+    );
 
-    //남이 보낸 메세지 받아오기
-    if (param.id === undefined) {
-      //로비msg
-      socket.on('receiveLobbyMsg', (msg) => {
-        setChat([...chat, msg]);
-      });
-    } else {
-      //룸msg
-      socket.on('receiveRoomMsg', (msg) => {
-        //console.log(msg);
-        setChat([...chat, msg]);
-      });
-    }
-    //퇴장시 실행 (아마도 자동실행?)
-    //socket.emit('disconnecting', param.id, nickname);
+    msgInput.current.value = '';
   };
-  console.log('param확인', param.id);
+
+  console.log(chat);
   return (
     <ChatLayout theme={themeContext}>
       <MyProfile onClick={() => navigate(`/user/`)}>
@@ -207,7 +185,6 @@ const ChatLayout = styled.div`
   border-radius: 10px;
   position: relative;
   margin-left: 10px;
-
   /* //채팅방 열고 닫기 코드
   position: absolute;
   top: 0;
@@ -264,7 +241,6 @@ const ChatRow = styled.div`
   height: 80%;
   /* min-height: 460px; */
   overflow-y: auto;
-
   ${Notice} {
     text-align: center;
     line-height: 30px;
@@ -272,11 +248,9 @@ const ChatRow = styled.div`
     color: gray;
     font-size: 12px;
   }
-
   ${Msg} {
     margin: 5px;
     display: flex;
-
     ${User} {
       width: 30px;
       height: 30px;
@@ -285,14 +259,12 @@ const ChatRow = styled.div`
       text-align: center;
       margin-right: 10px;
     }
-
     ${Nickname} {
       font-weight: 700;
       margin-bottom: 5px;
       margin-right: 10px;
       font-size: 14px;
     }
-
     ${Word} {
       display: inline-block;
       background-color: ${(props) => props.theme.color.gray2};
@@ -312,7 +284,6 @@ const Form = styled.form`
   padding: 3% 0 3% 0;
   height: 10%;
   min-height: 40px;
-
   p {
     padding: 5px 0;
   }
