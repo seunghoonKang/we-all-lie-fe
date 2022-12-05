@@ -52,8 +52,6 @@ const Home = () => {
   }, []);
 
   //로비 입장 못하는 alert 뒤에 화면 안보이게 처리하려고.
-  //= 로그인 한 사람한테만 로비 보여주려고. => room이나 user 페이지에서도 처리해야함 ㅠ
-
   if (cookies.nickname === undefined || null) {
   } else {
     return (

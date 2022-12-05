@@ -3,7 +3,7 @@ import styled, { ThemeContext } from 'styled-components';
 // import { socket } from '../shared/socket';
 import { useRef } from 'react';
 import { useCookies } from 'react-cookie';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ReactComponent as ChatProfileDefault } from '../assets/chat_profile_default.svg';
 import { ReactComponent as ChatProfileLion } from '../assets/chat_profile_lion.svg';
 import { ReactComponent as PersonIcon } from '../assets/icon_person.svg';
@@ -18,10 +18,9 @@ export const socket = io('https://minhyeongi.xyz', {
   transports: ['websocket', 'polling'],
 });
 
-const Chat = () => {
+const RoomChat = () => {
   const themeContext = useContext(ThemeContext);
   const navigate = useNavigate();
-  //채팅방 열고닫기 구현하려면 {showChat} props로 받아오기
   let nickname = '익명';
   const [cookies, setCookie] = useCookies(['nickname']);
   const [userCnt, setUserCnt] = useState(0);
@@ -29,11 +28,12 @@ const Chat = () => {
     // { notice: '뀨띠님이 입장하셨습니다' },
     // { name: '뀨띠', msg: '안눙' },
   ]);
+  const param = useParams();
 
   nickname = cookies.nickname;
   const msgInput = useRef();
 
-  //접속 인원 수
+  //접속 인원 수 (현재는 로비인원임)
   socket.on('userCount', (people) => {
     setUserCnt(people);
   });
@@ -54,15 +54,15 @@ const Chat = () => {
   }, [chat]);
 
   useEffect(() => {
-    //로비 들어왔을 때 실행
-    socket.emit('enterLobby', nickname, () => {
+    //방 들어왔을 때 실행
+    socket.emit('enterRoomMsg', param.id, nickname, () => {
       setChat([...chat, { notice: `${nickname} 님이 입장하셨습니다` }]);
     });
   }, []);
 
   //남이 보낸 msg
-  socket.on('receiveLobbyMsg', (msg) => {
-    // console.log(msg);
+  socket.on('receiveRoomMsg', (msg) => {
+    console.log(msg);
     setChat([...chat, msg]);
   });
 
@@ -83,14 +83,14 @@ const Chat = () => {
     //내가 적은 msg
     //나를 제외한 모든 사람들한테 메세지를 보여주도록 emit
     socket.emit(
-      'sendLobbyMsg',
+      'sendRoomMsg',
       { name: `${nickname}`, msg: `${msgValue}` },
+      param.id,
       () => {
         //나한테 띄워줄 내가 보낸 메세지 추가
         myMsg(mine);
       }
     );
-
     msgInput.current.value = '';
   };
 
@@ -111,16 +111,16 @@ const Chat = () => {
       <ChatRow ref={scrollRef}>
         <Notice>매너 채팅 안하면 벤먹는다!</Notice>
 
-        {chat.map((a, index) => {
-          //index 빼봄
+        {chat.map((a) => {
+          //index빼봄
           return a.notice ? (
-            <Notice key={index}>{a.notice}</Notice> //key빼봄
+            <Notice>{a.notice}</Notice> //key빼봄
           ) : (
             a.msg &&
               (a.name == nickname ? (
                 <Msg
                   theme={themeContext}
-                  //key빼봄
+                  //key={index}
                   style={{ justifyContent: 'flex-end' }}
                 >
                   <div
@@ -140,7 +140,8 @@ const Chat = () => {
                 </Msg>
               ) : (
                 <Msg
-                  theme={themeContext} //key빼봄
+                  theme={themeContext}
+                  //key={index}
                 >
                   <User>
                     <ChatProfileDefault />
@@ -166,7 +167,7 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default RoomChat;
 
 const ChatLayout = styled.div`
   padding: 18px;
