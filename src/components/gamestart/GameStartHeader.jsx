@@ -4,17 +4,21 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { socket } from '../../shared/socket';
 import { ReactComponent as Megaphone } from '../../assets/megaphone.svg';
 import { ReactComponent as VoteIcon } from '../../assets/voteIcon.svg';
+import { useCookies } from 'react-cookie';
 import Button from '../../elements/Button';
 import styled from 'styled-components';
+import CommonModal from '../../elements/CommonModal';
 
-const GameStartHeader = () => {
+const GameStartHeader = ({ setEarlyVote }) => {
+  const [modalStatus, setModalStatus] = useState(false);
   const [disabledBtn, setDisabledBtn] = useState('투표준비');
-  const asker = useSelector((state) => state.game.asker);
-  const answerer = useSelector((state) => state.game.answerer);
+  const userNickname = useSelector((state) => state.room.userNickname);
+  const [cookies, setCookies] = useCookies(['nickname']);
   const navigate = useNavigate();
   const param = useParams();
+  const [earlyVoteInfo, setEarlyVoteInfo] = useState();
 
-  const voteBtnHandler = () => {
+  const tempGoOutBtn = () => {
     alert('방 나가기 소켓 임시로 넣었음');
     socket.emit('leaveRoom', param.id);
     socket.on('leaveRoom', () => {
@@ -23,7 +27,44 @@ const GameStartHeader = () => {
     navigate('/home');
   };
 
-  //투표하기 활성화 btn
+  const modalset = () =>
+    setTimeout(() => {
+      setModalStatus(false);
+    }, 5000);
+
+  const voteBtnHandler = () => {
+    //방에 들어온 인원이 for문을 돌며,
+    //cookies에 있는 닉네임과 같은 사람이라면 투표
+    //투표완료 되면 버튼 다시 비활성화
+    for (let i = 0; i < userNickname.length; i++) {
+      if (userNickname[i] === cookies.nickname) {
+        setEarlyVote(true);
+        socket.emit('nowVote', param.id, true);
+        //임시 테스트를 위해 넣어두었슴 투표 정상확인되면 삭제 예정
+        setModalStatus(true);
+        modalset();
+        clearTimeout(modalset);
+        //setDisabledBtn('투표완료');
+      }
+    }
+    socket.on('nowVote', (voteInfos) => {
+      setEarlyVoteInfo(voteInfos);
+    });
+
+    //방 인원이 투표한 숫자가 게임 인원의 과반수 이상이라면
+    //모달 띄운 후 투표페이지로 이동
+    if (
+      Number(earlyVoteInfo?.currNowVoteCount) >=
+      Number(earlyVoteInfo?.currGameRoomUsers) / 2
+    ) {
+      setModalStatus(true);
+      modalset();
+      clearTimeout(modalset);
+    }
+  };
+  console.log(earlyVoteInfo);
+
+  //투표하기 활성화 btn -> 시간은 3분으로 변경 예정
   useEffect(() => {
     const checkNotDisabledBtn = setTimeout(() => {
       setDisabledBtn('투표하기');
@@ -36,30 +77,39 @@ const GameStartHeader = () => {
 
   return (
     <HeaderSection>
+      {modalStatus ? (
+        <CommonModal
+          main="잠시 후 투표가 시작됩니다. "
+          sub="과반수가 투표를 요청하여 투표가 진행됩니다."
+          time
+        ></CommonModal>
+      ) : (
+        <></>
+      )}
       <HeaderTitle>
         <div className="flex">
           <MegaphoneDiv>
             <Megaphone width="15" height="13" fill="none" />
           </MegaphoneDiv>
-          {answerer === '' ? (
-            <div>[{asker}] (이)가 질문하고 싶은 유저를 찾고 있습니다.</div>
-          ) : (
-            <div>
-              [{asker}] (이)가 [{answerer}] 에게 질문합니다.
-            </div>
-          )}
+          <div>스파이가 알아채지 못하게 답변해야해요 !</div>
         </div>
         <div className="flex gap-[6px]">
           <VoteIconDiv>
             <VoteIcon width="16" height="16" fill="none" />
           </VoteIconDiv>
-          <div className=" pr-2">3/7</div>
+          <div className=" pr-2">
+            {earlyVoteInfo?.currNowVoteCount || 0}/
+            {earlyVoteInfo?.currGameRoomUsers || userNickname.length}
+          </div>
         </div>
       </HeaderTitle>
+      <Button type={'button'} addStyle={{}} onClick={tempGoOutBtn}>
+        나가기 임시
+      </Button>
       <Button
         type={'button'}
         addStyle={{
-          backgroundColor: '#2B2B2B',
+          backgroundColor: '#FF7300',
           borderRadius: '10px 10px 0 0',
           width: '113px',
           height: '40px',

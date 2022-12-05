@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   roomInfos: [],
+  userNickname: [],
 };
 
 const roomSlice = createSlice({
@@ -11,8 +12,12 @@ const roomSlice = createSlice({
     getRoomInfo: (state, action) => {
       state.roomInfos = action.payload;
     },
+    getUserNickname: (state, action) => {
+      state.userNickname = action.payload;
+      // console.log('난 리듀서 액션', state.userNickname);
+    },
   },
 });
 
-export const { getRoomInfo } = roomSlice.actions;
+export const { getRoomInfo, getUserNickname } = roomSlice.actions;
 export default roomSlice.reducer;
