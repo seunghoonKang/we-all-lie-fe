@@ -31,7 +31,7 @@ const Chat = () => {
     // { notice: '뀨띠님이 입장하셨습니다' },
     // { name: '뀨띠', msg: '안눙' },
   ]);
-  //const [roomChat, setRoomChat] = useState([]);
+  const [roomChat, setRoomChat] = useState([]);
 
   const msgInput = useRef();
 
@@ -51,9 +51,15 @@ const Chat = () => {
     }
   }, []);
 
+  //로비채팅 스크롤
   useEffect(() => {
     scrollToBottom();
   }, [chat]);
+
+  //룸채팅 스크롤
+  useEffect(() => {
+    scrollToBottom();
+  }, [roomChat]);
 
   useEffect(() => {
     if (param.id === undefined) {
@@ -66,13 +72,20 @@ const Chat = () => {
       console.log('룸이얌');
       //룸 들어왔을 때 실행
       socket.emit('enterRoomMsg', param.id, nickname, () => {
-        setChat([...chat, { notice: `${nickname} 님이 입장하셨습니다` }]);
+        setRoomChat([
+          ...roomChat,
+          { notice: `${nickname} 님이 입장하셨습니다` },
+        ]);
       });
     }
   }, []);
 
-  const myMsg = (a) => {
+  const myLobbyMsg = (a) => {
     setChat([...chat, a]);
+  };
+
+  const myRoomMsg = (a) => {
+    setRoomChat([...roomChat, a]);
   };
 
   const msgSubmitHandler = (e) => {
@@ -83,7 +96,7 @@ const Chat = () => {
     //채팅에 닉네임, 메세지 전송 (emit)
     const mine = { name: `${nickname}`, msg: `${msgValue}` };
     // console.log(mine);
-    myMsg(mine);
+    //myMsg(mine);
 
     if (param.id === undefined) {
       //내가 적은 msg
@@ -93,7 +106,7 @@ const Chat = () => {
         { name: `${nickname}`, msg: `${msgValue}` },
         () => {
           //나한테 띄워줄 내가 보낸 메세지 추가
-          myMsg(mine);
+          myLobbyMsg(mine);
         }
       );
       msgInput.current.value = '';
@@ -104,7 +117,7 @@ const Chat = () => {
         param.id,
         () => {
           //나한테 띄워줄 내가 보낸 메세지 추가
-          myMsg(mine);
+          myRoomMsg(mine);
         }
       );
       msgInput.current.value = '';
@@ -120,7 +133,7 @@ const Chat = () => {
       //룸msg
       socket.on('receiveRoomMsg', (msg) => {
         //console.log(msg);
-        setChat([...chat, msg]);
+        setRoomChat([...roomChat, msg]);
       });
     }
     //퇴장시 실행 (아마도 자동실행?)
