@@ -43,14 +43,19 @@ const StyledButton = styled.button`
   width: ${(props) => props?.addStyle.width || '96px'};
   height: ${(props) => props?.addStyle.height || '40px'};
   background-color: ${(props) => props?.addStyle.backgroundColor || '#fff'};
+  border-color: ${(props) => props?.addStyle.borderColor || 'none'};
+  border-width: ${(props) => props?.addStyle.borderWidth || 'none'};
+  border-style: ${(props) => props?.addStyle.borderStyle || 'none'};
   border-radius: ${(props) => props?.addStyle.borderRadius || '6px'};
   color: ${(props) => props?.addStyle.color || '#1F1F1F'};
   &:hover {
     transition: 0.3s ease-in-out;
     background-color: #ff7300;
+    border: none;
+    color: #fff;
   }
   &:not(:hover) {
-    transition: 0.3s ease-out;
+    transition: 0.5s ease-out;
   }
 
   ${(props) =>
