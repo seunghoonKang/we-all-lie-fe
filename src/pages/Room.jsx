@@ -67,6 +67,7 @@ const Room = () => {
 const Box = styled.div`
   display: flex;
   justify-content: space-between;
+  padding: 16px;
 `;
 
 //List 없애고 Game 에 합침
