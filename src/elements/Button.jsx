@@ -5,7 +5,17 @@ const Button = ({ children, ...props }) => {
   return (
     <>
       {/* 투표때 필요해서 넣었음.. */}
-      {children === '투표준비' ? (
+      {children === '투표완료' ? (
+        <StyledButton
+          type={props.type}
+          onClick={props.onClick}
+          addStyle={props.addStyle}
+          doong={props.doong}
+          disabled={props.disabled}
+        >
+          {children}
+        </StyledButton>
+      ) : children === '투표준비' ? (
         <StyledButton
           type={props.type}
           onClick={props.onClick}
@@ -33,14 +43,19 @@ const StyledButton = styled.button`
   width: ${(props) => props?.addStyle.width || '96px'};
   height: ${(props) => props?.addStyle.height || '40px'};
   background-color: ${(props) => props?.addStyle.backgroundColor || '#fff'};
+  border-color: ${(props) => props?.addStyle.borderColor || 'none'};
+  border-width: ${(props) => props?.addStyle.borderWidth || 'none'};
+  border-style: ${(props) => props?.addStyle.borderStyle || 'none'};
   border-radius: ${(props) => props?.addStyle.borderRadius || '6px'};
   color: ${(props) => props?.addStyle.color || '#1F1F1F'};
   &:hover {
     transition: 0.3s ease-in-out;
-    background-color: #ff8217;
+    background-color: #ff7300;
+    border: none;
+    color: #fff;
   }
   &:not(:hover) {
-    transition: 0.3s ease-out;
+    transition: 0.5s ease-out;
   }
 
   ${(props) =>
@@ -60,7 +75,7 @@ const StyledButton = styled.button`
     props.disabled &&
     css`
       :disabled ;
-      background-color: gray;
+      background-color: #a5a5a5;
       &:hover {
         transition: 0.3s ease-in-out;
         background-color: red;

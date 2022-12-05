@@ -1,88 +1,131 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Camera from '../elements/Camera2';
 import { socket } from '../shared/socket';
 import Timer from '../elements/Timer';
 import GameStartHeader from './gamestart/GameStartHeader';
+import { useCookies } from 'react-cookie';
+import { useParams } from 'react-router-dom';
+import { goFromGameStartToGameVote } from '../redux/modules/gameSlice';
+import GivenWord from './gamestart/GivenWord';
 
 const GameStart = () => {
-  const userCameras = [
-    { nickName: '승훈' },
-    { nickName: '연석' },
-    { nickName: '진영' },
-    { nickName: '형석' },
-    { nickName: '민형' },
-    { nickName: '하은' },
-    { nickName: '윤진' },
-    { nickName: '주은' },
-  ];
-
+  const dispatch = useDispatch();
+  const userNickname = useSelector((state) => state.room.userNickname);
   const words = useSelector((state) => state.game.words);
   const answerWord = useSelector((state) => state.game.answerWord);
   const category = useSelector((state) => state.game.category);
   const spy = useSelector((state) => state.game.spy);
+  const [cookies, setCookies] = useCookies(['nickname']);
+  const param = useParams();
+  const [earlyVote, setEarlyVote] = useState(false);
+  const goFromStartToVote = useSelector(
+    (state) => state.game.goFromStartToVote
+  );
+  const userCameras = [
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+    { nickName: '빈자리' },
+  ];
+  const fillInTheEmptySeats = () => {
+    for (let step = 0; step < 8; step++) {
+      if (userCameras[step].nickName === '빈자리') {
+        userCameras[step].nickName = userNickname[step];
+      }
+    }
+    return userCameras;
+  };
+  fillInTheEmptySeats();
+
+  // userCameras[0].nickName = cookies.nickname;
+
+  useEffect(() => {
+    socket.emit('setNowVote', param.id);
+  }, []);
 
   console.log(words, answerWord, category, spy);
+  console.log(goFromStartToVote);
+
+  /* 시간 다되면 알아서 투표페이지로 이동하기 
+  const votePage = () =>
+    setTimeout(() => {
+      alert('시간이 다 되어 투표페이지로 이동합니다.');
+      dispatch(goFromGameStartToGameVote(true));
+    }, 10000);
+
+  useEffect(() => {
+    votePage();
+    return () => {
+      clearTimeout(votePage);
+    };
+  }, []);
+  */
 
   return (
     <>
-      <GameStartHeader />
-      {userCameras.map((person) => (
-        <GameEntireContainer key={person.nickName}>
-          <GameCardSection>
-            <Question>
-              <TimerContainer>
-                <TimerDiv>
-                  <MinWidthTimerDiv>
-                    <Timer min="8" />
-                  </MinWidthTimerDiv>
-                </TimerDiv>
-              </TimerContainer>
-              <div className="mt-[77px] pl-[37px]">
-                <div>
-                  <p className=" font-semibold text-[22px]">
-                    질문할 차례입니다!
-                  </p>
-                </div>
-                <div>
-                  <p>질문하고 싶은 유저의 화면을 클릭하세요.</p>
-                </div>
+      <GameStartHeader earlyVote={earlyVote} setEarlyVote={setEarlyVote} />
+      <GameEntireContainer>
+        <GameCardSection>
+          <Question>
+            <TimerContainer>
+              <TimerDiv>
+                <MinWidthTimerDiv>
+                  <Timer min="8" />
+                </MinWidthTimerDiv>
+              </TimerDiv>
+            </TimerContainer>
+            <div className="mt-[77px] pl-[37px]">
+              <div>
+                <p>장소</p>
+                <p>일러스트 영역</p>
               </div>
-            </Question>
-            {spy === person.nickName ? (
-              <CorrectCard>
-                <CorrectAnswer>
-                  <p>비밀임</p>
-                </CorrectAnswer>
-                <IllustSection>
-                  <p>{category}</p>
-                </IllustSection>
-              </CorrectCard>
-            ) : (
-              <CorrectCard>
-                <CorrectAnswer>
-                  <p>{answerWord}</p>
-                </CorrectAnswer>
-                <IllustSection>
-                  <p>{category}</p>
-                </IllustSection>
-              </CorrectCard>
-            )}
-          </GameCardSection>
-          <VideoContainer>
-            <Camera nickname={person.nickName} />
-          </VideoContainer>
-        </GameEntireContainer>
-      ))}
+            </div>
+          </Question>
+          {spy === cookies.nickname ? (
+            <CorrectCard>
+              <CorrectAnswer>
+                <p>제시어 목록</p>
+              </CorrectAnswer>
+              <IllustSection>
+                {words.map((word) => {
+                  return <GivenWord word={word} key={word} />;
+                })}
+              </IllustSection>
+            </CorrectCard>
+          ) : (
+            <CorrectCard>
+              <CorrectAnswer>
+                <p>{answerWord}</p>
+              </CorrectAnswer>
+              <IllustSection>
+                {words.map((word) => {
+                  return <GivenWord word={word} key={word} />;
+                })}
+              </IllustSection>
+            </CorrectCard>
+          )}
+        </GameCardSection>
+        <VideoContainer>
+          {userCameras.map((person, i) => (
+            <Camera nickname={person.nickName} key={i} />
+          ))}
+        </VideoContainer>
+      </GameEntireContainer>
     </>
   );
 };
 
 const GameEntireContainer = styled.div`
   width: 100%;
-  height: 86vh;
+  //height: 86vh;
   background-color: #fff;
+  border-radius: 0 0 10px 10px;
 `;
 
 const VideoContainer = styled.div`
@@ -90,8 +133,8 @@ const VideoContainer = styled.div`
   flex-wrap: wrap;
   justify-content: space-between;
   min-height: 384px;
-  height: 50vh;
-  gap: 16px 16px;
+  height: 54vh;
+  //gap: 16px 16px;
   padding: 16px;
   background-color: white;
   border-radius: 10px;
@@ -101,7 +144,9 @@ const GameCardSection = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 30vh;
   width: 100%;
+  padding-top: 16px;
   margin-bottom: 16px;
   gap: 16px;
 `;
@@ -176,8 +221,8 @@ const CorrectCard = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  padding-top: 15px;
-  padding-right: 18px;
+  margin-top: 15px;
+  margin-right: 18px;
 `;
 
 const Question = styled.div`
@@ -187,16 +232,20 @@ const Question = styled.div`
   flex-direction: column;
   margin-left: 16px;
   flex-grow: 1;
-  padding-top: 15px;
+  margin-top: 15px;
 `;
 
 const IllustSection = styled.div`
   width: 100%;
   height: 12.0625rem;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  background-color: #dfdfdf;
+  background-color: #f5f5f5;
+  gap: 6px;
+  padding-bottom: 10px;
+  border-radius: 0 0 6px 6px;
 `;
 
 export default GameStart;

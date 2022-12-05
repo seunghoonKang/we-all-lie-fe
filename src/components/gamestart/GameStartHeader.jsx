@@ -4,17 +4,19 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { socket } from '../../shared/socket';
 import { ReactComponent as Megaphone } from '../../assets/megaphone.svg';
 import { ReactComponent as VoteIcon } from '../../assets/voteIcon.svg';
+import { useCookies } from 'react-cookie';
 import Button from '../../elements/Button';
 import styled from 'styled-components';
 
-const GameStartHeader = () => {
+const GameStartHeader = ({ earlyVote, setEarlyVote }) => {
   const [disabledBtn, setDisabledBtn] = useState('투표준비');
-  const asker = useSelector((state) => state.game.asker);
-  const answerer = useSelector((state) => state.game.answerer);
+  const userNickname = useSelector((state) => state.room.userNickname);
+  const [cookies, setCookies] = useCookies(['nickname']);
   const navigate = useNavigate();
   const param = useParams();
+  const [earlyVoteCount, setEarlyVoteCount] = useState(0);
 
-  const voteBtnHandler = () => {
+  const tempGoOutBtn = () => {
     alert('방 나가기 소켓 임시로 넣었음');
     socket.emit('leaveRoom', param.id);
     socket.on('leaveRoom', () => {
@@ -23,7 +25,34 @@ const GameStartHeader = () => {
     navigate('/home');
   };
 
-  //투표하기 활성화 btn
+  const voteBtnHandler = () => {
+    //방에 들어온 인원이 for문을 돌며,
+    //cookies에 있는 닉네임과 같은 사람이라면 투표
+    //투표완료 되면 버튼 다시 비활성화
+    for (let i = 0; i < userNickname.length; i++) {
+      if (userNickname[i] === cookies.nickname) {
+        setEarlyVoteCount((prev) => prev + 1);
+        setEarlyVote(true);
+        socket.emit('nowVote', param.id, true);
+
+        //setDisabledBtn('투표완료');
+      }
+    }
+    socket.on('nowVote', (a, b, c) => {
+      console.log(a, b, c);
+    });
+    //방 인원이 투표한 숫자가 게임 인원의 과반수 이상이라면
+    //voteStart emit 해주고 투표페이지로 이동하면 될거같음
+    // if (earlyVoteCount >= userNickname.length / 2) {
+    //   alert('이제 투표페이지 가야지?');
+    // }
+  };
+
+  // useEffect(() => {
+
+  // }, [voteBtnHandler]);
+
+  //투표하기 활성화 btn -> 시간은 3분으로 변경 예정
   useEffect(() => {
     const checkNotDisabledBtn = setTimeout(() => {
       setDisabledBtn('투표하기');
@@ -41,25 +70,24 @@ const GameStartHeader = () => {
           <MegaphoneDiv>
             <Megaphone width="15" height="13" fill="none" />
           </MegaphoneDiv>
-          {answerer === '' ? (
-            <div>[{asker}] (이)가 질문하고 싶은 유저를 찾고 있습니다.</div>
-          ) : (
-            <div>
-              [{asker}] (이)가 [{answerer}] 에게 질문합니다.
-            </div>
-          )}
+          <div>스파이가 알아채지 못하게 답변해야해요 !</div>
         </div>
         <div className="flex gap-[6px]">
           <VoteIconDiv>
             <VoteIcon width="16" height="16" fill="none" />
           </VoteIconDiv>
-          <div className=" pr-2">3/7</div>
+          <div className=" pr-2">
+            {earlyVoteCount}/{userNickname.length}
+          </div>
         </div>
       </HeaderTitle>
+      <Button type={'button'} addStyle={{}} onClick={tempGoOutBtn}>
+        나가기 임시
+      </Button>
       <Button
         type={'button'}
         addStyle={{
-          backgroundColor: '#2B2B2B',
+          backgroundColor: '#FF7300',
           borderRadius: '10px 10px 0 0',
           width: '113px',
           height: '40px',

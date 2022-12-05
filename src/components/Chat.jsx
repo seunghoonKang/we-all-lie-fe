@@ -126,7 +126,8 @@ const Chat = () => {
     //퇴장시 실행 (아마도 자동실행?)
     //socket.emit('disconnecting', param.id, nickname);
   };
-  console.log('param확인', param.id);
+
+  // console.log('param확인', param.id);
   return (
     <ChatLayout theme={themeContext}>
       <MyProfile onClick={() => navigate(`/user/`)}>
