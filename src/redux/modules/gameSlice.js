@@ -23,7 +23,7 @@ const initialState = {
     '사이클',
     '축구',
     '태권도',
-    '피겨스케이팅',
+    '롯데월드 아이스링크장',
   ],
   answerWord: '골프',
   category: '스포츠',
