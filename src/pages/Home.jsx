@@ -25,6 +25,7 @@ const Home = () => {
   useEffect(() => {
     socket.on('showRoom', (room) => {
       setRooms(room);
+      //console.log(rooms);
     });
   }, []);
 
