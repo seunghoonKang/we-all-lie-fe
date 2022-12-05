@@ -1,6 +1,4 @@
-import { useState } from 'react';
 import styled from 'styled-components';
-import arrestedstamp from '../img/arrested.png';
 
 const Camera = ({ person }) => {
   return (

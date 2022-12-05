@@ -33,28 +33,54 @@ const GameReady = () => {
   });
   console.log(pendingReady);
 
+  // 기존내용
+  // let userCameras = [
+  //   '빈자리',
+  //   '빈자리',
+  //   '빈자리',
+  //   '빈자리',
+  //   '빈자리',
+  //   '빈자리',
+  //   '빈자리',
+  //   '빈자리',
+  // ];
+
+  //새로운 내용
   let userCameras = [
-    '빈자리',
-    '빈자리',
-    '빈자리',
-    '빈자리',
-    '빈자리',
-    '빈자리',
-    '빈자리',
-    '빈자리',
+    { nickname: '빈자리', boolkey: false },
+    { nickname: '빈자리', boolkey: false },
+    { nickname: '빈자리', boolkey: false },
+    { nickname: '빈자리', boolkey: false },
+    { nickname: '빈자리', boolkey: false },
+    { nickname: '빈자리', boolkey: false },
+    { nickname: '빈자리', boolkey: false },
+    { nickname: '빈자리', boolkey: false },
   ];
 
-  //입장하는 유저들
+  //입장하는 유저들 기존 내용
+  // const vacancy = () => {
+  //   for (let step = 0; step < userNickname.length; step++) {
+  //     if (userCameras[step] === '빈자리') {
+  //       userCameras[step] = userNickname[step];
+  //     }
+  //   }
+  //   return userCameras;
+  // };
+  // console.log('8개의 배열형태', userCameras);
+
+  // vacancy();
+
   const vacancy = () => {
     for (let step = 0; step < userNickname.length; step++) {
-      if (userCameras[step] === '빈자리') {
-        userCameras[step] = userNickname[step];
+      if (userCameras[step].nickname === '빈자리') {
+        userCameras[step].nickname = userNickname[step];
+        console.log(userCameras[step].nickname);
       }
     }
     return userCameras;
   };
+  console.log('8개의 배열형태', userCameras);
   vacancy();
-  // console.log('8개의 배열형태', userCameras);
 
   //4명 이상이 준비시 카테고리 받아옴
   socket.on('gameStart', (gameStart) => {
@@ -106,26 +132,80 @@ const GameReady = () => {
           )
         )} */}
 
-        {/* 네번째 방법 */}
-        {userCameras.map((person, a) =>
+        {/* 4번째  */}
+        {/* {userCameras.map((person, i) =>
           !ready ? (
-            <Camera person={person} key={person} />
+            <Camera person={person} key={i} />
           ) : (
-            pendingReady.map((per, b) => {
-              console.log(per);
-              console.log('닉네임이라네~', per.nickname);
-              console.log('불키', per.boolkey);
-              per.nickname === person[a] && per.boolkey === 'true' ? (
-                <ReadyWrap person={person[a]} key={person}>
+            pendingReady.map((pending) => {
+              console.log('펜딩', pending);
+              console.log('닉네임', pending.nickname);
+              console.log('닉네임', pending.boolkey);
+              pending.nickname === cookies.nickname &&
+              pending.boolkey === 'true' ? (
+                <ReadyWrap person={person} key={i}>
                   <Ready />
                   <ReadyNickName>{person}</ReadyNickName>
                 </ReadyWrap>
               ) : (
-                <></>
+                <Camera person={person} key={i} />
               );
             })
           )
-        )}
+        )} */}
+
+        {/* 6번째 ..(일단 한명만 레디되는거 성공 무야호 ~) */}
+        {/* {userCameras.map((person, i) =>
+          !ready ? (
+            <Camera person={person} key={i} />
+          ) : cookies.nickname === person ? (
+            <ReadyWrap>
+              <Ready />
+              <ReadyNickName key={i}>{person}</ReadyNickName>
+            </ReadyWrap>
+          ) : (
+            <Camera person={person} key={i} />
+          )
+        )} */}
+
+        {/* <Camera
+          nickname={userCameras[0].nickname}
+          boolkey={userCameras[0].boolkey}
+        ></Camera>
+        <Camera
+          nickname={userCameras[1].nickname}
+          boolkey={userCameras[1].boolkey}
+        ></Camera>
+        <Camera
+          nickname={userCameras[2].nickname}
+          boolkey={userCameras[2].boolkey}
+        ></Camera>
+        <Camera
+          nickname={userCameras[3].nickname}
+          boolkey={userCameras[3].boolkey}
+        ></Camera>
+        <Camera
+          nickname={userCameras[4].nickname}
+          boolkey={userCameras[4].boolkey}
+        ></Camera>
+        <Camera
+          nickname={userCameras[5].nickname}
+          boolkey={userCameras[5].boolkey}
+        ></Camera>
+        <Camera
+          nickname={userCameras[6].nickname}
+          boolkey={userCameras[6].boolkey}
+        ></Camera>
+        <Camera
+          nickname={userCameras[7].nickname}
+          boolkey={userCameras[7].boolkey}
+        ></Camera> */}
+
+        {userCameras.map((person, i) => {
+          console.log('person 값', person);
+          console.log('닉네임', person.nickname);
+          <Camera person={person.nickname} key={i}></Camera>;
+        })}
       </Users>
     </ReadyLayout>
   );
