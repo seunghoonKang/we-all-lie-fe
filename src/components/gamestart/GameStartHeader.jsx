@@ -7,8 +7,10 @@ import { ReactComponent as VoteIcon } from '../../assets/voteIcon.svg';
 import { useCookies } from 'react-cookie';
 import Button from '../../elements/Button';
 import styled from 'styled-components';
+import CommonModal from '../../elements/CommonModal';
 
-const GameStartHeader = ({ earlyVote, setEarlyVote }) => {
+const GameStartHeader = ({ setEarlyVote }) => {
+  const [modalStatus, setModalStatus] = useState(false);
   const [disabledBtn, setDisabledBtn] = useState('투표준비');
   const userNickname = useSelector((state) => state.room.userNickname);
   const [cookies, setCookies] = useCookies(['nickname']);
@@ -25,6 +27,11 @@ const GameStartHeader = ({ earlyVote, setEarlyVote }) => {
     navigate('/home');
   };
 
+  const modalset = () =>
+    setTimeout(() => {
+      setModalStatus(false);
+    }, 5000);
+
   const voteBtnHandler = () => {
     //방에 들어온 인원이 for문을 돌며,
     //cookies에 있는 닉네임과 같은 사람이라면 투표
@@ -33,19 +40,26 @@ const GameStartHeader = ({ earlyVote, setEarlyVote }) => {
       if (userNickname[i] === cookies.nickname) {
         setEarlyVote(true);
         socket.emit('nowVote', param.id, true);
-        setDisabledBtn('투표완료');
+        //임시 테스트를 위해 넣어두었슴 투표 정상확인되면 삭제 예정
+        setModalStatus(true);
+        modalset();
+        clearTimeout(modalset);
+        //setDisabledBtn('투표완료');
       }
     }
     socket.on('nowVote', (voteInfos) => {
       setEarlyVoteInfo(voteInfos);
     });
+
     //방 인원이 투표한 숫자가 게임 인원의 과반수 이상이라면
-    //투표페이지로 이동하면 될거같음
+    //모달 띄운 후 투표페이지로 이동
     if (
       Number(earlyVoteInfo?.currNowVoteCount) >=
       Number(earlyVoteInfo?.currGameRoomUsers) / 2
     ) {
-      alert('이제 투표페이지 가야지?');
+      setModalStatus(true);
+      modalset();
+      clearTimeout(modalset);
     }
   };
   console.log(earlyVoteInfo);
@@ -63,6 +77,15 @@ const GameStartHeader = ({ earlyVote, setEarlyVote }) => {
 
   return (
     <HeaderSection>
+      {modalStatus ? (
+        <CommonModal
+          main="잠시 후 투표가 시작됩니다. "
+          sub="과반수가 투표를 요청하여 투표가 진행됩니다."
+          time
+        ></CommonModal>
+      ) : (
+        <></>
+      )}
       <HeaderTitle>
         <div className="flex">
           <MegaphoneDiv>
