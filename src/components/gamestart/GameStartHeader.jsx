@@ -34,18 +34,18 @@ const GameStartHeader = ({ earlyVote, setEarlyVote }) => {
         setEarlyVoteCount((prev) => prev + 1);
         setEarlyVote(true);
         socket.emit('nowVote', param.id, true);
-        setDisabledBtn('투표완료');
+
+        //setDisabledBtn('투표완료');
       }
     }
-
+    socket.on('nowVote', (a, b, c) => {
+      console.log(a, b, c);
+    });
     //방 인원이 투표한 숫자가 게임 인원의 과반수 이상이라면
     //voteStart emit 해주고 투표페이지로 이동하면 될거같음
-    if (earlyVoteCount >= userNickname.length / 2) {
-      socket.emit('voteStart', (curr) => {
-        console.log(curr);
-      });
-      alert('이제 투표페이지 가야지?');
-    }
+    // if (earlyVoteCount >= userNickname.length / 2) {
+    //   alert('이제 투표페이지 가야지?');
+    // }
   };
 
   // useEffect(() => {

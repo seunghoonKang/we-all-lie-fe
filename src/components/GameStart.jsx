@@ -8,6 +8,7 @@ import GameStartHeader from './gamestart/GameStartHeader';
 import { useCookies } from 'react-cookie';
 import { useParams } from 'react-router-dom';
 import { goFromGameStartToGameVote } from '../redux/modules/gameSlice';
+import GivenWord from './gamestart/GivenWord';
 
 const GameStart = () => {
   const dispatch = useDispatch();
@@ -81,20 +82,20 @@ const GameStart = () => {
             </TimerContainer>
             <div className="mt-[77px] pl-[37px]">
               <div>
-                <p className=" font-semibold text-[22px]">질문할 차례입니다!</p>
-              </div>
-              <div>
-                <p>질문하고 싶은 유저의 화면을 클릭하세요.</p>
+                <p>장소</p>
+                <p>일러스트 영역</p>
               </div>
             </div>
           </Question>
           {spy === cookies.nickname ? (
             <CorrectCard>
               <CorrectAnswer>
-                <p>비밀임</p>
+                <p>제시어 목록</p>
               </CorrectAnswer>
               <IllustSection>
-                <p>{category}</p>
+                {words.map((word) => {
+                  return <GivenWord word={word} key={word} />;
+                })}
               </IllustSection>
             </CorrectCard>
           ) : (
@@ -103,7 +104,9 @@ const GameStart = () => {
                 <p>{answerWord}</p>
               </CorrectAnswer>
               <IllustSection>
-                <p>{category}</p>
+                {words.map((word) => {
+                  return <GivenWord word={word} key={word} />;
+                })}
               </IllustSection>
             </CorrectCard>
           )}
@@ -143,6 +146,7 @@ const GameCardSection = styled.section`
   align-items: center;
   height: 30vh;
   width: 100%;
+  padding-top: 16px;
   margin-bottom: 16px;
   gap: 16px;
 `;
@@ -217,8 +221,8 @@ const CorrectCard = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  padding-top: 15px;
-  padding-right: 18px;
+  margin-top: 15px;
+  margin-right: 18px;
 `;
 
 const Question = styled.div`
@@ -228,16 +232,20 @@ const Question = styled.div`
   flex-direction: column;
   margin-left: 16px;
   flex-grow: 1;
-  padding-top: 15px;
+  margin-top: 15px;
 `;
 
 const IllustSection = styled.div`
   width: 100%;
   height: 12.0625rem;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  background-color: #dfdfdf;
+  background-color: #f5f5f5;
+  gap: 6px;
+  padding-bottom: 10px;
+  border-radius: 0 0 6px 6px;
 `;
 
 export default GameStart;
