@@ -31,7 +31,7 @@ const Chat = () => {
     // { notice: '뀨띠님이 입장하셨습니다' },
     // { name: '뀨띠', msg: '안눙' },
   ]);
-  const [roomChat, setRoomChat] = useState([]);
+  //const [roomChat, setRoomChat] = useState([]);
 
   const msgInput = useRef();
 
