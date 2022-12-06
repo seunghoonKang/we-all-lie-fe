@@ -56,13 +56,18 @@ const RoomChat = () => {
   useEffect(() => {
     //방 들어왔을 때 실행
     socket.emit('enterRoomMsg', param.id, nickname, () => {
-      setChat([...chat, { notice: `${nickname} 님이 입장하셨습니다` }]);
+      const msgId = new Date().getTime().toString(36);
+      setChat([
+        ...chat,
+        { notice: `${nickname} 님이 입장하셨습니다`, msgId: msgId },
+      ]);
     });
   }, []);
 
   //남이 보낸 msg
-  socket.on('receiveRoomMsg', (msg) => {
-    // console.log(msg);
+  socket.on('receiveRoomMsg', (msg, msgId) => {
+    msg.msgId = msgId;
+    console.log('남이 보낸 Room msg::', msg);
     setChat([...chat, msg]);
   });
 
@@ -76,7 +81,8 @@ const RoomChat = () => {
 
     //내가 적은 msg (나한테만 보임)
     //채팅에 닉네임, 메세지 전송 (emit)
-    const mine = { name: `${nickname}`, msg: `${msgValue}` };
+    const msgId = new Date().getTime().toString(36);
+    const mine = { name: `${nickname}`, msg: `${msgValue}`, msgId: msgId };
     // console.log(mine);
     myMsg(mine);
 
@@ -112,15 +118,14 @@ const RoomChat = () => {
         <Notice>매너 채팅 안하면 벤먹는다!</Notice>
 
         {chat.map((a) => {
-          //index빼봄
           return a.notice ? (
-            <Notice>{a.notice}</Notice> //key빼봄
+            <Notice key={a.msgId}>{a.notice}</Notice> //key빼봄
           ) : (
             a.msg &&
               (a.name == nickname ? (
                 <Msg
                   theme={themeContext}
-                  //key={index}
+                  key={a.msgId}
                   style={{ justifyContent: 'flex-end' }}
                 >
                   <div
@@ -139,10 +144,7 @@ const RoomChat = () => {
                   </User>
                 </Msg>
               ) : (
-                <Msg
-                  theme={themeContext}
-                  //key={index}
-                >
+                <Msg theme={themeContext} key={a.msgId}>
                   <User>
                     <ChatProfileDefault />
                     {/* <ChatProfileLion /> */}
