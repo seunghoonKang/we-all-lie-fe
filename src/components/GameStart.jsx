@@ -1,16 +1,22 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import styled from 'styled-components';
-import Camera from '../elements/Camera2';
-import { socket } from '../shared/socket';
+import React, { useState, useEffect, useContext } from 'react';
 import Timer from '../elements/Timer';
+import Camera from '../elements/Camera2';
 import GameStartHeader from './gamestart/GameStartHeader';
+import GivenWord from './gamestart/GivenWord';
+import styled, { ThemeContext } from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { socket } from '../shared/socket';
 import { useCookies } from 'react-cookie';
 import { useParams } from 'react-router-dom';
 import { goFromGameStartToGameVote } from '../redux/modules/gameSlice';
-import GivenWord from './gamestart/GivenWord';
+import { ReactComponent as CategoryFood } from '../assets/category_food.svg';
+import { ReactComponent as CategorySport } from '../assets/category_sport.svg';
+import { ReactComponent as CategoryCountry } from '../assets/category_country.svg';
+import { ReactComponent as CategoryAnimal } from '../assets/category_animal.svg';
+import SelectCategoryImg from './gamestart/SelectCategoryImg';
 
 const GameStart = () => {
+  const themeContext = useContext(ThemeContext);
   const dispatch = useDispatch();
   const userNickname = useSelector((state) => state.room.userNickname);
   const words = useSelector((state) => state.game.words);
@@ -68,7 +74,7 @@ const GameStart = () => {
   */
 
   return (
-    <>
+    <div theme={themeContext}>
       <GameStartHeader earlyVote={earlyVote} setEarlyVote={setEarlyVote} />
       <GameEntireContainer>
         <GameCardSection>
@@ -80,17 +86,16 @@ const GameStart = () => {
                 </MinWidthTimerDiv>
               </TimerDiv>
             </TimerContainer>
-            <div className="mt-[77px] pl-[37px]">
-              <div>
-                <p>장소</p>
-                <p>일러스트 영역</p>
-              </div>
+            <div>
+              <SelectCategoryImg category={category} />
+              {/* <CategoryFood /> */}
             </div>
           </Question>
           {spy === cookies.nickname ? (
             <CorrectCard>
               <CorrectAnswer>
-                <p>제시어 목록</p>
+                <WhatWords>제시어</WhatWords>
+                <AnswerCategoryDiv>{category} / ?</AnswerCategoryDiv>
               </CorrectAnswer>
               <IllustSection>
                 {words.map((word) => {
@@ -101,7 +106,9 @@ const GameStart = () => {
           ) : (
             <CorrectCard>
               <CorrectAnswer>
-                <p>{answerWord}</p>
+                <AnswerCategoryDiv>
+                  {category}/{answerWord}
+                </AnswerCategoryDiv>
               </CorrectAnswer>
               <IllustSection>
                 {words.map((word) => {
@@ -117,7 +124,7 @@ const GameStart = () => {
           ))}
         </VideoContainer>
       </GameEntireContainer>
-    </>
+    </div>
   );
 };
 
@@ -154,7 +161,7 @@ const GameCardSection = styled.section`
 const TimerContainer = styled.div`
   position: relative;
   width: 100%;
-  height: 40px;
+  min-height: 2.5rem;
   border-radius: 6px;
   background-color: #f5f5f5;
 `;
@@ -164,7 +171,7 @@ const TimerDiv = styled.div`
   align-items: center;
   position: absolute;
   width: 80%;
-  height: 40px;
+  height: 2.5rem;
   border-radius: 6px;
   color: #fff;
   background-color: #222;
@@ -204,13 +211,35 @@ const MinWidthTimerDiv = styled.div`
 const CorrectAnswer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   font-weight: 700;
   font-size: 16px;
   width: 100%;
-  height: 40px;
+  height: 56px;
   border-radius: 6px 6px 0 0;
   background-color: #f5f5f5;
+`;
+
+const WhatWords = styled.div`
+  width: 42px;
+  height: 20px;
+  margin: 0 0 0 27px;
+`;
+
+const AnswerCategoryDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 158px;
+  height: 38px;
+  background-color: ${(props) => props.theme.color.lionBlack};
+  color: ${(props) => props.theme.color.white};
+  font-weight: 700;
+  font-size: ${(props) => props.theme.fontSize.sm};
+  border-radius: 6px;
+  margin-top: 9px;
+  margin-right: 10px;
+  margin-bottom: 9px;
 `;
 
 const CorrectCard = styled.div`
