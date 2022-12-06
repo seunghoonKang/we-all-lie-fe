@@ -1,8 +1,7 @@
-import { useState } from 'react';
 import styled from 'styled-components';
-import arrestedstamp from '../img/arrested.png';
 
 const Camera = ({ person }) => {
+  console.log('여긴 카메라', person);
   return (
     <Wrap>
       <NickName>{person}</NickName>
@@ -34,15 +33,4 @@ const NickName = styled.div`
   align-self: flex-end;
   text-align: center;
   border-radius: 0px 0px 5px 5px;
-`;
-
-const Arrested = styled.div`
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translateY(-25%);
-  margin-left: -80px;
-  z-index: 999;
 `;
