@@ -96,7 +96,7 @@ const CreateRoom = ({ closeModal }) => {
                   navigate(`/room/${room._id}`)
                 );
                 setSubmitting(false);
-              }, 100);
+              }, 500);
             }}
           >
             <Form className=" flex flex-col pt-[17px] w-full">
@@ -127,7 +127,7 @@ const CreateRoom = ({ closeModal }) => {
                       onClick={modeClickHandler}
                       id="EASY"
                     >
-                      <label>
+                      <label className="w-[80px] min-h-full flex justify-center items-center">
                         <Field
                           type="radio"
                           name="gameMode"
@@ -143,7 +143,7 @@ const CreateRoom = ({ closeModal }) => {
                       onClick={modeClickHandler}
                       id="HARD"
                     >
-                      <label>
+                      <label className="w-[80px] min-h-full flex justify-center items-center">
                         <Field
                           type="radio"
                           name="gameMode"
