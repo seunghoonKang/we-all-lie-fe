@@ -8,16 +8,23 @@ import { ReactComponent as Ready } from '../assets/r_eady.svg';
 import { useParams } from 'react-router-dom';
 import { socket } from '../shared/socket';
 import { useSelector } from 'react-redux';
-import { useCookies } from 'react-cookie';
 
 const GameReady = () => {
   const [ready, useReady] = useState(false);
   const [pendingReady, setPendingReady] = useState([]);
   const param = useParams();
-  const [cookies] = useCookies(['nickname']);
-
   const userNickname = useSelector((state) => state.room.userNickname);
   // console.log('받아오는 닉네임 확인', userNickname);
+  const [userCameras, setUserCameras] = useState([
+    { nickname: '빈자리', boolkey: false },
+    { nickname: '빈자리', boolkey: false },
+    { nickname: '빈자리', boolkey: false },
+    { nickname: '빈자리', boolkey: false },
+    { nickname: '빈자리', boolkey: false },
+    { nickname: '빈자리', boolkey: false },
+    { nickname: '빈자리', boolkey: false },
+    { nickname: '빈자리', boolkey: false },
+  ]);
 
   const ReadyHandler = () => {
     socket.emit('ready', param.id);
@@ -28,59 +35,52 @@ const GameReady = () => {
   socket.on('ready', (nic, bool) => {
     setPendingReady([
       // ...pendingReady,
-      { nickname: `${nic}`, boolkey: `${bool}` },
+      { nickname: nic, boolkey: bool },
     ]);
   });
   console.log(pendingReady);
 
-  // 기존내용
   // let userCameras = [
-  //   '빈자리',
-  //   '빈자리',
-  //   '빈자리',
-  //   '빈자리',
-  //   '빈자리',
-  //   '빈자리',
-  //   '빈자리',
-  //   '빈자리',
+  //   { nickname: '빈자리', boolkey: false },
+  //   { nickname: '빈자리', boolkey: false },
+  //   { nickname: '빈자리', boolkey: false },
+  //   { nickname: '빈자리', boolkey: false },
+  //   { nickname: '빈자리', boolkey: false },
+  //   { nickname: '빈자리', boolkey: false },
+  //   { nickname: '빈자리', boolkey: false },
+  //   { nickname: '빈자리', boolkey: false },
   // ];
 
-  //새로운 내용
-  let userCameras = [
-    { nickname: '빈자리', boolkey: false },
-    { nickname: '빈자리', boolkey: false },
-    { nickname: '빈자리', boolkey: false },
-    { nickname: '빈자리', boolkey: false },
-    { nickname: '빈자리', boolkey: false },
-    { nickname: '빈자리', boolkey: false },
-    { nickname: '빈자리', boolkey: false },
-    { nickname: '빈자리', boolkey: false },
-  ];
-
-  //입장하는 유저들 기존 내용
-  // const vacancy = () => {
-  //   for (let step = 0; step < userNickname.length; step++) {
-  //     if (userCameras[step] === '빈자리') {
-  //       userCameras[step] = userNickname[step];
-  //     }
-  //   }
-  //   return userCameras;
-  // };
-  // console.log('8개의 배열형태', userCameras);
-
-  // vacancy();
-
-  const vacancy = () => {
-    for (let step = 0; step < userNickname.length; step++) {
-      if (userCameras[step].nickname === '빈자리') {
-        userCameras[step].nickname = userNickname[step];
-        console.log(userCameras[step].nickname);
+  //닉네임 변경
+  const Vacancy = () => {
+    for (let item = 0; item < userNickname.length; item++) {
+      if (userCameras[item].nickname === '빈자리') {
+        userCameras[item].nickname = userNickname[item];
+        // console.log(userCameras[nicItem].nickname);
       }
     }
     return userCameras;
   };
   console.log('8개의 배열형태', userCameras);
-  vacancy();
+
+  Vacancy();
+
+  //불값 변경
+  const GameReadyBool = () => {
+    for (let int = 0; int < 8; int++) {
+      console.log('카메라 불값', userCameras[int].nickname);
+      // console.log('팬딩 불값', pendingReady[int].nickname);
+
+      if (userCameras[int].nickname === pendingReady[0]?.nickname) {
+        userCameras[int].boolkey = pendingReady[0].boolkey;
+      }
+    }
+
+    return userCameras;
+  };
+  console.log('과연 불 값 변경?', userCameras);
+
+  GameReadyBool();
 
   //4명 이상이 준비시 카테고리 받아옴
   socket.on('gameStart', (gameStart) => {
@@ -101,111 +101,17 @@ const GameReady = () => {
           </div>
         </ReadyButtonSection>
       </div>
-      <Users
-      // userLength={userLength}
-      >
-        {/* 두번째 방법  */}
-
-        {/* {pendingReady.map((person, i) =>
-          !ready ? (
-            <Camera person={person.nickname} key={i} />
-          ) : (
+      <Users>
+        {userCameras.map((person, i) =>
+          person.boolkey === true ? (
             <ReadyWrap>
               <Ready />
               <ReadyNickName>{person.nickname}</ReadyNickName>
             </ReadyWrap>
-          )
-        )} */}
-
-        {/* 세번쨰 방법 */}
-        {/* {userCameras.map((person, i) =>
-          !ready ? (
-            <Camera person={person} key={i} />
-          ) : pendingReady.nickname === cookies.nickname ||
-            (pendingReady.boolkey && 'true') ? (
-            <ReadyWrap person={person} key={i}>
-              <Ready />
-              <ReadyNickName>{person}</ReadyNickName>
-            </ReadyWrap>
           ) : (
-            <Camera person={person} key={i} />
+            <Camera person={person.nickname} key={i} />
           )
-        )} */}
-
-        {/* 4번째  */}
-        {/* {userCameras.map((person, i) =>
-          !ready ? (
-            <Camera person={person} key={i} />
-          ) : (
-            pendingReady.map((pending) => {
-              console.log('펜딩', pending);
-              console.log('닉네임', pending.nickname);
-              console.log('닉네임', pending.boolkey);
-              pending.nickname === cookies.nickname &&
-              pending.boolkey === 'true' ? (
-                <ReadyWrap person={person} key={i}>
-                  <Ready />
-                  <ReadyNickName>{person}</ReadyNickName>
-                </ReadyWrap>
-              ) : (
-                <Camera person={person} key={i} />
-              );
-            })
-          )
-        )} */}
-
-        {/* 6번째 ..(일단 한명만 레디되는거 성공 무야호 ~) */}
-        {/* {userCameras.map((person, i) =>
-          !ready ? (
-            <Camera person={person} key={i} />
-          ) : cookies.nickname === person ? (
-            <ReadyWrap>
-              <Ready />
-              <ReadyNickName key={i}>{person}</ReadyNickName>
-            </ReadyWrap>
-          ) : (
-            <Camera person={person} key={i} />
-          )
-        )} */}
-
-        {/* <Camera
-          nickname={userCameras[0].nickname}
-          boolkey={userCameras[0].boolkey}
-        ></Camera>
-        <Camera
-          nickname={userCameras[1].nickname}
-          boolkey={userCameras[1].boolkey}
-        ></Camera>
-        <Camera
-          nickname={userCameras[2].nickname}
-          boolkey={userCameras[2].boolkey}
-        ></Camera>
-        <Camera
-          nickname={userCameras[3].nickname}
-          boolkey={userCameras[3].boolkey}
-        ></Camera>
-        <Camera
-          nickname={userCameras[4].nickname}
-          boolkey={userCameras[4].boolkey}
-        ></Camera>
-        <Camera
-          nickname={userCameras[5].nickname}
-          boolkey={userCameras[5].boolkey}
-        ></Camera>
-        <Camera
-          nickname={userCameras[6].nickname}
-          boolkey={userCameras[6].boolkey}
-        ></Camera>
-        <Camera
-          nickname={userCameras[7].nickname}
-          boolkey={userCameras[7].boolkey}
-        ></Camera> */}
-
-        {userCameras.map((person, i) => {
-          console.log('person 값', person);
-          console.log('닉네임', person.nickname);
-          <Camera person={person.nickname} key={i}></Camera>;
-        })}
+        )}
       </Users>
     </ReadyLayout>
   );
@@ -215,7 +121,6 @@ export default GameReady;
 
 const ReadyLayout = styled.div`
   width: 100%;
-  //height: 100%;
   height: 90vh;
   min-height: 650px;
   background-color: white;
@@ -223,30 +128,24 @@ const ReadyLayout = styled.div`
 `;
 
 const ReadyButtonSection = styled.div`
-  /* background-color: #4f9c64; */
   min-height: 160px;
   height: 22vh;
   margin: 1vh 1.5%;
   padding: 2vh 3%;
-  //background-color: #f5f5f5;
   background-color: ${(props) => props.theme.color.gray1};
   border-radius: 5px;
   display: flex;
   flex-direction: column;
-  //margin: 2vh auto; //50px auto 에서 변경
   align-items: flex;
-  /* gap: 10px; */
   gap: 2vh;
   h1 {
-    /* background-color: white; */
     font-size: 22px;
     font-weight: 700;
   }
   span {
-    /* background-color: pink; */
     font-size: 16px;
     color: #2b2b2b;
-    margin: 0px 0px 1vh; //27px -> 20px
+    margin: 0px 0px 1vh;
   }
 `;
 
@@ -270,7 +169,6 @@ const ReadyWrap = styled.div`
   justify-content: space-between;
   img {
     align-self: flex-start;
-    /* margin: 5px; */
   }
 `;
 

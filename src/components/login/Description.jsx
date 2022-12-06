@@ -63,7 +63,7 @@ const GameDescription = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  width: 800px;
+  width: 650px;
   background-color: #fff;
   border-radius: 3px;
   box-shadow: 0 20px 60px -2px rgb(27 33 58 / 40%);

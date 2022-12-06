@@ -1,6 +1,11 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Pagination, Autoplay } from 'swiper/core';
+import { ReactComponent as DescriptionOwn } from '../../assets/game_description_one.svg';
+import { ReactComponent as DescriptionTwo } from '../../assets/game_description_2.svg';
+import { ReactComponent as DescriptionThree } from '../../assets/game_description_3.svg';
+import { ReactComponent as DescriptionFour } from '../../assets/game_description_4.svg';
+import { ReactComponent as DescriptionFive } from '../../assets/game_description_5.svg';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -12,8 +17,8 @@ const MainSwiper = () => {
       <div className="main-wrap">
         <Swiper
           style={{
-            width: '335px',
-            height: '170px',
+            width: ' 650px',
+            height: '500px',
             backgroundColor: '#FFF5F1',
             borderRadius: '12px',
           }}
@@ -26,6 +31,7 @@ const MainSwiper = () => {
           autoplay={{ delay: 3000 }}
         >
           <SwiperSlide>
+            <DescriptionOwn />
             게임이 시작되면 카테고리가 랜덤으로 지정되고,
             <br />
             그에 맞는 제시어 카드가 시민 수에 맞게 분배됩니다. (최소인원 4명 ~
@@ -36,6 +42,7 @@ const MainSwiper = () => {
           </SwiperSlide>
 
           <SwiperSlide>
+            <DescriptionTwo />
             모든 사람이 제시어를 확인한 후, 차례대로 한 명씩 제시어에 대해
             설명합니다.
             <br />
@@ -45,6 +52,7 @@ const MainSwiper = () => {
           </SwiperSlide>
 
           <SwiperSlide>
+            <DescriptionThree />
             게임 시간(10분)이 흐른 뒤 사람들은 스파이일 것 같은 사람을
             투표합니다.
             <br />
@@ -54,12 +62,14 @@ const MainSwiper = () => {
           </SwiperSlide>
 
           <SwiperSlide>
+            <DescriptionFour />
             스파이를 찾아내지 못하면 스파이가 승리합니다!
             <br />
             만약 투표로 스파이를 찾아낼 경우 다음 단계로 이동합니다.
           </SwiperSlide>
 
           <SwiperSlide>
+            <DescriptionFive />
             스파이가 지목받은 경우 제시어를 선택할 마지막 찬스가 주어집니다.
             <br />
             주어진 키워드 중 정답을 맞추면 스파이가 최종 승리하게 됩니다
