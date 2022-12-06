@@ -14,7 +14,8 @@ export default ReadyButton;
 const StyledButton = styled.button`
   width: 200px;
   height: 40px;
-  background-color: #f5f5f5;
+  /* background-color: #f5f5f5; */
+  background-color: pink;
   border-radius: 6px;
   color: #ff8217;
   font-weight: 500;

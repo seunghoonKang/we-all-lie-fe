@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { Field } from 'formik';
 
 const HeaderSection = () => {
   //게임 정보 있는 헤더
@@ -9,6 +10,15 @@ const HeaderSection = () => {
     <RoomNameLayout>
       <RoomNumber>{String(getRoomInfo._id).padStart(3, '00')}</RoomNumber>
       <RoomInitials>{getRoomInfo.roomTitle}</RoomInitials>
+      <label
+        type="radio"
+        name="gameMode"
+        value={false}
+        id="EASY"
+        className="text-white appearance-none"
+      >
+        EASY
+      </label>
     </RoomNameLayout>
   );
 };

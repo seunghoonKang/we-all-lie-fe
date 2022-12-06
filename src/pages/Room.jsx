@@ -18,24 +18,9 @@ const Room = () => {
   const param = useParams();
   const [cookies, setCookies] = useCookies(['nickname']);
   const navigate = useNavigate();
-  const goFromStartToVote = useSelector(
-    (state) => state.game.goFromStartToVote
-  );
-  /*
-  useEffect(() => {
-    return () => {
-      socket.emit('leaveRoom', param.id);
-    };
-  });
-  const navigate = useNavigate();
-  const onClickhandler = () => {
-    socket.emit('leaveRoom', param.id);
-    navigate('/home');
-  };
-  */
-  socket.on('ready', (room) => {
-    // console.log(room);
-  });
+  const gameOperation = useSelector((state) => state.game.gameOperation);
+
+  console.log('게임 값 다 받고 실행할 값', gameOperation);
 
   useEffect(() => {
     //로그인 안하면 로비입장 못하게 하기 (useEffect 안에 넣어야 navigate 먹어요)
@@ -52,6 +37,7 @@ const Room = () => {
         <Box>
           <Game>
             {/* 본인 컴포넌트말고 주석하면 돼용 */}
+
             <GameReady />
             {/* <GameStart /> */}
             {/* {goFromStartToVote ? <GameVote /> : <GameStart />} */}
@@ -73,8 +59,6 @@ const Box = styled.div`
 
 //List 없애고 Game 에 합침
 const Game = styled.div`
-  //background-color: lightpink;
-  /* height: 100%; */
   width: calc(100% - 350px);
   height: 90vh;
   min-height: 650px;

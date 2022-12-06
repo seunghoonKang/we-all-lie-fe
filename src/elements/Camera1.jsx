@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Camera = ({ person }) => {
-  console.log('여긴 카메라', person);
+  // console.log('여긴 카메라', person);
   return (
     <Wrap>
       <NickName>{person}</NickName>

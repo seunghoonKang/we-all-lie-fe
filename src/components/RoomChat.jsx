@@ -62,7 +62,7 @@ const RoomChat = () => {
 
   //남이 보낸 msg
   socket.on('receiveRoomMsg', (msg) => {
-    console.log(msg);
+    // console.log(msg);
     setChat([...chat, msg]);
   });
 
@@ -94,7 +94,7 @@ const RoomChat = () => {
     msgInput.current.value = '';
   };
 
-  console.log(chat);
+  // console.log(chat);
   return (
     <ChatLayout theme={themeContext}>
       <MyProfile onClick={() => navigate(`/user/`)}>
