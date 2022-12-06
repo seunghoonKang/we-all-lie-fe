@@ -51,15 +51,15 @@ const Room = () => {
       <>
         <Notice />
         <Box>
-          {/* <Game> */}
-          {/* 본인 컴포넌트말고 주석하면 돼용 */}
-          {/* <GameReady /> */}
-          {/* <GameStart /> */}
-          {/* {goFromStartToVote ? <GameVote /> : <GameStart />} */}
-          {/* <GameVote /> */}
-          {/* </Game> */}
-          <GameEnd />
-          {/* <RoomChat /> */}
+          <Game>
+            {/* 본인 컴포넌트말고 주석하면 돼용 */}
+            <GameReady />
+            {/* <GameStart /> */}
+            {/* {goFromStartToVote ? <GameVote /> : <GameStart />} */}
+            {/* <GameVote /> */}
+          </Game>
+          {/* <GameEnd /> */}
+          <RoomChat />
         </Box>
       </>
     );
@@ -69,7 +69,7 @@ const Room = () => {
 const Box = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 16px;
+  padding: 0 16px 0 16px;
 `;
 
 //List 없애고 Game 에 합침

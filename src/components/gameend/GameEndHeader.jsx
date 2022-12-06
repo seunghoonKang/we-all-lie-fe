@@ -29,6 +29,7 @@ const GameEndHeader = () => {
             height: '40px',
             color: '#fff',
             fontSize: '14px',
+            paddingRight: '11px',
           }}
           onClick={restartBtnHandler}
         >
@@ -36,7 +37,7 @@ const GameEndHeader = () => {
         </Button>
         <TimerOnButton>
           <ModalTimer
-            modalSec="9"
+            modalSec="20"
             width="16px"
             height="16px"
             fontSize="12px"
@@ -62,7 +63,7 @@ const HeaderTitle = styled.div`
   align-items: center;
   justify-content: space-between;
   border-radius: 10px 10px 0 0;
-  background-color: #fff;
+  background-color: ${(props) => props.theme.color.white};
   height: 40px;
   width: 97%;
 `;

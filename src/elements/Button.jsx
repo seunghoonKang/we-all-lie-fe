@@ -49,6 +49,7 @@ const StyledButton = styled.button`
   border-radius: ${(props) => props?.addStyle.borderRadius || '6px'};
   color: ${(props) => props?.addStyle.color || '#1F1F1F'};
   font-size: ${(props) => props?.addStyle.fontSize || '16px'};
+  padding-right: ${(props) => props?.addStyle.paddingRight || '0px'};
   &:hover {
     transition: 0.3s ease-in-out;
     background-color: ${(props) => props?.addStyle.hoverBgColor || '#ff7300'};
