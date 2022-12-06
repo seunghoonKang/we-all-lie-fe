@@ -3,7 +3,7 @@ import ReadyButton from './gameready/ReadyButton';
 import ReadyHeader from './gameready/ReadyHeader';
 import HeaderSection from './gameready/HeaderSection';
 import Camera from '../elements/Camera1';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ReactComponent as Ready } from '../assets/r_eady.svg';
 import { useParams } from 'react-router-dom';
 import { socket } from '../shared/socket';
@@ -11,7 +11,16 @@ import { useSelector } from 'react-redux';
 
 const GameReady = () => {
   const [ready, useReady] = useState(false);
-  const [pendingReady, setPendingReady] = useState([]);
+  const [pendingReady, setPendingReady] = useState([
+    { nickname: '빈자리', boolkey: false },
+    { nickname: '빈자리', boolkey: false },
+    { nickname: '빈자리', boolkey: false },
+    { nickname: '빈자리', boolkey: false },
+    { nickname: '빈자리', boolkey: false },
+    { nickname: '빈자리', boolkey: false },
+    { nickname: '빈자리', boolkey: false },
+    { nickname: '빈자리', boolkey: false },
+  ]);
   const param = useParams();
   const userNickname = useSelector((state) => state.room.userNickname);
   // console.log('받아오는 닉네임 확인', userNickname);
@@ -29,6 +38,22 @@ const GameReady = () => {
   const ReadyHandler = () => {
     socket.emit('ready', param.id);
     useReady(!ready);
+    socket.on('ready', (nic, bool) => {
+      console.log(nic, bool);
+      // setPendingReady([
+      //   // ...pendingReady,
+      //   { nickname: `${nic}`, boolkey: `${bool}` },
+      // ]);
+      for (let int = 0; int < userNickname.length; int++) {
+        if (pendingReady[int].nickname === nic) {
+          setPendingReady([
+            ...pendingReady,
+            (pendingReady[int].boolkey = bool),
+          ]);
+        }
+      }
+      //return userCameras;
+    });
   };
 
   //게임레디 확인
@@ -39,6 +64,11 @@ const GameReady = () => {
     ]);
   });
   console.log(pendingReady);
+  console.log(pendingReady[0]);
+  // 닉네임 변경
+  // useEffect(() => {
+  //   Vacancy();
+  // });
 
   // let userCameras = [
   //   { nickname: '빈자리', boolkey: false },
@@ -59,7 +89,6 @@ const GameReady = () => {
         // console.log(userCameras[nicItem].nickname);
       }
     }
-    return userCameras;
   };
   console.log('8개의 배열형태', userCameras);
 

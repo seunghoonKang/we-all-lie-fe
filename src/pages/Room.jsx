@@ -11,6 +11,7 @@ import GameReady from '../components/GameReady';
 import GameStart from '../components/GameStart';
 import GameVote from '../components/GameVote';
 import RoomChat from '../components/RoomChat';
+import GameEnd from '../components/GameEnd';
 
 const Room = () => {
   // 새로고침방지
@@ -57,7 +58,7 @@ const Room = () => {
             {/* {goFromStartToVote ? <GameVote /> : <GameStart />} */}
             {/* <GameVote /> */}
           </Game>
-
+          {/* <GameEnd /> */}
           <RoomChat />
         </Box>
       </>
@@ -68,7 +69,7 @@ const Room = () => {
 const Box = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 16px;
+  padding: 0 16px 0 16px;
 `;
 
 //List 없애고 Game 에 합침
