@@ -11,6 +11,7 @@ import GameReady from '../components/GameReady';
 import GameStart from '../components/GameStart';
 import GameVote from '../components/GameVote';
 import RoomChat from '../components/RoomChat';
+import GameEnd from '../components/GameEnd';
 
 const Room = () => {
   // 새로고침방지
@@ -50,15 +51,15 @@ const Room = () => {
       <>
         <Notice />
         <Box>
-          <Game>
-            {/* 본인 컴포넌트말고 주석하면 돼용 */}
-            <GameReady />
-            {/* <GameStart /> */}
-            {/* {goFromStartToVote ? <GameVote /> : <GameStart />} */}
-            {/* <GameVote /> */}
-          </Game>
-
-          <RoomChat />
+          {/* <Game> */}
+          {/* 본인 컴포넌트말고 주석하면 돼용 */}
+          {/* <GameReady /> */}
+          {/* <GameStart /> */}
+          {/* {goFromStartToVote ? <GameVote /> : <GameStart />} */}
+          {/* <GameVote /> */}
+          {/* </Game> */}
+          <GameEnd />
+          {/* <RoomChat /> */}
         </Box>
       </>
     );

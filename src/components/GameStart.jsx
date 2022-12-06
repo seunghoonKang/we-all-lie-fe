@@ -8,11 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { socket } from '../shared/socket';
 import { useCookies } from 'react-cookie';
 import { useParams } from 'react-router-dom';
-import { goFromGameStartToGameVote } from '../redux/modules/gameSlice';
-import { ReactComponent as CategoryFood } from '../assets/category_food.svg';
-import { ReactComponent as CategorySport } from '../assets/category_sport.svg';
-import { ReactComponent as CategoryCountry } from '../assets/category_country.svg';
-import { ReactComponent as CategoryAnimal } from '../assets/category_animal.svg';
 import SelectCategoryImg from './gamestart/SelectCategoryImg';
 
 const GameStart = () => {
@@ -87,7 +82,7 @@ const GameStart = () => {
               </TimerDiv>
             </TimerContainer>
             <div>
-              <SelectCategoryImg category={category} />
+              <SelectCategoryImg category={category} width="424" height="197" />
               {/* <CategoryFood /> */}
             </div>
           </Question>
