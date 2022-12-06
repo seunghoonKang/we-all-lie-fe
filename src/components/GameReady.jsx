@@ -22,11 +22,9 @@ const GameReady = () => {
     { nickname: '빈자리', boolkey: false },
   ]);
   const param = useParams();
-
   const userNickname = useSelector((state) => state.room.userNickname);
   // console.log('받아오는 닉네임 확인', userNickname);
-
-  let userCameras = [
+  const [userCameras, setUserCameras] = useState([
     { nickname: '빈자리', boolkey: false },
     { nickname: '빈자리', boolkey: false },
     { nickname: '빈자리', boolkey: false },
@@ -35,7 +33,7 @@ const GameReady = () => {
     { nickname: '빈자리', boolkey: false },
     { nickname: '빈자리', boolkey: false },
     { nickname: '빈자리', boolkey: false },
-  ];
+  ]);
 
   const ReadyHandler = () => {
     socket.emit('ready', param.id);
@@ -59,7 +57,12 @@ const GameReady = () => {
   };
 
   //게임레디 확인
-
+  socket.on('ready', (nic, bool) => {
+    setPendingReady([
+      // ...pendingReady,
+      { nickname: nic, boolkey: bool },
+    ]);
+  });
   console.log(pendingReady);
   console.log(pendingReady[0]);
   // 닉네임 변경
@@ -67,27 +70,46 @@ const GameReady = () => {
   //   Vacancy();
   // });
 
+  // let userCameras = [
+  //   { nickname: '빈자리', boolkey: false },
+  //   { nickname: '빈자리', boolkey: false },
+  //   { nickname: '빈자리', boolkey: false },
+  //   { nickname: '빈자리', boolkey: false },
+  //   { nickname: '빈자리', boolkey: false },
+  //   { nickname: '빈자리', boolkey: false },
+  //   { nickname: '빈자리', boolkey: false },
+  //   { nickname: '빈자리', boolkey: false },
+  // ];
+
+  //닉네임 변경
   const Vacancy = () => {
     for (let item = 0; item < userNickname.length; item++) {
-      if (pendingReady[item].nickname === '빈자리') {
-        setPendingReady([
-          (pendingReady[item].nickname = userNickname[item]),
-          ...pendingReady,
-        ]);
-        //userCameras[item].nickname = userNickname[item];
+      if (userCameras[item].nickname === '빈자리') {
+        userCameras[item].nickname = userNickname[item];
         // console.log(userCameras[nicItem].nickname);
       }
     }
   };
+  console.log('8개의 배열형태', userCameras);
+
   Vacancy();
-  console.log('8개의 배열형태', pendingReady);
 
   //불값 변경
-  // const GameReadyBool = () => {
+  const GameReadyBool = () => {
+    for (let int = 0; int < 8; int++) {
+      console.log('카메라 불값', userCameras[int].nickname);
+      // console.log('팬딩 불값', pendingReady[int].nickname);
 
-  // console.log('과연 불 값 변경?', userCameras);
+      if (userCameras[int].nickname === pendingReady[0]?.nickname) {
+        userCameras[int].boolkey = pendingReady[0].boolkey;
+      }
+    }
 
-  // GameReadyBool();
+    return userCameras;
+  };
+  console.log('과연 불 값 변경?', userCameras);
+
+  GameReadyBool();
 
   //4명 이상이 준비시 카테고리 받아옴
   socket.on('gameStart', (gameStart) => {
@@ -109,14 +131,14 @@ const GameReady = () => {
         </ReadyButtonSection>
       </div>
       <Users>
-        {pendingReady?.map((person, i) =>
+        {userCameras.map((person, i) =>
           person.boolkey === true ? (
-            <ReadyWrap key={i}>
+            <ReadyWrap>
               <Ready />
-              <ReadyNickName>{person?.nickname}</ReadyNickName>
+              <ReadyNickName>{person.nickname}</ReadyNickName>
             </ReadyWrap>
           ) : (
-            <Camera person={person?.nickname} key={i} />
+            <Camera person={person.nickname} key={i} />
           )
         )}
       </Users>
