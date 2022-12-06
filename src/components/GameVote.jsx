@@ -1,10 +1,18 @@
 import React, { useContext, useState } from 'react';
+import { useCookies } from 'react-cookie';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import styled, { ThemeContext } from 'styled-components';
 import Camera from '../elements/Camera';
+import CommonModal from '../elements/CommonModal';
 import { socket } from '../shared/socket';
 
 const GameVote = () => {
   const themeContext = useContext(ThemeContext);
+  const param = useParams();
+  const [cookies, setCookies] = useCookies(['nickname']);
+  const [voteStatus, setVoteStatus] = useState(false);
+  const userNickname = useSelector((state) => state.room.userNickname); //유저닉네임 들고오기
   const userCameras = [
     { nickName: 'a' },
     { nickName: 'b' },
@@ -17,10 +25,20 @@ const GameVote = () => {
   ];
   const userLength = userCameras.length;
   const [stamp, setStamp] = useState();
-  socket.emit('voteSpy', '뀨띠', () => {
-    //
-  });
+  const nickname = cookies.nickname;
 
+  console.log(userNickname);
+
+  //내가 선택한 사람 닉네임 = stamp
+  console.log(stamp);
+
+  //내가 스파이 유저 선택. => CommonModal.jsx 로 이동
+  //socket.emit('voteSpy', param.id, stamp);
+
+  //스파이 투표 종료 후 개인 결과 집계.
+  socket.emit('voteRecord');
+
+  //const voteClick = `() => {}`;
   return (
     <Layout theme={themeContext}>
       <HeaderSection>
@@ -34,7 +52,24 @@ const GameVote = () => {
         <VoteContent>
           스파이로 의심되는 유저의 화면을 클릭해 투표하세요.
         </VoteContent>
-        <VoteButton>투표완료</VoteButton>
+        <VoteButton onClick={() => setVoteStatus(!voteStatus)}>
+          투표완료
+        </VoteButton>
+        {stamp && voteStatus === true ? (
+          <CommonModal
+            main="이 유저에게 투표할까요?"
+            sub="투표 완료후 재투표는 불가합니다."
+            firstBtn="다시선택"
+            secBtn="투표하기"
+            voteStatus={voteStatus}
+            setVoteStatus={setVoteStatus}
+            stamp={stamp}
+            param={param}
+            socket={socket}
+          ></CommonModal>
+        ) : (
+          <></>
+        )}
       </Vote>
       <Users userLength={userLength}>
         {userCameras.map((person) => (

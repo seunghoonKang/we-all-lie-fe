@@ -3,15 +3,24 @@ import styled from 'styled-components';
 import arrestedstamp from '../img/arrested.png';
 
 const Camera = ({ person, stamp, setStamp }) => {
-  const [vote, setVote] = useState(false);
+  // const [vote, setVote] = useState(false);
   const arrestedToggle = () => {
     setStamp(person);
   };
-  console.log(person);
+  // console.log(person);
 
   return (
     <>
-      {vote === false ? (
+      <Wrap onClick={arrestedToggle}>
+        <NickName>{person}</NickName>
+        {stamp === person && (
+          <Arrested>
+            <img src={arrestedstamp} alt="투표 지목된 사람" />
+          </Arrested>
+        )}
+      </Wrap>
+
+      {/* {vote === false ? (
         <Wrap>
           <NickName>{person}</NickName>
         </Wrap>
@@ -24,7 +33,7 @@ const Camera = ({ person, stamp, setStamp }) => {
             </Arrested>
           )}
         </Wrap>
-      )}
+      )} */}
     </>
   );
 };
@@ -63,5 +72,5 @@ const Arrested = styled.div`
   left: 50%;
   transform: translateY(-25%);
   margin-left: -80px;
-  z-index: 999;
+  z-index: 99;
 `;
