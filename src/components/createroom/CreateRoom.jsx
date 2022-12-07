@@ -57,7 +57,7 @@ const CreateRoom = ({ closeModal }) => {
             initialValues={{
               roomTitle: '',
               participants: '',
-              gameMode: null,
+              gameMode: true,
               privateRoom: false,
               roomPassword: '',
               currentCount: 1,
@@ -74,7 +74,10 @@ const CreateRoom = ({ closeModal }) => {
                 .required('필수 입력'),
                 */
               gameMode: Yup.boolean()
-                .oneOf([false], '하드 모드는 준비중입니다.')
+                .oneOf(
+                  [false],
+                  '하드 모드는 준비중입니다. 이지모드를 선택해주세요!'
+                )
                 .required('필수'),
               // privateRoom: Yup.boolean().oneOf([false], '기능 구현예정입니다'),
 
@@ -96,19 +99,20 @@ const CreateRoom = ({ closeModal }) => {
                   navigate(`/room/${room._id}`)
                 );
                 setSubmitting(false);
-              }, 100);
+              }, 500);
             }}
           >
-            <Form className=" flex flex-col pt-[17px] w-full">
-              <div className="pl-[27px] pr-[27px]">
-                <CreateRoomTextInput
-                  label="방제목"
-                  name="roomTitle"
-                  type="text"
-                  placeholder="방 제목을 입력해주세요"
-                />
-              </div>
-              {/* 추가구현예정
+            {({ errors, touched }) => (
+              <Form className=" flex flex-col pt-[17px] w-full">
+                <div className="pl-[27px] pr-[27px]">
+                  <CreateRoomTextInput
+                    label="방제목"
+                    name="roomTitle"
+                    type="text"
+                    placeholder="방 제목을 입력해주세요"
+                  />
+                </div>
+                {/* 추가구현예정
               <CreateRoomSelect label="인원수" name="participants">
                 <option value="">인원 선택</option>
                 <option value="4">4</option>
@@ -118,79 +122,89 @@ const CreateRoom = ({ closeModal }) => {
                 <option value="8">8</option>
               </CreateRoomSelect>
                 */}
-              <div className="flex gap-[16px] pl-[27px] pr-[27px]">
-                <div role="group" className="flex flex-col">
-                  <p className="mt-[10px] text-[14px] font-bold">게임모드</p>
-                  <div className="flex">
-                    <ModeBtn
-                      color={easyModeColor}
-                      onClick={modeClickHandler}
-                      id="EASY"
-                    >
-                      <label>
-                        <Field
-                          type="radio"
-                          name="gameMode"
-                          value={false}
-                          id="EASY"
-                          className="appearance-none"
-                        />
-                        EASY
-                      </label>
-                    </ModeBtn>
-                    <ModeBtn
-                      color={hardModeColor}
-                      onClick={modeClickHandler}
-                      id="HARD"
-                    >
-                      <label>
-                        <Field
-                          type="radio"
-                          name="gameMode"
-                          value={true}
-                          id="HARD"
-                          className="appearance-none"
-                        />
-                        HARD
-                      </label>
-                    </ModeBtn>
+                <div className="flex gap-[16px] pl-[27px] pr-[27px]">
+                  <div role="group" className="flex flex-col">
+                    <p className="mt-[10px] text-[14px] font-bold">게임모드</p>
+                    <div className="flex">
+                      <ModeBtn
+                        color={easyModeColor}
+                        onClick={modeClickHandler}
+                        id="EASY"
+                      >
+                        <label className="w-[80px] min-h-full flex justify-center items-center">
+                          <Field
+                            type="radio"
+                            name="gameMode"
+                            value={false}
+                            id="EASY"
+                            className="appearance-none"
+                          />
+                          EASY
+                        </label>
+                      </ModeBtn>
+                      <ModeBtn
+                        color={hardModeColor}
+                        onClick={modeClickHandler}
+                        id="HARD"
+                      >
+                        <label className="w-[80px] min-h-full flex justify-center items-center">
+                          <Field
+                            type="radio"
+                            name="gameMode"
+                            value={true}
+                            id="HARD"
+                            className="appearance-none"
+                          />
+                          HARD
+                        </label>
+                      </ModeBtn>
+                    </div>
+                    {errors.gameMode && touched.gameMode ? (
+                      <div className="text-[12px] text-red-500">
+                        {errors.gameMode}
+                      </div>
+                    ) : (
+                      false
+                    )}
                   </div>
-                </div>
-                {/* 추가구현예정 */}
-                <div className="w-full ">
-                  <p className="mt-[10px] text-[14px] font-bold">비밀방 설정</p>
-                  <div className="flex gap-5 ">
-                    <CreateRoomCheckBox
-                      name="privateRoom"
-                      className="appearance-none w-[40px] h-[40px] border-solid border-black border-[0.5px] rounded-md flex checked:bg-[#a5a5a5]"
-                    ></CreateRoomCheckBox>
+                  {/* 추가구현예정 */}
+                  <div className="w-full ">
+                    <p className="mt-[10px] text-[14px] font-bold">
+                      비밀방 설정
+                    </p>
+                    <div className="flex gap-5 ">
+                      <CreateRoomCheckBox
+                        name="privateRoom"
+                        className="appearance-none w-[40px] h-[40px] border-solid border-black border-[0.5px] rounded-md flex checked:bg-[#a5a5a5]"
+                      ></CreateRoomCheckBox>
 
-                    <CreateRoomTextInput
-                      name="roomPassword"
-                      type="password"
-                      placeholder=""
-                      className="bg-[#f5f5f5] w-full h-[40px] rounded-md"
-                      //disabled
-                    ></CreateRoomTextInput>
+                      <CreateRoomTextInput
+                        name="roomPassword"
+                        type="password"
+                        placeholder=""
+                        className="bg-[#f5f5f5] w-full h-[40px] rounded-md"
+                        //disabled
+                      ></CreateRoomTextInput>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="flex mt-[20px] justify-around">
-                {/* <button
+                <div className="flex mt-[20px] justify-around">
+                  {/* <button
                   type="button"
                   onClick={closeBtnHandler}
                   className=" w-full border-solid border-black border-l-[0.5px] border-t-[0.5px] border-b-[0.5px] min-h-[30px]"
                 >
                   취소하기
                 </button> */}
-                <button
-                  type="submit"
-                  className="border-solid border-[#ff7300] border-[1px] min-w-[110px] min-h-[40px] mb-5 rounded-md text-[#ff7300] font-bold text-[14px]"
-                >
-                  개설하기
-                </button>
-              </div>
-            </Form>
+                  <button
+                    type="submit"
+                    className="border-solid border-[#ff7300] border-[1px] min-w-[110px] min-h-[40px] mb-5 rounded-md text-[#ff7300] font-bold text-[14px]"
+                  >
+                    개설하기
+                  </button>
+                </div>
+              </Form>
+            )}
           </Formik>
         </CreateRoomDiv>
       </ModalBackGround>

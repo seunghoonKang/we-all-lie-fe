@@ -40,28 +40,25 @@ const GameStartHeader = ({ setEarlyVote }) => {
       if (userNickname[i] === cookies.nickname) {
         setEarlyVote(true);
         socket.emit('nowVote', param.id, true);
-        //임시 테스트를 위해 넣어두었슴 투표 정상확인되면 삭제 예정
-        setModalStatus(true);
-        modalset();
-        clearTimeout(modalset);
-        //setDisabledBtn('투표완료');
+        setDisabledBtn('투표완료');
       }
     }
     socket.on('nowVote', (voteInfos) => {
       setEarlyVoteInfo(voteInfos);
+      if (
+        //Number(earlyVoteInfo?.currNowVoteCount)
+        voteInfos.currNowVoteCount >= Math.ceil(userNickname.length / 2)
+      ) {
+        setModalStatus(true);
+        modalset();
+        clearTimeout(modalset);
+      }
     });
 
     //방 인원이 투표한 숫자가 게임 인원의 과반수 이상이라면
     //모달 띄운 후 투표페이지로 이동
-    if (
-      Number(earlyVoteInfo?.currNowVoteCount) >=
-      Number(earlyVoteInfo?.currGameRoomUsers) / 2
-    ) {
-      setModalStatus(true);
-      modalset();
-      clearTimeout(modalset);
-    }
   };
+
   console.log(earlyVoteInfo);
 
   //투표하기 활성화 btn -> 시간은 3분으로 변경 예정
