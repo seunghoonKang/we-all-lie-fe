@@ -43,14 +43,14 @@ const Home = () => {
     socket.emit('getNickname', nickname);
 
     //로그인 안하면 로비입장 못하게 하기 (useEffect 안에 넣어야 navigate 먹어요)
-    if (cookies.nickname === undefined || null) {
-      alert('로그인해주세요');
+    if (cookies.nickname == null) {
+      alert('로그인이 필요합니다');
       navigate(`/`);
     }
   }, [cookies.nickname, navigate, nickname]);
 
   //로비 입장 못하는 alert 뒤에 화면 안보이게 처리하려고.
-  if (cookies.nickname === undefined || null) {
+  if (cookies.nickname == null) {
   } else {
     return (
       <div theme={themeContext}>
