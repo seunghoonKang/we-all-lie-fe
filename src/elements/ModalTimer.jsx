@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import styled, { ThemeContext } from 'styled-components';
 
-const ModalTimer = ({ modalSec }) => {
+const ModalTimer = ({ modalSec, ...props }) => {
+  console.log(props.fontSize);
   const themeContext = useContext(ThemeContext);
   const interval = useRef(null);
 
@@ -23,22 +24,35 @@ const ModalTimer = ({ modalSec }) => {
     }
   }, [modalSecond]);
 
-  return <ModalSecDiv theme={themeContext}>{modalSecond}</ModalSecDiv>;
+  return (
+    <ModalSecDiv
+      theme={themeContext}
+      width={props.width}
+      height={props.height}
+      fontSize={props.fontSize}
+      borderColor={props.borderColor}
+      backgroundColor={props.backgroundColor}
+      color={props.color}
+    >
+      {modalSecond}
+    </ModalSecDiv>
+  );
 };
 
 const ModalSecDiv = styled.div`
-  width: 40px;
-  height: 40px;
+  width: ${(props) => props?.width || '40px'};
+  height: ${(props) => props?.height || '40px'};
 
   display: flex;
   justify-content: center;
   align-items: center;
 
   border: 1px solid;
-  border-color: ${(props) => props.theme.color.lionOrange};
+  border-color: ${(props) => props?.borderColor || '#FF7300'};
   border-radius: 50%;
-
-  color: ${(props) => props.theme.color.lionOrange};
+  color: ${(props) => props?.color || '#FF7300'};
+  background-color: ${(props) => props?.backgroundColor || 'none'};
+  font-size: ${(props) => props?.fontSize || '16px'};
   font-weight: 700;
 `;
 

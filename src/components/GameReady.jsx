@@ -53,7 +53,6 @@ const GameReady = () => {
         // console.log(userCameras[nicItem].nickname);
       }
     }
-    return userCameras;
   };
   // console.log('8개의 배열형태', userCameras);
 

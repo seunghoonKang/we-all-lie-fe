@@ -26,7 +26,7 @@ const initialState = {
     '롯데월드 아이스링크장',
   ],
   answerWord: '골프',
-  category: '스포츠',
+  category: '장소',
   spy: 'Agent_프리티강',
   gameOperation: 0,
   giveCategory: [],
