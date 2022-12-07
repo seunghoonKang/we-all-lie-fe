@@ -8,8 +8,15 @@ const GameEndContents = () => {
   const category = useSelector((state) => state.game.category);
   const answerWord = useSelector((state) => state.game.answerWord);
   const spy = useSelector((state) => state.game.spy);
-  const userNickname = useSelector((state) => state.room.userNickname);
-  const userCameras = [
+  let userNickname = useSelector((state) => state.room.userNickname);
+
+  //스파이 빼고 나머지 유저들 고르기
+  const exceptSpy = () => {
+    return (userNickname = userNickname.filter((nick) => nick !== spy));
+  };
+  exceptSpy();
+
+  let userCameras = [
     { nickName: '빈자리' },
     { nickName: '빈자리' },
     { nickName: '빈자리' },
@@ -18,13 +25,15 @@ const GameEndContents = () => {
     { nickName: '빈자리' },
     { nickName: '빈자리' },
   ];
+
+  //스파이 외 나머지 유저들 자리  채우기
   const fillInTheEmptySeats = () => {
-    for (let step = 0; step < userCameras.length; step++) {
-      if (userCameras[step].nickName === '빈자리') {
-        userCameras[step].nickName = userNickname[step];
+    for (let i = 0; i < userCameras.length; i++) {
+      if (userNickname[i] && userCameras[i].nickName === '빈자리') {
+        userCameras[i].nickName = userNickname[i];
       }
+      return userCameras;
     }
-    return userCameras;
   };
   fillInTheEmptySeats();
 
@@ -40,7 +49,7 @@ const GameEndContents = () => {
           <SelectCategoryImg category={category} width="513" height="238" />
         </CategoryImg>
         <CorrectCard>
-          {/* <div></div> */}
+          <div></div>
           <SpyName>{spy}</SpyName>
         </CorrectCard>
       </GameCardSection>

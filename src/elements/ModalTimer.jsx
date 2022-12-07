@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState, useContext } from 'react';
 import styled, { ThemeContext } from 'styled-components';
 
 const ModalTimer = ({ modalSec, ...props }) => {
-  console.log(props.fontSize);
   const themeContext = useContext(ThemeContext);
   const interval = useRef(null);
 
