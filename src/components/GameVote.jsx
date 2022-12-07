@@ -11,7 +11,10 @@ const GameVote = () => {
   const themeContext = useContext(ThemeContext);
   const param = useParams();
   const [cookies, setCookies] = useCookies(['nickname']);
+  const [voteModal, setVoteModal] = useState(false);
   const [voteStatus, setVoteStatus] = useState(false);
+  const [spyWin, setSpyWin] = useState(0);
+  const [spyGuess, setSpyGuess] = useState(0);
   const userNickname = useSelector((state) => state.room.userNickname); //유저닉네임 들고오기
   const userCameras = [
     { nickName: 'a' },
@@ -28,10 +31,11 @@ const GameVote = () => {
   const [stamp, setStamp] = useState(`${nickname}`); //기본값이 본인으로 선택
 
   console.log('userNickname::', userNickname);
+  console.log('voteStatus::', voteStatus);
 
+  //투표 기본값 : 본인 (O) -> stamp가 찍혀있진 않음
   //투표 시간이 다 되었을때, 투표 처리
-  //투표 기본값 : 본인
-  //우선책 : 현재 클릭한 사람으로 자동 투표 완료 처리
+  //우선책 : 현재 클릭한 사람으로 자동 투표 완료 처리 (O)
   //차선책 : 강제로 본인 투표한 걸로 처리
 
   //스파이가 이기는 로직이면 true, 지는 로직이면 false
@@ -39,6 +43,17 @@ const GameVote = () => {
   //사람들이 투표했을 때 스파이가 걸렸는지 아닌지 'spyWin'
   //스파이가 걸렸을 때 제시어를 맞췄는지 아닌지 'spyGuess'
   //스파이가 이겼는지 졌는지
+
+  //투표시간 setTimeout 걸기
+  //아직 투표를 하지 않은 사람은 현재 stamp 찍혀있는 사람으로 자동 emit
+  if (voteStatus === false) {
+    socket.emit('voteSpy', param.id, stamp);
+  }
+
+  //스파이가 걸렸는지 결과 on 받기
+  socket.on('spyWin', (bool) => {
+    setSpyWin(bool);
+  });
 
   //내가 선택한 사람 닉네임 = stamp
   console.log('stamp::', stamp);
@@ -52,36 +67,44 @@ const GameVote = () => {
   //const voteClick = `() => {}`;
   return (
     <Layout theme={themeContext}>
-      <HeaderSection>
-        📌 모든 유저가 투표를 완료하면 스파이의 정체가 공개됩니다!
-      </HeaderSection>
+      <HeaderSection>📌 모든 유저가 투표를 진행하고 있습니다.</HeaderSection>
       <Timer>
         <Time></Time>
       </Timer>
-      <Vote>
-        <VoteTitle>스파이를 검거하세요 !</VoteTitle>
-        <VoteContent>
-          스파이로 의심되는 유저의 화면을 클릭해 투표하세요.
-        </VoteContent>
-        <VoteButton onClick={() => setVoteStatus(!voteStatus)}>
-          투표완료
-        </VoteButton>
-        {stamp && voteStatus === true ? (
-          <CommonModal
-            main="이 유저에게 투표할까요?"
-            sub="투표 완료후 재투표는 불가합니다."
-            firstBtn="다시선택"
-            secBtn="투표하기"
-            voteStatus={voteStatus}
-            setVoteStatus={setVoteStatus}
-            stamp={stamp}
-            param={param}
-            socket={socket}
-          ></CommonModal>
-        ) : (
-          <></>
-        )}
-      </Vote>
+      {voteStatus ? (
+        <Vote>
+          <VoteTitle>투표 완료</VoteTitle>
+          <VoteContent>다른 플레이어의 투표를 기다리는 중입니다.</VoteContent>
+        </Vote>
+      ) : (
+        <Vote>
+          <VoteTitle>스파이를 검거하세요 !</VoteTitle>
+          <VoteContent>
+            스파이로 의심되는 유저의 화면을 클릭해 투표하세요.
+          </VoteContent>
+          <VoteButton onClick={() => setVoteModal(!voteModal)}>
+            투표하기
+          </VoteButton>
+          {stamp && voteModal === true ? (
+            <CommonModal
+              main="이 유저에게 투표할까요?"
+              sub="투표 완료후 재투표는 불가합니다."
+              firstBtn="다시선택"
+              secBtn="투표하기"
+              voteStatus={voteStatus}
+              setVoteStatus={setVoteStatus}
+              voteModal={voteModal}
+              setVoteModal={setVoteModal}
+              stamp={stamp}
+              param={param}
+              socket={socket}
+            ></CommonModal>
+          ) : (
+            <></>
+          )}
+        </Vote>
+      )}
+
       <Users userLength={userLength}>
         {userCameras.map((person) => (
           <Camera

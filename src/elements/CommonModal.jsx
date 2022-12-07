@@ -20,15 +20,19 @@ const CommonModal = ({ ...props }) => {
 
   //First Btn : 투표취소 핸들러
   const closeModal = () => {
-    props.setVoteStatus(!props.voteStatus);
+    // props.setVoteStatus(!props.voteStatus);
+    props.setVoteModal(!props.voteModal);
+    console.log('voteStatus 상태', props.voteStatus);
   };
 
   //Sec Btn : 투표완료 핸들러
   const completeVote = () => {
     //내가 스파이 유저 선택.
     props.socket.emit('voteSpy', props.param.id, props.stamp);
-    closeModal();
+    props.setVoteModal(!props.voteModal);
     console.log(`${props.stamp}투표완료!`);
+    props.setVoteStatus(!props.voteStatus);
+    console.log('voteStatus 상태', props.voteStatus);
   };
 
   return (
