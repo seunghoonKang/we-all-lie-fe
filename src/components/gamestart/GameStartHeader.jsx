@@ -13,7 +13,7 @@ const GameStartHeader = ({ setEarlyVote }) => {
   const [modalStatus, setModalStatus] = useState(false);
   const [disabledBtn, setDisabledBtn] = useState('투표준비');
   const userNickname = useSelector((state) => state.room.userNickname);
-  const [cookies, setCookies] = useCookies(['nickname']);
+  const [cookies] = useCookies(['nickname']);
   const navigate = useNavigate();
   const param = useParams();
   const [earlyVoteInfo, setEarlyVoteInfo] = useState();
@@ -43,23 +43,19 @@ const GameStartHeader = ({ setEarlyVote }) => {
         setDisabledBtn('투표완료');
       }
     }
-    socket.on('nowVote', (voteInfos) => {
-      setEarlyVoteInfo(voteInfos);
-      if (
-        //Number(earlyVoteInfo?.currNowVoteCount)
-        voteInfos.currNowVoteCount >= Math.ceil(userNickname.length / 2)
-      ) {
-        setModalStatus(true);
-        modalset();
-        clearTimeout(modalset);
-      }
-    });
-
     //방 인원이 투표한 숫자가 게임 인원의 과반수 이상이라면
     //모달 띄운 후 투표페이지로 이동
   };
 
-  console.log(earlyVoteInfo);
+  //socket을 통해 사전투표를 계속 감지하고 있는다.
+  socket.on('nowVote', (voteInfos) => {
+    setEarlyVoteInfo(voteInfos);
+    if (voteInfos.currNowVoteCount >= Math.ceil(userNickname.length / 2)) {
+      setModalStatus(true);
+      modalset();
+      clearTimeout(modalset);
+    }
+  });
 
   //투표하기 활성화 btn -> 시간은 3분으로 변경 예정
   useEffect(() => {
