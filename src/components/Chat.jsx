@@ -100,7 +100,7 @@ const Chat = () => {
     msgInput.current.value = '';
   };
 
-  console.log(chat);
+  // console.log(chat);
   return (
     <ChatLayout theme={themeContext}>
       <MyProfile onClick={() => navigate(`/user/`)}>
