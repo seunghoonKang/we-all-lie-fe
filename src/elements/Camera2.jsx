@@ -9,8 +9,6 @@ const Camera = ({ nickname }) => {
     return Math.floor(Math.random() * 4);
   };
   let catValue = randomCatImg();
-  console.log(catValue);
-  // console.log('여긴 카메라', person);
   return (
     <Wrap>
       <PreParingIconWrap>
