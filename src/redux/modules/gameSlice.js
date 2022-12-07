@@ -26,31 +26,25 @@ const initialState = {
     '롯데월드 아이스링크장',
   ],
   answerWord: '골프',
-  category: '스포츠',
+  category: '장소',
   spy: 'Agent_프리티강',
-  goFromStartToVote: false,
-  goFromReadyToStart: false,
+  gameOperation: 0,
+  giveCategory: [],
 };
 
 const gameSlice = createSlice({
   name: 'GameSlice',
   initialState,
   reducers: {
-    choiceAsker: (state, action) => {
-      state.asker = action.payload;
+    giveCategory: (state, action) => {
+      state.giveCategory = action.payload;
     },
-    choiceAnswerer: (state, action) => {
-      state.answerer = action.payload;
-    },
-    goFromGameStartToGameVote: (state, action) => {
-      state.goFromStartToVote = action.payload;
-    },
-    goFromGameReadyToGameStart: (state, action) => {
-      state.goFromStartToVote = action.payload;
+    gameOperation: (state, action) => {
+      state.gameOperation = action.payload;
+      console.log(action.payload);
     },
   },
 });
 
-export const { choiceAsker, choiceAnswerer, goFromGameStartToGameVote } =
-  gameSlice.actions;
+export const { giveCategory, gameOperation } = gameSlice.actions;
 export default gameSlice.reducer;
