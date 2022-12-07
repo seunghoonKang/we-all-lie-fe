@@ -23,14 +23,25 @@ const GameVote = () => {
     { nickName: 'g' },
     { nickName: 'h' },
   ];
-  const userLength = userCameras.length;
-  const [stamp, setStamp] = useState();
   const nickname = cookies.nickname;
+  const userLength = userCameras.length;
+  const [stamp, setStamp] = useState(`${nickname}`); //기본값이 본인으로 선택
 
-  console.log(userNickname);
+  console.log('userNickname::', userNickname);
+
+  //투표 시간이 다 되었을때, 투표 처리
+  //투표 기본값 : 본인
+  //우선책 : 현재 클릭한 사람으로 자동 투표 완료 처리
+  //차선책 : 강제로 본인 투표한 걸로 처리
+
+  //스파이가 이기는 로직이면 true, 지는 로직이면 false
+  //첫번쨰 파라미터는 항상 방번호
+  //사람들이 투표했을 때 스파이가 걸렸는지 아닌지 'spyWin'
+  //스파이가 걸렸을 때 제시어를 맞췄는지 아닌지 'spyGuess'
+  //스파이가 이겼는지 졌는지
 
   //내가 선택한 사람 닉네임 = stamp
-  console.log(stamp);
+  console.log('stamp::', stamp);
 
   //내가 스파이 유저 선택. => CommonModal.jsx 로 이동
   //socket.emit('voteSpy', param.id, stamp);
