@@ -37,15 +37,16 @@ const Kakao = () => {
         console.log(res2);
         const nickname = res2.data.nickname;
         // console.log(nickname);
+        console.log(res2.data);
         setCookie('nickname', nickname, {
           path: '/',
           secure: true,
           sameSite: 'none',
-          // httpOnly: true, 서버에서만 설정이 가능함
         });
         // console.log(cookies);
         if (res2.status == 200) {
           window.location.replace('/home');
+          // console.log(cookies);
         }
       } else {
         alert('카카오톡 요청 실패');

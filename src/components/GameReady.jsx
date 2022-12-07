@@ -1,13 +1,14 @@
 import styled from 'styled-components';
 import ReadyButton from './gameready/ReadyButton';
-import ReadyHeader from './gameready/MainHeader';
+import MainHeader from './gameready/MainHeader';
+import MediumHeader from './gameready/MediumHeader';
 import Camera from '../elements/Camera1';
 import { useState } from 'react';
 import { socket } from '../shared/socket';
 import { useParams } from 'react-router-dom';
 import { gameOperation, giveCategory } from '../redux/modules/gameSlice';
 import { ReactComponent as Ready } from '../assets/r_eady.svg';
-import { ReactComponent as Prepare } from '../assets/prepare_cat.svg';
+import { ReactComponent as Prepared } from '../assets/prepared_cat.svg';
 import { useSelector, useDispatch } from 'react-redux';
 
 const GameReady = () => {
@@ -21,14 +22,14 @@ const GameReady = () => {
   console.log('과연 들어왔니?', giveCategory);
 
   const [userCameras, setUserCameras] = useState([
-    { nickname: '빈자리', boolkey: false },
-    { nickname: '빈자리', boolkey: false },
-    { nickname: '빈자리', boolkey: false },
-    { nickname: '빈자리', boolkey: false },
-    { nickname: '빈자리', boolkey: false },
-    { nickname: '빈자리', boolkey: false },
-    { nickname: '빈자리', boolkey: false },
-    { nickname: '빈자리', boolkey: false },
+    { nickname: '', boolkey: false },
+    { nickname: '', boolkey: false },
+    { nickname: '', boolkey: false },
+    { nickname: '', boolkey: false },
+    { nickname: '', boolkey: false },
+    { nickname: '', boolkey: false },
+    { nickname: '', boolkey: false },
+    { nickname: '', boolkey: false },
   ]);
 
   const ReadyHandler = () => {
@@ -48,7 +49,7 @@ const GameReady = () => {
   //닉네임 변경
   const Vacancy = () => {
     for (let item = 0; item < userNickname.length; item++) {
-      if (userCameras[item].nickname === '빈자리') {
+      if (userCameras[item].nickname === '') {
         userCameras[item].nickname = userNickname[item];
         // console.log(userCameras[nicItem].nickname);
       }
@@ -63,7 +64,6 @@ const GameReady = () => {
     for (let int = 0; int < 8; int++) {
       // console.log('카메라 불값', userCameras[int].nickname);
       // console.log('팬딩 불값', pendingReady[int].nickname);
-
       if (userCameras[int].nickname === pendingReady[0]?.nickname) {
         userCameras[int].boolkey = pendingReady[0].boolkey;
       }
@@ -86,30 +86,32 @@ const GameReady = () => {
 
   return (
     <ReadyLayout>
-      <div>
-        <ReadyHeader />
-
+      <MainHeader />
+      <MediumHeader />
+      <ReadyLayoutSection>
         <ReadyButtonSection>
           <h1>준비 버튼을 클릭하세요 ! </h1>
           <span>모든 플레이어가 준비되면 자동으로 게임이 시작됩니다.</span>
-          <div onClick={ReadyHandler}>
-            <ReadyButton>준비완료 </ReadyButton>
-          </div>
+          <ReadyButton>
+            <div onClick={ReadyHandler}>{!ready ? '준비하기' : '준비완료'}</div>{' '}
+          </ReadyButton>
         </ReadyButtonSection>
-      </div>
-      <Users>
-        {userCameras.map((person, i) =>
-          person.boolkey === true ? (
-            <ReadyWrap>
-              <Ready />
-              <Prepare />
-              <ReadyNickName>{person.nickname}</ReadyNickName>
-            </ReadyWrap>
-          ) : (
-            <Camera person={person.nickname} />
-          )
-        )}
-      </Users>
+        <Users>
+          {userCameras.map((person) =>
+            person.boolkey === true ? (
+              <ReadyWrap>
+                <ReadyMediumWrap>
+                  <Ready />
+                </ReadyMediumWrap>
+                <Prepared />
+                <ReadyNickName>{person.nickname}</ReadyNickName>
+              </ReadyWrap>
+            ) : (
+              <Camera person={person.nickname} />
+            )
+          )}
+        </Users>
+      </ReadyLayoutSection>
     </ReadyLayout>
   );
 };
@@ -121,15 +123,21 @@ const ReadyLayout = styled.div`
   height: 90vh;
   min-height: 650px;
   /* background-color: white; */
-  background-color: blue;
   border-radius: 5px;
 `;
 
+const ReadyLayoutSection = styled.div`
+  background-color: #ffffff;
+  border-radius: 5px;
+  width: 100%;
+  padding: 1vh 0.5%;
+`;
+
 const ReadyButtonSection = styled.div`
-  background-color: orange;
+  border: orange;
   min-height: 160px;
   height: 22vh;
-  margin: 1vh 1.5%;
+  margin: 1vh 1%;
   padding: 2vh 3%;
   background-color: ${(props) => props.theme.color.gray1};
   border-radius: 5px;
@@ -139,14 +147,13 @@ const ReadyButtonSection = styled.div`
   gap: 2vh;
   h1 {
     font-size: 22px;
-    font-weight: 700;
-    background-color: gray;
+    font-weight: 600;
+    border: gray;
   }
   span {
     font-size: 16px;
     color: #2b2b2b;
     margin: 0px 0px 1vh;
-    background-color: rosybrown;
   }
 `;
 
@@ -158,7 +165,6 @@ const Users = styled.div`
   width: 100%;
   height: 50vh;
   min-height: 312px;
-  background-color: yellowgreen;
 `;
 
 const ReadyWrap = styled.div`
@@ -169,17 +175,25 @@ const ReadyWrap = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  img {
-    align-self: flex-start;
-  }
+  align-items: center;
+`;
+
+const ReadyMediumWrap = styled.div`
+  width: 100%;
+  height: 3%;
+  padding: 5px 0 0 5px;
+  /* background-color: orange; */
 `;
 
 const ReadyNickName = styled.div`
   width: 100%;
   height: 28px;
+  line-height: 28px;
   background-color: #222222;
-  color: white;
-  align-self: flex-end;
+  color: #f5f5f5;
+  font-weight: 600;
+  font-size: 14px;
   text-align: center;
   border-radius: 0px 0px 5px 5px;
+  margin: 5% 0 0 0;
 `;

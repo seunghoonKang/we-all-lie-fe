@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { ReactComponent as UnockedIcon } from '../../assets/unlocked.svg';
+import { ReactComponent as LockedIcon } from '../../assets/locked_white.svg';
+import { ReactComponent as UnlockedIcon } from '../../assets/unlocked_white.svg';
 
 const MediumHeader = () => {
   //게임 정보 있는 헤더
@@ -15,7 +16,11 @@ const MediumHeader = () => {
         <InfoDiv>{getRoomInfo.currentCount} / 8 </InfoDiv>
         <InfoDiv>{getRoomInfo?.gameMode === false ? 'EASY' : 'HARD'}</InfoDiv>
         <div className="flex justify-center items-center mr-[8px] pl-[7px]">
-          <UnockedIcon width="16" height="16" fill="none" />
+          {getRoomInfo.private == null ? (
+            <UnlockedIcon width="16" height="16" fill="none" />
+          ) : (
+            <LockedIcon width="16" height="16" fill="none" />
+          )}
         </div>
       </RoomInfos>
     </RoomNameLayout>
@@ -25,48 +30,39 @@ const MediumHeader = () => {
 export default MediumHeader;
 
 const RoomNameLayout = styled.div`
-  background-color: #222222;
   display: flex;
-  justify-content: space-around;
   width: 100%;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0 1vh 0.5%;
 `;
 
 const RoomNumber = styled.div`
   display: flex;
+  display: inline;
   justify-content: center;
   align-items: center;
   color: #ffffff;
-  align-content: center;
-  min-width: 6%;
-  min-height: 40px;
-  border-radius: 5px;
-  text-align: center;
-  font-size: 20px;
-  margin: 0 auto 10px;
+  font-size: 16px;
+  margin: 0px 10px;
 `;
 
 const RoomInitials = styled.div`
   display: flex;
+  display: inline;
   align-items: center;
   color: #ffffff;
-  width: 31%;
-  min-height: 40px;
-  border-radius: 5px;
-  font-size: 20px;
+  font-size: 16px;
   padding-left: 5px;
-  margin: 0 auto 10px;
-  background-color: pink;
+  margin: 5px 10px;
 `;
 
 const RoomInfos = styled.div`
   display: flex;
   gap: 5px;
-  flex-direction: row;
   margin-left: 7px;
   font-weight: 700;
   font-weight: 700;
-  align-items: center;
-  background-color: orange;
 `;
 
 const InfoDiv = styled.div`
