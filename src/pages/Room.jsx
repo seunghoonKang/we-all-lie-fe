@@ -37,8 +37,8 @@ const Room = () => {
         <Box>
           <Game>
             {/* 본인 컴포넌트말고 주석하면 돼용 */}
-            {/* {gameOperation === 1 ? <GameStart /> : <GameReady />} */}
-            <GameReady />
+            {gameOperation === 1 ? <GameStart /> : <GameReady />}
+            {/* <GameReady /> */}
             {/* <GameStart /> */}
             {/* {goFromStartToVote ? <GameVote /> : <GameStart />} */}
             {/* <GameVote /> */}
