@@ -171,7 +171,7 @@ const TimerDiv = styled.div`
   color: #fff;
   background-color: #222;
   animation-name: progressTimeBar;
-  animation-duration: 10s;
+  animation-duration: 480s;
   animation-iteration-count: 1;
   animation-direction: reverse;
   animation-timing-function: linear;
@@ -183,11 +183,9 @@ const TimerDiv = styled.div`
       color: #222;
       background-color: orange;
     }
-
     10% {
       background-color: orange;
     }
-
     20% {
       background-color: #222;
     }

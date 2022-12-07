@@ -2,11 +2,16 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import arrestedstamp from '../img/arrested.png';
 
-const Camera = ({ person, stamp, setStamp }) => {
+const Camera = ({ person, stamp, setStamp, voteStatus, setVoteStatus }) => {
   // const [vote, setVote] = useState(false);
+
+  //투표 미완료 상태일때만 스탬프 찍히는 로직 (투표완료시 눌러도 작동 안함)
   const arrestedToggle = () => {
-    setStamp(person);
+    if (voteStatus == false) {
+      setStamp(person);
+    }
   };
+
   // console.log(person);
 
   return (
