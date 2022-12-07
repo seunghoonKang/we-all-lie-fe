@@ -1,17 +1,17 @@
 import styled from 'styled-components';
 import ReadyButton from './gameready/ReadyButton';
 import ReadyHeader from './gameready/MainHeader';
-import HeaderSection from './gameready/MediumHeader';
 import Camera from '../elements/Camera1';
 import { useState } from 'react';
 import { socket } from '../shared/socket';
 import { useParams } from 'react-router-dom';
-import { gameOperation } from '../redux/modules/gameSlice';
+import { gameOperation, giveCategory } from '../redux/modules/gameSlice';
 import { ReactComponent as Ready } from '../assets/r_eady.svg';
+import { ReactComponent as Prepare } from '../assets/prepare_cat.svg';
 import { useSelector, useDispatch } from 'react-redux';
 
 const GameReady = () => {
-  const [ready, useReady] = useState(false);
+  const [ready, setReady] = useState(false);
   const [pendingReady, setPendingReady] = useState([]);
   const param = useParams();
   const dispatch = useDispatch();
@@ -33,7 +33,7 @@ const GameReady = () => {
 
   const ReadyHandler = () => {
     socket.emit('ready', param.id);
-    useReady(!ready);
+    setReady(!ready);
   };
 
   //게임레디 확인
@@ -72,7 +72,7 @@ const GameReady = () => {
 
     return userCameras;
   };
-  // console.log('과연 불 값 변경?', userCameras);
+  console.log('과연 불 값 변경?', userCameras);
 
   GameReadyBool();
 
@@ -80,14 +80,15 @@ const GameReady = () => {
   socket.on('gameStart', (gameStart) => {
     console.log('게임시작됐는지 확인', gameStart);
     dispatch(giveCategory(gameStart));
+    // setTimeout(()=> {
     dispatch(gameOperation(1));
+    // },1000)
   });
 
   return (
     <ReadyLayout>
       <div>
         <ReadyHeader />
-        <HeaderSection />
 
         <ReadyButtonSection>
           <h1>준비 버튼을 클릭하세요 ! </h1>
@@ -102,10 +103,11 @@ const GameReady = () => {
           person.boolkey === true ? (
             <ReadyWrap>
               <Ready />
-              <ReadyNickName key={i}>{person.nickname}</ReadyNickName>
+              <Prepare />
+              <ReadyNickName>{person.nickname}</ReadyNickName>
             </ReadyWrap>
           ) : (
-            <Camera person={person.nickname} key={i} />
+            <Camera person={person.nickname} />
           )
         )}
       </Users>

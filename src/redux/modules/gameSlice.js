@@ -41,6 +41,7 @@ const gameSlice = createSlice({
     },
     gameOperation: (state, action) => {
       state.gameOperation = action.payload;
+      console.log(action.payload);
     },
   },
 });

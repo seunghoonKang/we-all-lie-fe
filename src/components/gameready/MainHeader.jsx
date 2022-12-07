@@ -4,6 +4,7 @@ import Button from '../../elements/Button';
 import { useNavigate, useParams } from 'react-router-dom';
 import { socket } from '../../shared/socket';
 import { ReactComponent as WeAllLieLogo } from '../../assets/we_all_lie_white_logo.svg';
+import MediumHeader from './MediumHeader';
 
 const ReadyHeader = () => {
   const param = useParams();
@@ -35,6 +36,7 @@ const ReadyHeader = () => {
       >
         나가기
       </Button>
+      <MediumHeader />
     </Section>
   );
 };
@@ -47,6 +49,7 @@ const Section = styled.section`
   align-items: center;
   height: 71px;
   background-color: #222222;
+  flex-wrap: wrap;
 `;
 
 const LogoImg = styled.div`
