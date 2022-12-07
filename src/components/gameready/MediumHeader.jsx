@@ -6,7 +6,7 @@ import { ReactComponent as UnlockedIcon } from '../../assets/unlocked_white.svg'
 const MediumHeader = () => {
   //게임 정보 있는 헤더
   const getRoomInfo = useSelector((state) => state.room.roomInfos);
-  console.log(getRoomInfo);
+  // console.log(getRoomInfo);
   return (
     <RoomNameLayout>
       <RoomNumber>{String(getRoomInfo._id).padStart(3, '00')}</RoomNumber>
