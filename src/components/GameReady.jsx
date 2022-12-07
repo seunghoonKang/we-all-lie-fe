@@ -3,23 +3,25 @@ import ReadyButton from './gameready/ReadyButton';
 import MainHeader from './gameready/MainHeader';
 import MediumHeader from './gameready/MediumHeader';
 import Camera from '../elements/Camera1';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { socket } from '../shared/socket';
 import { useParams } from 'react-router-dom';
 import { gameOperation, giveCategory } from '../redux/modules/gameSlice';
 import { ReactComponent as Ready } from '../assets/r_eady.svg';
 import { ReactComponent as Prepared } from '../assets/prepared_cat.svg';
 import { useSelector, useDispatch } from 'react-redux';
+import CommonModal from '../elements/CommonModal';
 
 const GameReady = () => {
   const [ready, setReady] = useState(false);
+  const [trueAlert, setTrueAlert] = useState(false);
   const [pendingReady, setPendingReady] = useState([]);
   const param = useParams();
   const dispatch = useDispatch();
   const userNickname = useSelector((state) => state.room.userNickname);
   // console.log('받아오는 닉네임 확인', userNickname);
   const giveCategory = useSelector((state) => state.game.giveCategory);
-  console.log('과연 들어왔니?', giveCategory);
+  // console.log('과연 들어왔니?', giveCategory);
 
   const [userCameras, setUserCameras] = useState([
     { nickname: '', boolkey: false },
@@ -68,12 +70,40 @@ const GameReady = () => {
         userCameras[int].boolkey = pendingReady[0].boolkey;
       }
     }
-
     return userCameras;
   };
-  console.log('과연 불 값 변경?', userCameras);
+  // console.log('과연 불 값 변경?', userCameras);
 
   GameReadyBool();
+
+  const currentUser = userNickname.length;
+
+  const currentReadyUSer = [
+    userCameras[0].boolkey,
+    userCameras[1].boolkey,
+    userCameras[2].boolkey,
+    userCameras[3].boolkey,
+    userCameras[4].boolkey,
+    userCameras[5].boolkey,
+    userCameras[6].boolkey,
+    userCameras[7].boolkey,
+  ];
+
+  const trueUser = currentReadyUSer.filter((user) => user === true);
+
+  // 현재 접속한 유저와 true인 유저와 같다면 alert창을 띄어야 한다.
+  useEffect(() => {
+    let timer = setTimeout(() => {
+      if (currentUser >= 4 && currentUser === trueUser.length) {
+        setTrueAlert(!trueAlert);
+      } else if (currentUser > trueUser.length) {
+        setTrueAlert(false);
+      }
+    }, 5000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [trueUser]);
 
   //4명 이상이 준비시 카테고리 받아옴
   socket.on('gameStart', (gameStart) => {
@@ -86,6 +116,16 @@ const GameReady = () => {
 
   return (
     <ReadyLayout>
+      {trueAlert === true ? (
+        <CommonModal
+          main="잠시 후 게임이 시작됩니다! "
+          sub="카메라 앞에 앉아 게임을 준비해주세요."
+          time
+        ></CommonModal>
+      ) : (
+        // setTrueAlert(!trueAlert)
+        <></>
+      )}
       <MainHeader />
       <MediumHeader />
       <ReadyLayoutSection>
