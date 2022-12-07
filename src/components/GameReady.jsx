@@ -21,7 +21,7 @@ const GameReady = () => {
   const userNickname = useSelector((state) => state.room.userNickname);
   // console.log('받아오는 닉네임 확인', userNickname);
   const giveCategory = useSelector((state) => state.game.giveCategory);
-  console.log('과연 들어왔니?', giveCategory);
+  // console.log('과연 들어왔니?', giveCategory);
 
   const [userCameras, setUserCameras] = useState([
     { nickname: '', boolkey: false },
@@ -46,7 +46,7 @@ const GameReady = () => {
       { nickname: nic, boolkey: bool },
     ]);
   });
-  console.log(pendingReady);
+  // console.log(pendingReady);
 
   //닉네임 변경
   const Vacancy = () => {
@@ -72,7 +72,7 @@ const GameReady = () => {
     }
     return userCameras;
   };
-  console.log('과연 불 값 변경?', userCameras);
+  // console.log('과연 불 값 변경?', userCameras);
 
   GameReadyBool();
 
@@ -94,7 +94,7 @@ const GameReady = () => {
   // 현재 접속한 유저와 true인 유저와 같다면 alert창을 띄어야 한다.
   useEffect(() => {
     let timer = setTimeout(() => {
-      if (currentUser >= 1 && currentUser === trueUser.length) {
+      if (currentUser >= 4 && currentUser === trueUser.length) {
         setTrueAlert(!trueAlert);
       } else if (currentUser > trueUser.length) {
         setTrueAlert(false);
