@@ -44,7 +44,7 @@ const Kakao = () => {
           sameSite: 'none',
         });
         // console.log(cookies);
-        if (res2.status == 200) {
+        if (res2.status == 200 || 201) {
           window.location.replace('/home');
           // console.log(cookies);
         }
