@@ -267,7 +267,7 @@ const IllustSection = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #f5f5f5;
-  gap: 6px;
+  gap: 7px;
   padding-bottom: 10px;
   border-radius: 0 0 6px 6px;
 `;
