@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import Notice from '../elements/Notice';
-import Chat from '../components/Chat';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { socket } from '../shared/socket';
@@ -25,12 +24,12 @@ const Room = () => {
 
   useEffect(() => {
     //로그인 안하면 로비입장 못하게 하기 (useEffect 안에 넣어야 navigate 먹어요)
-    if (cookies.nickname === undefined || null) {
-      alert('로그인해주세요');
+    if (cookies.nickname == null) {
+      alert('로그인이 필요합니다');
       navigate(`/`);
     }
   }, []);
-  if (cookies.nickname === undefined || null) {
+  if (cookies.nickname == null) {
   } else {
     return (
       <>
@@ -40,9 +39,9 @@ const Room = () => {
             {/* 본인 컴포넌트말고 주석하면 돼용 */}
             {/* {gameOperation === 1 ? <GameStart /> : <GameReady />} */}
             {/* <GameReady /> */}
-            <GameStart />
+            {/* <GameStart /> */}
             {/* {goFromStartToVote ? <GameVote /> : <GameStart />} */}
-            {/* <GameVote /> */}
+            <GameVote />
           </Game>
           {/* <GameEnd /> */}
           <RoomChat />
