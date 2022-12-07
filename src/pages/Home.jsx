@@ -12,10 +12,9 @@ import { ReactComponent as WeAllLieWhiteLogo } from '../assets/we_all_lie_white_
 const Home = () => {
   //채팅방 열고 닫기 코드 (나중에 필요없으면 props들과 함께 지우기)
   const themeContext = useContext(ThemeContext);
-  const [showChat, setShowChat] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [rooms, setRooms] = useState();
-  const [cookies, setCookies] = useCookies(['nickname']);
+  const [cookies] = useCookies(['nickname']);
   const nickname = cookies['nickname'];
   const navigate = useNavigate('');
 
@@ -25,9 +24,8 @@ const Home = () => {
   useEffect(() => {
     socket.on('showRoom', (room) => {
       setRooms(room);
-      //console.log(rooms);
     });
-  }, []);
+  }, [rooms]);
 
   // useEffect(() => {
   //   const intervalId = setInterval(() => {
@@ -49,7 +47,7 @@ const Home = () => {
       alert('로그인이 필요합니다');
       navigate(`/`);
     }
-  }, []);
+  }, [cookies.nickname, navigate, nickname]);
 
   //로비 입장 못하는 alert 뒤에 화면 안보이게 처리하려고.
   if (cookies.nickname == null) {
@@ -57,7 +55,7 @@ const Home = () => {
     return (
       <div theme={themeContext}>
         <Notice />
-        <Box showChat={showChat}>
+        <Box>
           <List>
             <HeaderSection>
               <LogoImg>
@@ -88,7 +86,7 @@ const Home = () => {
               })}
             </section>
           </List>
-          <Chat showChat={showChat} />
+          <Chat />
         </Box>
       </div>
     );
