@@ -65,10 +65,12 @@ const RoomChat = () => {
   }, []);
 
   //남이 보낸 msg
-  socket.on('receiveRoomMsg', (msg, msgId) => {
-    msg.msgId = msgId;
-    console.log('남이 보낸 Room msg::', msg);
-    setChat([...chat, msg]);
+  socket.on('receiveRoomMsg', (msg, msgId, roomNum) => {
+    if (roomNum === param.id) {
+      msg.msgId = msgId;
+      console.log('남이 보낸 Room msg::', msg);
+      setChat([...chat, msg]);
+    }
   });
 
   const myMsg = (a) => {
