@@ -12,12 +12,13 @@ const ReadyButton = ({ children }) => {
 export default ReadyButton;
 
 const StyledButton = styled.button`
-  width: 200px;
-  height: 40px;
+  width: 15%;
+  height: 28%;
   background-color: #f5f5f5;
   border-radius: 6px;
   color: #ff8217;
   font-weight: 500;
+  font-size: 16px;
   border: 1px solid #ff8217;
   &:hover {
     transition: 0.3s ease-in-out;

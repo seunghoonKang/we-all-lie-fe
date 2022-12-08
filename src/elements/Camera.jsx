@@ -2,15 +2,20 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import arrestedstamp from '../img/arrested.png';
 
-const Camera = ({ person, stamp, setStamp }) =>
-  // { person, stamp, setStamp }
-  {
-    const arrestedToggle = () => {
-      setStamp(person);
-    };
-    console.log(person);
+const Camera = ({ person, stamp, setStamp, voteStatus, setVoteStatus }) => {
+  // const [vote, setVote] = useState(false);
 
-    return (
+  //투표 미완료 상태일때만 스탬프 찍히는 로직 (투표완료시 눌러도 작동 안함)
+  const arrestedToggle = () => {
+    if (voteStatus == false) {
+      setStamp(person);
+    }
+  };
+
+  // console.log(person);
+
+  return (
+    <>
       <Wrap onClick={arrestedToggle}>
         <NickName>{person}</NickName>
         {stamp === person && (
@@ -19,8 +24,24 @@ const Camera = ({ person, stamp, setStamp }) =>
           </Arrested>
         )}
       </Wrap>
-    );
-  };
+
+      {/* {vote === false ? (
+        <Wrap>
+          <NickName>{person}</NickName>
+        </Wrap>
+      ) : (
+        <Wrap onClick={arrestedToggle}>
+          <NickName>{person}</NickName>
+          {stamp === person && (
+            <Arrested>
+              <img src={arrestedstamp} alt="투표 지목된 사람" />
+            </Arrested>
+          )}
+        </Wrap>
+      )} */}
+    </>
+  );
+};
 
 export default Camera;
 
@@ -56,5 +77,5 @@ const Arrested = styled.div`
   left: 50%;
   transform: translateY(-25%);
   margin-left: -80px;
-  z-index: 999;
+  z-index: 99;
 `;

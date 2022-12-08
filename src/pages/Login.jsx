@@ -4,6 +4,7 @@ import { ReactComponent as WeAllLie } from '../assets/we_all_lie.svg';
 import Description from '../components/login/Description';
 import { useState } from 'react';
 import { ReactComponent as Modalimg } from '../assets/play_modal.svg';
+import { ReactComponent as KakaoIcon } from '../assets/kakao.svg';
 
 const Login = () => {
   const [playModal, setPlayModal] = useState(false);
@@ -22,11 +23,13 @@ const Login = () => {
         </MainImg>
 
         <BtnWrap>
-          <Modalimg
-            onClick={() => {
-              setPlayModal(!playModal);
-            }}
-          />
+          <DescriptionModal>
+            <Modalimg
+              onClick={() => {
+                setPlayModal(!playModal);
+              }}
+            />
+          </DescriptionModal>
           {playModal ? (
             <Description
               closeDescription={() => {
@@ -38,11 +41,7 @@ const Login = () => {
           )}
 
           <KaKaoBtn onClick={handleLogin}>
-            <img
-              style={{ transform: 'scale(0.3)' }}
-              src="/img/kakao1.png"
-            ></img>
-            <span>카카오 로그인</span>
+            <KakaoIcon />
           </KaKaoBtn>
         </BtnWrap>
       </MiniWrap>
@@ -65,20 +64,7 @@ const MiniWrap = styled.div`
   padding: 0px 0px 90px;
 `;
 
-// const P = styled.div`
-//   color: #000000;
-//   font-family: Pretendard, 'Source Sans Pro';
-//   font-size: 50px;
-//   font-weight: 800;
-//   /* white-space: nowrap; */
-//   margin: 102px auto 0 auto;
-//   text-align: center;
-//   /* width: 50%; */
-//   flex-wrap: Wrap;
-// `;
-
 const MainImg = styled.div`
-  /* height: 360px; */
   object-fit: contain;
   vertical-align: top;
   display: inline;
@@ -87,35 +73,30 @@ const MainImg = styled.div`
   align-self: center;
   columns: center;
   margin: 12px auto 0 auto;
-  img {
-    width: 1080px;
-    height: 360px;
-  }
 `;
 
 const BtnWrap = styled.div`
   display: flex;
   justify-content: center;
-  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 15px;
+`;
+
+const DescriptionModal = styled.div`
+  display: flex;
 `;
 
 const KaKaoBtn = styled.div`
-  height: 52px;
-  display: inline-block;
+  height: 40px;
   display: flex;
-  position: absolute;
-  text-align: center;
-  padding: 11px 0px 10px;
   justify-content: center;
   background: #ffcd2a;
   align-items: center;
-  min-width: 410px;
+  min-width: 250px;
   border-radius: 8px;
-  font-weight: bold;
-  font-size: 16px;
   line-height: 24px;
 
-  margin: 12px auto 0px 90px;
   &:hover {
     background-color: #f4c31f;
   }

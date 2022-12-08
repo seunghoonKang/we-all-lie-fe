@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import Notice from '../elements/Notice';
-import Chat from '../components/Chat';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { socket } from '../shared/socket';
@@ -11,6 +10,7 @@ import GameReady from '../components/GameReady';
 import GameStart from '../components/GameStart';
 import GameVote from '../components/GameVote';
 import RoomChat from '../components/RoomChat';
+import GameEnd from '../components/GameEnd';
 
 const Room = () => {
   // 새로고침방지
@@ -18,33 +18,18 @@ const Room = () => {
   const param = useParams();
   const [cookies, setCookies] = useCookies(['nickname']);
   const navigate = useNavigate();
-  const goFromStartToVote = useSelector(
-    (state) => state.game.goFromStartToVote
-  );
-  /*
-  useEffect(() => {
-    return () => {
-      socket.emit('leaveRoom', param.id);
-    };
-  });
-  const navigate = useNavigate();
-  const onClickhandler = () => {
-    socket.emit('leaveRoom', param.id);
-    navigate('/home');
-  };
-  */
-  socket.on('ready', (room) => {
-    // console.log(room);
-  });
+  const gameOperation = useSelector((state) => state.game.gameOperation);
+
+  console.log('게임 값 다 받고 실행할 값', gameOperation);
 
   useEffect(() => {
     //로그인 안하면 로비입장 못하게 하기 (useEffect 안에 넣어야 navigate 먹어요)
-    if (cookies.nickname === undefined || null) {
-      alert('로그인해주세요');
+    if (cookies.nickname == null) {
+      alert('로그인이 필요합니다');
       navigate(`/`);
     }
   }, []);
-  if (cookies.nickname === undefined || null) {
+  if (cookies.nickname == null) {
   } else {
     return (
       <>
@@ -52,12 +37,13 @@ const Room = () => {
         <Box>
           <Game>
             {/* 본인 컴포넌트말고 주석하면 돼용 */}
-            <GameReady />
+            {gameOperation === 1 ? <GameStart /> : <GameReady />}
+            {/* <GameReady /> */}
             {/* <GameStart /> */}
             {/* {goFromStartToVote ? <GameVote /> : <GameStart />} */}
             {/* <GameVote /> */}
           </Game>
-
+          {/* <GameEnd /> */}
           <RoomChat />
         </Box>
       </>
@@ -68,13 +54,11 @@ const Room = () => {
 const Box = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 16px;
+  padding: 0 16px 0 16px;
 `;
 
 //List 없애고 Game 에 합침
 const Game = styled.div`
-  //background-color: lightpink;
-  /* height: 100%; */
   width: calc(100% - 350px);
   height: 90vh;
   min-height: 650px;
