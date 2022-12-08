@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -16,6 +17,7 @@ const GameVote = () => {
   const [voteStatus, setVoteStatus] = useState(false);
   const [spyWin, setSpyWin] = useState(0);
   const [spyGuess, setSpyGuess] = useState(0);
+  const [timeout, setTimeout] = useState(false);
   const userNickname = useSelector((state) => state.room.userNickname); //유저닉네임 들고오기
   const userCameras = [
     { nickName: 'a' },
@@ -49,13 +51,14 @@ const GameVote = () => {
 
   //투표시간 setTimeout 걸기
   //내가 아직 투표를 하지 않았다면 현재 stamp 찍혀있는 사람으로 자동 emit
-  setTimeout(() => {
+
+  if (timeout === true) {
     if (voteStatus === false) {
       socket.emit('voteSpy', param.id, stamp);
       console.log('투표를 안해서 마지막으로 클릭한 사람 보내줌 ::', stamp);
       setVoteStatus(true);
     }
-  }, 20000);
+  }
 
   //내가 선택한 사람 닉네임 = stamp
   console.log('stamp::', stamp);
@@ -98,7 +101,7 @@ const GameVote = () => {
       <TimerContainer>
         <TimerDiv>
           <MinWidthTimerDiv>
-            <Timer sec="20" />
+            <Timer sec="20" timeout={timeout} setTimeout={setTimeout} />
           </MinWidthTimerDiv>
         </TimerDiv>
       </TimerContainer>

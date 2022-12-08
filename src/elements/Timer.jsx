@@ -4,7 +4,7 @@ const padStartTime = (num) => {
   return String(num).padStart(2, '0');
 };
 
-const Timer = ({ min, sec }) => {
+const Timer = ({ min, sec, timeout, setTimeout }) => {
   const Min = min ? parseInt(min) : 0;
   const Sec = sec ? parseInt(sec) : 0;
   const count = useRef(Min * 60 + Sec);
@@ -24,6 +24,7 @@ const Timer = ({ min, sec }) => {
 
   useEffect(() => {
     if (count.current <= 0) {
+      setTimeout(true);
       clearInterval(interval.current);
     }
   }, [second]);

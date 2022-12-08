@@ -39,14 +39,14 @@ const Room = () => {
             <>
               <Game>
                 {/* 본인 컴포넌트말고 주석하면 돼용 */}
-                {gameOperation === 0 && <GameReady />}
+                {/* {gameOperation === 0 && <GameReady />}
                 {gameOperation === 1 && <GameStart />}
                 {gameOperation === 2 && <GameVote />}
-                {/* {gameOperation === 1 ? <GameStart /> : <GameReady />} */}
+                {gameOperation === 1 ? <GameStart /> : <GameReady />} */}
                 {/* <GameReady /> */}
                 {/* <GameStart /> */}
                 {/* {goFromStartToVote ? <GameVote /> : <GameStart />} */}
-                {/* <GameVote /> */}
+                <GameVote />
               </Game>
               <RoomChat />
             </>
