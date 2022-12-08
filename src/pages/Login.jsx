@@ -25,6 +25,7 @@ const Login = () => {
         <BtnWrap>
           <DescriptionModal>
             <Modalimg
+              class="hover:bg-orange-400 rounded-md"
               onClick={() => {
                 setPlayModal(!playModal);
               }}
@@ -61,18 +62,15 @@ const Wrap = styled.div`
 `;
 
 const MiniWrap = styled.div`
-  padding: 0px 0px 90px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const MainImg = styled.div`
-  object-fit: contain;
-  vertical-align: top;
-  display: inline;
-  justify-content: center;
-  display: flex;
-  align-self: center;
-  columns: center;
-  margin: 12px auto 0 auto;
+  margin: 4% auto 0 auto;
 `;
 
 const BtnWrap = styled.div`
@@ -81,6 +79,8 @@ const BtnWrap = styled.div`
   align-items: center;
   width: 100%;
   gap: 15px;
+  padding: 25px;
+  margin: 1% auto 0 auto;
 `;
 
 const DescriptionModal = styled.div`
@@ -91,13 +91,13 @@ const KaKaoBtn = styled.div`
   height: 40px;
   display: flex;
   justify-content: center;
-  background: #ffcd2a;
+  background: #fee500;
   align-items: center;
   min-width: 250px;
   border-radius: 8px;
-  line-height: 24px;
+  /* line-height: 24px; */
 
   &:hover {
-    background-color: #f4c31f;
+    background-color: #e4cd03;
   }
 `;
