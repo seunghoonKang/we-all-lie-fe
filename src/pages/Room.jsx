@@ -35,16 +35,26 @@ const Room = () => {
       <>
         <Notice />
         <Box>
-          <Game>
-            {/* 본인 컴포넌트말고 주석하면 돼용 */}
-            {gameOperation === 1 ? <GameStart /> : <GameReady />}
-            {/* <GameReady /> */}
-            {/* <GameStart /> */}
-            {/* {goFromStartToVote ? <GameVote /> : <GameStart />} */}
-            {/* <GameVote /> */}
-          </Game>
-          {/* <GameEnd /> */}
-          <RoomChat />
+          {gameOperation !== 3 ? (
+            <>
+              <Game>
+                {/* 본인 컴포넌트말고 주석하면 돼용 */}
+                {gameOperation === 0 && <GameReady />}
+                {gameOperation === 1 && <GameStart />}
+                {gameOperation === 2 && <GameVote />}
+                {/* {gameOperation === 1 ? <GameStart /> : <GameReady />} */}
+                {/* <GameReady /> */}
+                {/* <GameStart /> */}
+                {/* {goFromStartToVote ? <GameVote /> : <GameStart />} */}
+                {/* <GameVote /> */}
+              </Game>
+              <RoomChat />
+            </>
+          ) : (
+            {
+              /* <GameEnd /> */
+            }
+          )}
         </Box>
       </>
     );
