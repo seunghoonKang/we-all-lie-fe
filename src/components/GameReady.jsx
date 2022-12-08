@@ -21,7 +21,7 @@ const GameReady = () => {
   const userNickname = useSelector((state) => state.room.userNickname);
   // console.log('받아오는 닉네임 확인', userNickname);
   const giveCategory = useSelector((state) => state.game.giveCategory);
-  // console.log('과연 들어왔니?', giveCategory);
+  console.log('과연 들어왔니?', giveCategory);
 
   const [userCameras, setUserCameras] = useState([
     { nickname: '', boolkey: false },
@@ -35,7 +35,7 @@ const GameReady = () => {
   ]);
 
   const ReadyHandler = () => {
-    socket.emit('ready', param.id);
+    socket.emit('ready', param.id, ready);
     setReady(!ready);
   };
 
@@ -46,7 +46,7 @@ const GameReady = () => {
       { nickname: nic, boolkey: bool },
     ]);
   });
-  // console.log(pendingReady);
+  console.log(pendingReady);
 
   //닉네임 변경
   const Vacancy = () => {
@@ -94,8 +94,25 @@ const GameReady = () => {
   // 현재 접속한 유저와 true인 유저와 같다면 alert창을 띄어야 한다.
   useEffect(() => {
     let timer = setTimeout(() => {
-      if (currentUser >= 4 && currentUser === trueUser.length) {
+      if (currentUser >= 3 && currentUser === trueUser.length) {
         setTrueAlert(!trueAlert);
+        //4명 이상이 준비시 스파이 받아옴 리덕스에 넣기 Agent_융징이 이렇게 들어옴
+        socket.on('spyUser', (spyUser) => {
+          console.log('이건 스파이', spyUser);
+          dispatch(giveCategory(spyUser));
+          // setTimeout(()=> {
+          dispatch(gameOperation(1));
+          // },1000)
+        });
+
+        //4명 이상이 준비시 카테고리 받아옴
+        socket.on('gameStart', (gameStart) => {
+          console.log('이건 카테고리', gameStart);
+          dispatch(giveCategory(gameStart));
+          // setTimeout(()=> {
+          dispatch(gameOperation(1));
+          // },1000)
+        });
       } else if (currentUser > trueUser.length) {
         setTrueAlert(false);
       }
@@ -104,15 +121,6 @@ const GameReady = () => {
       clearTimeout(timer);
     };
   }, [trueUser]);
-
-  //4명 이상이 준비시 카테고리 받아옴
-  socket.on('gameStart', (gameStart) => {
-    console.log('게임시작됐는지 확인', gameStart);
-    dispatch(giveCategory(gameStart));
-    // setTimeout(()=> {
-    dispatch(gameOperation(1));
-    // },1000)
-  });
 
   return (
     <ReadyLayout>
