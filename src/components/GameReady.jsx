@@ -35,7 +35,7 @@ const GameReady = () => {
   ]);
 
   const ReadyHandler = () => {
-    socket.emit('ready', param.id);
+    socket.emit('ready', param.id, ready);
     setReady(!ready);
   };
 
@@ -46,7 +46,7 @@ const GameReady = () => {
       { nickname: nic, boolkey: bool },
     ]);
   });
-  // console.log(pendingReady);
+  console.log(pendingReady);
 
   //닉네임 변경
   const Vacancy = () => {
