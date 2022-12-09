@@ -22,26 +22,26 @@ const GameReady = () => {
   const [ready, setReady] = useState(false);
   const [trueAlert, setTrueAlert] = useState(false);
   const [pendingReady, setPendingReady] = useState([]);
+  const [cookies] = useCookies(['nickname']);
   const param = useParams();
   const dispatch = useDispatch();
-  const [cookies] = useCookies(['nickname']);
-  const nickname = cookies.nickname;
+
   const initialState = [
-    { id: 1, nickname: '', boolkey: false },
-    { id: 2, nickname: '', boolkey: false },
-    { id: 3, nickname: '', boolkey: false },
-    { id: 4, nickname: '', boolkey: false },
-    { id: 5, nickname: '', boolkey: false },
-    { id: 6, nickname: '', boolkey: false },
-    { id: 7, nickname: '', boolkey: false },
-    { id: 8, nickname: '', boolkey: false },
+    { nickname: '', boolkey: false, id: 1 },
+    { nickname: '', boolkey: false, id: 2 },
+    { nickname: '', boolkey: false, id: 3 },
+    { nickname: '', boolkey: false, id: 4 },
+    { nickname: '', boolkey: false, id: 5 },
+    { nickname: '', boolkey: false, id: 6 },
+    { nickname: '', boolkey: false, id: 7 },
+    { nickname: '', boolkey: false, id: 8 },
   ];
 
   const [userCameras, setUserCameras] = useState(initialState);
 
   const ReadyHandler = () => {
     setReady(!ready);
-    socket.emit('ready', param.id, ready, nickname);
+    socket.emit('ready', param.id, ready, cookies.nickname);
   };
 
   //게임레디 확인

@@ -13,20 +13,20 @@ import { gameOperation } from '../../redux/modules/gameSlice';
 const GameStartHeader = ({ setEarlyVote }) => {
   const [modalStatus, setModalStatus] = useState(false);
   const [disabledBtn, setDisabledBtn] = useState('투표준비');
-  const userNickname = useSelector((state) => state.room.userNickname);
   const [cookies] = useCookies(['nickname']);
+  const userNickname = useSelector((state) => state.room.userNickname);
   const navigate = useNavigate();
-  const param = useParams();
   const dispatch = useDispatch();
+  const param = useParams();
+
   const [earlyVoteInfo, setEarlyVoteInfo] = useState();
-  const nickname = cookies.nickname;
   const tempGoOutBtn = () => {
     //나가기 버튼 눌렀을 때 퇴장메세지 이벤트 emit
-    socket.emit('leaveRoomMsg', param.id, nickname);
+    socket.emit('leaveRoomMsg', param.id, cookies.nickname);
     console.log('나가기버튼 누름');
     //퇴장 이벤트
     alert('방 나가기 소켓 임시로 넣었음');
-    socket.emit('leaveRoom', param.id);
+    socket.emit('leaveRoom', param.id, cookies.nickname);
     socket.on('leaveRoom', () => {
       navigate('/home');
     });
@@ -47,7 +47,7 @@ const GameStartHeader = ({ setEarlyVote }) => {
     for (let i = 0; i < userNickname.length; i++) {
       if (userNickname[i] === cookies.nickname) {
         setEarlyVote(true);
-        socket.emit('nowVote', param.id, true);
+        socket.emit('nowVote', param.id, true, cookies.nickname);
         setDisabledBtn('투표완료');
       }
     }
