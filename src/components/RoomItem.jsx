@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
+import { socket } from '../shared/socket';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
 import { getRoomInfo, getUserNickname } from '../redux/modules/roomSlice';
-import { socket } from '../shared/socket';
 import { ReactComponent as UnLockedIcon } from '../assets/unlocked.svg';
 import { ReactComponent as LockedIcon } from '../assets/locked.svg';
+import { useCookies } from 'react-cookie';
+import styled from 'styled-components';
 import Button from '../elements/Button';
 
 const RoomItem = ({ roominfo }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [cookies] = useCookies(['nickname']);
+
   const enterRoomHandler = () => {
     if (roominfo?.currentCount > 8) {
       alert('정원이 초과되었습니다.');
     } else {
-      socket.emit('enterRoom', roominfo?._id);
+      socket.emit('enterRoom', roominfo?._id, cookies.nickname);
       dispatch(getRoomInfo(roominfo));
       socket.on('userNickname', (userNickname) => {
         dispatch(getUserNickname(userNickname));
