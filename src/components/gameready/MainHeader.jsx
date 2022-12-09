@@ -3,12 +3,19 @@ import styled from 'styled-components';
 import Button from '../../elements/Button';
 import { useNavigate, useParams } from 'react-router-dom';
 import { socket } from '../../shared/socket';
+import { useCookies } from 'react-cookie';
 import { ReactComponent as WeAllLieLogo } from '../../assets/we_all_lie_white_logo.svg';
 
 const MainHeader = () => {
   const param = useParams();
   const navigate = useNavigate();
+  const [cookies, setCookies] = useCookies(['nickname']);
+  const nickname = cookies.nickname;
   const BtnHandler = () => {
+    //나가기 버튼 눌렀을 때 퇴장메세지 이벤트 emit
+    socket.emit('leaveRoomMsg', param.id, nickname);
+    console.log('나가기버튼 누름');
+    //퇴장이벤트
     alert('홈 화면으로 슈우웅');
     socket.emit('leaveRoom', param.id);
     socket.on('leaveRoom', () => {

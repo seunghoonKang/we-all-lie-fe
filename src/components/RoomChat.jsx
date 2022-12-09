@@ -68,7 +68,7 @@ const RoomChat = () => {
   socket.on('receiveRoomMsg', (msg, msgId, roomNum) => {
     if (roomNum === param.id) {
       msg.msgId = msgId;
-      console.log('남이 보낸 Room msg::', msg);
+      // console.log('남이 보낸 Room msg::', msg);
       setChat([...chat, msg]);
     }
   });
@@ -121,7 +121,7 @@ const RoomChat = () => {
 
         {chat.map((a) => {
           return a.notice ? (
-            <Notice key={a.msgId}>{a.notice}</Notice> //key빼봄
+            <Notice key={a.msgId}>{a.notice}</Notice>
           ) : (
             a.msg &&
               (a.name == nickname ? (
@@ -161,7 +161,6 @@ const RoomChat = () => {
         })}
       </ChatRow>
       <Form onSubmit={msgSubmitHandler}>
-        {/* <p>프로필?</p> */}
         <input type="text" ref={msgInput} placeholder="여따 할말혀!" required />
         <button>
           <SendIcon />
