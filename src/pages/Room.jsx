@@ -43,7 +43,7 @@ const Room = () => {
                 {gameOperation === 1 && <GameStart />}
                 {gameOperation === 2 && <GameVote />}
                 {gameOperation === 1 ? <GameStart /> : <GameReady />} */}
-                {/* <GameReady /> */}
+                <GameReady />
                 {/* <GameStart /> */}
                 {/* {goFromStartToVote ? <GameVote /> : <GameStart />} */}
                 <GameVote />
