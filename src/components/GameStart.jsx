@@ -1,27 +1,27 @@
-import React, { useState, useEffect, useContext } from 'react';
-import Timer from '../elements/Timer';
-import Camera from '../elements/Camera2';
-import GameStartHeader from './gamestart/GameStartHeader';
-import GivenWord from './gamestart/GivenWord';
-import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, useEffect, useMemo } from 'react';
 import { socket } from '../shared/socket';
+import { useDispatch, useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import { useParams } from 'react-router-dom';
+import { gameOperation } from '../redux/modules/gameSlice';
+import Camera from '../elements/Camera2';
+import GameStartHeader from './gamestart/GameStartHeader';
+import styled from 'styled-components';
 import SelectCategoryImg from './gamestart/SelectCategoryImg';
 import CorrectCardSection from './gamestart/CorrectCardSection';
 import GameStartTimerSection from './gamestart/GameStartTimerSection';
+import CommonModal from '../elements/CommonModal';
 
 const GameStart = () => {
   const dispatch = useDispatch();
   const userNickname = useSelector((state) => state.room.userNickname);
-  const words = useSelector((state) => state.game.words);
-  const answerWord = useSelector((state) => state.game.answerWord);
   const category = useSelector((state) => state.game.category);
-  const spy = useSelector((state) => state.game.spy);
-  const [cookies] = useCookies(['nickname']);
+  // const category = useSelector((state) => state.game.givecategory.category);
+
+  const [modalStatus, setModalStatus] = useState(false);
   const [earlyVote, setEarlyVote] = useState(false);
   const param = useParams();
+  const totalTime = 420000;
 
   const userCameras = [
     { nickName: '빈자리' },
@@ -33,39 +33,57 @@ const GameStart = () => {
     { nickName: '빈자리' },
     { nickName: '빈자리' },
   ];
-  const fillInTheEmptySeats = () => {
+
+  const fillInTheEmptySeats = useMemo(() => {
     for (let step = 0; step < 8; step++) {
       if (userCameras[step].nickName === '빈자리') {
         userCameras[step].nickName = userNickname[step];
       }
     }
     return userCameras;
-  };
-  fillInTheEmptySeats();
+  }, [userCameras]);
 
   useEffect(() => {
     socket.emit('setNowVote', param.id);
   }, []);
 
-  console.log(words, answerWord, category, spy);
-
-  /* 시간 다되면 알아서 투표페이지로 이동하기 
-  const votePage = () =>
+  //console.log(words, answerWord, category, spy);
+  //console.log(userCameras);
+  /* 시간되면 모달 띄우기 7분으로 따라가기 */
+  const votePage = () => {
     setTimeout(() => {
-      alert('시간이 다 되어 투표페이지로 이동합니다.');
-      dispatch(goFromGameStartToGameVote(true));
-    }, 10000);
+      setModalStatus(true);
+    }, totalTime);
+  };
+
+  //시간 다되면 알아서 투표페이지로 이동하기
+  //모달창 이후에 dispatch가 돼야 해서
+  //모달창 이후 7초 추가함
+  const changeGameOperation = () => {
+    setTimeout(() => {
+      setModalStatus(false);
+      dispatch(gameOperation(2));
+    }, totalTime + 7000);
+  };
 
   useEffect(() => {
     votePage();
+    changeGameOperation();
     return () => {
       clearTimeout(votePage);
+      clearTimeout(changeGameOperation);
     };
   }, []);
-  */
 
   return (
     <>
+      {modalStatus && (
+        <CommonModal
+          main="잠시 후 투표가 시작됩니다. "
+          sub="시간이 다 되어 투표페이지로 이동합니다."
+          time
+        />
+      )}
       <GameStartHeader earlyVote={earlyVote} setEarlyVote={setEarlyVote} />
       <GameEntireContainer>
         <GameCardSection>
@@ -77,7 +95,7 @@ const GameStart = () => {
         </GameCardSection>
         <VideoContainer>
           {userCameras.map((person, i) => (
-            <Camera nickname={person.nickName} key={i} />
+            <Camera person={person.nickName} key={i} />
           ))}
         </VideoContainer>
       </GameEntireContainer>
