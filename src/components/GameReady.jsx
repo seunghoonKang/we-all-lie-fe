@@ -27,9 +27,11 @@ const GameReady = () => {
   const param = useParams();
   const dispatch = useDispatch();
   const userNick = useSelector((state) => state.room.userNickname);
-  console.log(userNick);
 
+  // console.log('너는 계속 찍히니?', userNick);
+  // console.log('이거 준비임', ready);
   //유저 기본 틀
+
   const initialState = [
     { nickname: '', boolkey: false, id: 1 },
     { nickname: '', boolkey: false, id: 2 },
@@ -43,11 +45,30 @@ const GameReady = () => {
 
   const [userCameras, setUserCameras] = useState(initialState);
 
+  const vacancy = useMemo(() => {
+    socket.on('userNickname', (userNickname) => {
+      // console.log('유저닉', userNickname);
+      //dispatch(getUserNickname(userNickname));
+      setUserCameras(initialState);
+      for (let item = 0; item < userNickname.length; item++) {
+        if (userCameras[item].nickname !== userNickname[item]) {
+          userCameras[item].nickname = userNickname[item];
+        }
+      }
+      return userCameras;
+    });
+  }, [userCameras]);
+
   //게임 준비 보냄
+
   const ReadyHandler = () => {
     setReady(!ready);
-    socket.emit('ready', param.id, ready, cookies.nickname);
   };
+
+  useEffect(() => {
+    socket.emit('ready', param.id, `${ready}`, cookies.nickname);
+    console.log('이번에는 어떰?', ready);
+  }, [ready]);
 
   //게임 준비 받음
   socket.on('ready', (nic, bool) => {
@@ -59,20 +80,6 @@ const GameReady = () => {
   socket.on('userNickname', (userNickname) => {
     dispatch(getUserNickname(userNickname));
   });
-
-  const vacancy = useMemo(() => {
-    socket.on('userNickname', (userNickname) => {
-      console.log('유저닉', userNickname);
-      //dispatch(getUserNickname(userNickname));
-      setUserCameras(initialState);
-      for (let item = 0; item < userNickname.length; item++) {
-        if (userCameras[item].nickname !== userNickname[item]) {
-          userCameras[item].nickname = userNickname[item];
-        }
-      }
-      return userCameras;
-    });
-  }, [userCameras]);
 
   //불값 변경
   const GameReadyBool = () => {
@@ -151,7 +158,7 @@ const GameReady = () => {
           <h1>준비 버튼을 클릭하세요 ! </h1>
           <span>모든 플레이어가 준비되면 자동으로 게임이 시작됩니다.</span>
           <ReadyButton>
-            <div onClick={ReadyHandler}>{!ready ? '준비완료' : '준비하기'}</div>{' '}
+            <div onClick={ReadyHandler}>{!ready ? '준비하기' : '준비완료'}</div>{' '}
           </ReadyButton>
         </ReadyButtonSection>
 
