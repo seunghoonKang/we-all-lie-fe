@@ -126,7 +126,7 @@ const Chat = () => {
 
         {chat.map((a) => {
           return a.notice ? (
-            <Notice key={a.msgId}>{a.notice}</Notice> //key빼봄
+            <Notice key={a.msgId}>{a.notice}</Notice>
           ) : (
             a.msg &&
               (a.name == nickname ? (
@@ -166,7 +166,6 @@ const Chat = () => {
         })}
       </ChatRow>
       <Form onSubmit={msgSubmitHandler}>
-        {/* <p>프로필?</p> */}
         <input type="text" ref={msgInput} placeholder="여따 할말혀!" required />
         <button>
           <SendIcon />

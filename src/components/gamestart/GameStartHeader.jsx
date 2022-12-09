@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { socket } from '../../shared/socket';
 import { ReactComponent as Megaphone } from '../../assets/megaphone.svg';
@@ -8,6 +8,7 @@ import { useCookies } from 'react-cookie';
 import Button from '../../elements/Button';
 import styled from 'styled-components';
 import CommonModal from '../../elements/CommonModal';
+import { gameOperation } from '../../redux/modules/gameSlice';
 
 const GameStartHeader = ({ setEarlyVote }) => {
   const [modalStatus, setModalStatus] = useState(false);
@@ -16,9 +17,14 @@ const GameStartHeader = ({ setEarlyVote }) => {
   const [cookies] = useCookies(['nickname']);
   const navigate = useNavigate();
   const param = useParams();
+  const dispatch = useDispatch();
   const [earlyVoteInfo, setEarlyVoteInfo] = useState();
-
+  const nickname = cookies.nickname;
   const tempGoOutBtn = () => {
+    //나가기 버튼 눌렀을 때 퇴장메세지 이벤트 emit
+    socket.emit('leaveRoomMsg', param.id, nickname);
+    console.log('나가기버튼 누름');
+    //퇴장 이벤트
     alert('방 나가기 소켓 임시로 넣었음');
     socket.emit('leaveRoom', param.id);
     socket.on('leaveRoom', () => {
@@ -27,10 +33,12 @@ const GameStartHeader = ({ setEarlyVote }) => {
     navigate('/home');
   };
 
-  const modalset = () =>
+  const modalset = () => {
     setTimeout(() => {
       setModalStatus(false);
+      dispatch(gameOperation(2));
     }, 5000);
+  };
 
   const voteBtnHandler = () => {
     //방에 들어온 인원이 for문을 돌며,
@@ -61,7 +69,7 @@ const GameStartHeader = ({ setEarlyVote }) => {
   useEffect(() => {
     const checkNotDisabledBtn = setTimeout(() => {
       setDisabledBtn('투표하기');
-    }, 5000);
+    }, 140000);
 
     return () => {
       clearTimeout(checkNotDisabledBtn);

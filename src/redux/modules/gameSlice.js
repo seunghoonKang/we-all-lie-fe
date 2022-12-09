@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   asker: '',
   answerer: '',
-  words: [
+  showWords: [
     '배드민턴',
     '농구',
     '클라이밍',
