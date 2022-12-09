@@ -27,7 +27,11 @@ const GameReady = () => {
   const param = useParams();
   const dispatch = useDispatch();
   const userNick = useSelector((state) => state.room.userNickname);
-  console.log(userNick);
+
+  // console.log('너는 계속 찍히니?', userNick);
+  // console.log('이거 준비임', ready);
+  //유저 기본 틀
+
   const initialState = [
     { nickname: '', boolkey: false, id: 1 },
     { nickname: '', boolkey: false, id: 2 },
@@ -41,25 +45,9 @@ const GameReady = () => {
 
   const [userCameras, setUserCameras] = useState(initialState);
 
-  const ReadyHandler = () => {
-    setReady(!ready);
-    socket.emit('ready', param.id, ready, cookies.nickname);
-  };
-
-  //게임레디 확인
-  socket.on('ready', (nic, bool) => {
-    setPendingReady([{ nickname: nic, boolkey: bool }]);
-  });
-  console.log(pendingReady);
-
-  //닉네임 변경
-  socket.on('userNickname', (userNickname) => {
-    dispatch(getUserNickname(userNickname));
-  });
-
   const vacancy = useMemo(() => {
     socket.on('userNickname', (userNickname) => {
-      console.log('유저닉', userNickname);
+      // console.log('유저닉', userNickname);
       //dispatch(getUserNickname(userNickname));
       setUserCameras(initialState);
       for (let item = 0; item < userNickname.length; item++) {
@@ -70,6 +58,28 @@ const GameReady = () => {
       return userCameras;
     });
   }, [userCameras]);
+
+  //게임 준비 보냄
+
+  const ReadyHandler = () => {
+    setReady(!ready);
+  };
+
+  useEffect(() => {
+    socket.emit('ready', param.id, `${ready}`, cookies.nickname);
+    console.log('이번에는 어떰?', ready);
+  }, [ready]);
+
+  //게임 준비 받음
+  socket.on('ready', (nic, bool) => {
+    setPendingReady([{ nickname: nic, boolkey: bool }]);
+  });
+  console.log('게임레디 확인', pendingReady);
+
+  //닉네임 변경
+  socket.on('userNickname', (userNickname) => {
+    dispatch(getUserNickname(userNickname));
+  });
 
   //불값 변경
   const GameReadyBool = () => {
@@ -82,6 +92,7 @@ const GameReady = () => {
   };
   GameReadyBool();
 
+  //준비한 유저 숫자
   const userNickname = useSelector((state) => state.room.userNickname);
   const currentUser = userNickname.length;
 
@@ -98,10 +109,10 @@ const GameReady = () => {
 
   const trueUser = currentReadyUSer.filter((user) => user === true);
 
-  // 현재 접속한 유저와 true인 유저와 같다면 alert창을 띄어야 한다.
+  //접속인원 4명 이상 + 현재 접속인원 === true인원 맞는지 확인
   useEffect(() => {
     let timer = setTimeout(() => {
-      if (currentUser >= 3 && currentUser === trueUser.length) {
+      if (currentUser >= 4 && currentUser === trueUser.length) {
         setTrueAlert(!trueAlert);
         //4명 이상이 준비시 스파이 받아옴 리덕스에 넣기 Agent_융징이 이렇게 들어옴
         socket.on('spyUser', (spyUser) => {
@@ -147,7 +158,7 @@ const GameReady = () => {
           <h1>준비 버튼을 클릭하세요 ! </h1>
           <span>모든 플레이어가 준비되면 자동으로 게임이 시작됩니다.</span>
           <ReadyButton>
-            <div onClick={ReadyHandler}>{!ready ? '준비완료' : '준비하기'}</div>{' '}
+            <div onClick={ReadyHandler}>{!ready ? '준비하기' : '준비완료'}</div>{' '}
           </ReadyButton>
         </ReadyButtonSection>
 
