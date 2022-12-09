@@ -14,7 +14,7 @@ const CorrectCardSection = () => {
   const spy = useSelector((state) => state.game.spy);
   const [cookies] = useCookies(['nickname']);
   return (
-    <div>
+    <>
       {spy === cookies.nickname ? (
         <CorrectCard>
           <CorrectAnswer>
@@ -41,12 +41,12 @@ const CorrectCardSection = () => {
           </IllustSection>
         </CorrectCard>
       )}
-    </div>
+    </>
   );
 };
 
 const CorrectCard = styled.div`
-  width: 26.5rem;
+  width: 100%;
   height: 14.5625rem;
   background-color: #fff;
   border-radius: 10px;
@@ -99,7 +99,7 @@ const IllustSection = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #f5f5f5;
-  gap: 7px;
+  gap: 3px;
   padding-bottom: 10px;
   border-radius: 0 0 6px 6px;
 `;

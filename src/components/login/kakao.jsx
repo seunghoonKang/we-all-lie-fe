@@ -4,12 +4,18 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { useEffect } from 'react';
+import { useState } from 'react';
 import Spinner from '../../elements/Spinner';
+import UserInfo from '../UserInfo';
+import { useDispatch } from 'react-redux';
+import { __getUser } from '../../redux/modules/userSlice';
 
 //리다이렉트 화면
 const Kakao = () => {
   const navigator = useNavigate();
+  // const dispatch = useDispatch();
   const [cookies, setCookie] = useCookies(['nickname']);
+  // const [token, setToken] = useState('');
 
   // 인가코드
   let code = new URL(window.location.href).searchParams.get('code');
@@ -43,10 +49,12 @@ const Kakao = () => {
           secure: true,
           sameSite: 'none',
         });
-        // console.log(cookies);
+        // const accessToken = res2.data.accessToken;
+        // setToken(accessToken);
+        // dispatch(__getUser(accessToken));
+
         if (res2.status == 200 || 201) {
           window.location.replace('/home');
-          // console.log(cookies);
         }
       } else {
         alert('카카오톡 요청 실패');
@@ -62,6 +70,12 @@ const Kakao = () => {
   useEffect(() => {
     Token();
   }, [Token()]);
+
+  // console.log(token);
+
+  // useEffect(() => {
+  //   dispatch(__getUser(token));
+  // }, []);
 
   return <Spinner />;
 };

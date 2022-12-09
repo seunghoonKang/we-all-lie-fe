@@ -11,10 +11,12 @@ import CreateRoomTextInput from './CreateRoomTextInput';
 //import CreateRoomRadio from './CreateRoomRadio';
 // import CreateRoomSelect from './CreateRoomSelect';
 import CreateRoomCheckBox from './CreateRoomCheckBox';
+import { useCookies } from 'react-cookie';
 
 const CreateRoom = ({ closeModal }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [cookies] = useCookies(['nickname']);
   //모달창 닫기
   const closeBtnHandler = () => {
     closeModal();
@@ -89,10 +91,15 @@ const CreateRoom = ({ closeModal }) => {
             })}
             onSubmit={(values, { setSubmitting }) => {
               setTimeout(() => {
-                socket.emit('createRoom', values.gameMode, values.roomTitle);
-                socket.on('userNickname', (userNickname) => {
-                  dispatch(getUserNickname(userNickname));
-                });
+                socket.emit(
+                  'createRoom',
+                  values.gameMode,
+                  values.roomTitle,
+                  cookies.nickname
+                );
+                // socket.on('userNickname', (userNickname) => {
+                //   dispatch(getUserNickname(userNickname));
+                // });
                 socket.on('createRoom', (room) => {
                   dispatch(getRoomInfo(room));
                   navigate(`/room/${room._id}`);
