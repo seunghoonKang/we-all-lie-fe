@@ -97,9 +97,9 @@ const CreateRoom = ({ closeModal }) => {
                   values.roomTitle,
                   cookies.nickname
                 );
-                socket.on('userNickname', (userNickname) => {
-                  dispatch(getUserNickname(userNickname));
-                });
+                // socket.on('userNickname', (userNickname) => {
+                //   dispatch(getUserNickname(userNickname));
+                // });
                 socket.on('createRoom', (room) => {
                   dispatch(getRoomInfo(room));
                   navigate(`/room/${room._id}`);

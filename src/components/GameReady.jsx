@@ -20,7 +20,7 @@ import {
 } from '../redux/modules/gameSlice';
 
 const GameReady = () => {
-  const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(true);
   const [trueAlert, setTrueAlert] = useState(false);
   const [pendingReady, setPendingReady] = useState([]);
   const [cookies] = useCookies(['nickname']);
@@ -62,13 +62,9 @@ const GameReady = () => {
   //게임 준비 보냄
 
   const ReadyHandler = () => {
-    setReady(!ready);
-  };
-
-  useEffect(() => {
+    setReady((prev) => !prev);
     socket.emit('ready', param.id, `${ready}`, cookies.nickname);
-    console.log('이번에는 어떰?', ready);
-  }, [ready]);
+  };
 
   //게임 준비 받음
   socket.on('ready', (nic, bool) => {
@@ -158,7 +154,7 @@ const GameReady = () => {
           <h1>준비 버튼을 클릭하세요 ! </h1>
           <span>모든 플레이어가 준비되면 자동으로 게임이 시작됩니다.</span>
           <ReadyButton>
-            <div onClick={ReadyHandler}>{!ready ? '준비하기' : '준비완료'}</div>{' '}
+            <div onClick={ReadyHandler}>{ready ? '준비하기' : '준비완료'}</div>{' '}
           </ReadyButton>
         </ReadyButtonSection>
 
