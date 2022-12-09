@@ -16,22 +16,25 @@ import { ReactComponent as Prepared } from '../assets/prepared_cat.svg';
 import { useSelector, useDispatch } from 'react-redux';
 import CommonModal from '../elements/CommonModal';
 import { getUserNickname } from '../redux/modules/roomSlice';
+import { useCookies } from 'react-cookie';
 
 const GameReady = () => {
   const [ready, setReady] = useState(false);
   const [trueAlert, setTrueAlert] = useState(false);
   const [pendingReady, setPendingReady] = useState([]);
+  const [cookies] = useCookies(['nickname']);
   const param = useParams();
   const dispatch = useDispatch();
+
   const initialState = [
-    { nickname: '', boolkey: false },
-    { nickname: '', boolkey: false },
-    { nickname: '', boolkey: false },
-    { nickname: '', boolkey: false },
-    { nickname: '', boolkey: false },
-    { nickname: '', boolkey: false },
-    { nickname: '', boolkey: false },
-    { nickname: '', boolkey: false },
+    { nickname: '', boolkey: false, id: 1 },
+    { nickname: '', boolkey: false, id: 2 },
+    { nickname: '', boolkey: false, id: 3 },
+    { nickname: '', boolkey: false, id: 4 },
+    { nickname: '', boolkey: false, id: 5 },
+    { nickname: '', boolkey: false, id: 6 },
+    { nickname: '', boolkey: false, id: 7 },
+    { nickname: '', boolkey: false, id: 8 },
   ];
 
   const [userCameras, setUserCameras] = useState(
@@ -48,7 +51,7 @@ const GameReady = () => {
 
   const ReadyHandler = () => {
     setReady(!ready);
-    socket.emit('ready', param.id, ready);
+    socket.emit('ready', param.id, ready, cookies.nickname);
   };
 
   //게임레디 확인
@@ -63,7 +66,6 @@ const GameReady = () => {
   });
 
   const Vacancy = () => {
-    console.log(1);
     socket.on('userNickname', (userNickname) => {
       console.log('유저닉', userNickname);
       dispatch(getUserNickname(userNickname));
@@ -163,7 +165,7 @@ const GameReady = () => {
         <Users>
           {userCameras.map((person) =>
             person.boolkey === true ? (
-              <ReadyWrap>
+              <ReadyWrap key={person.id}>
                 <ReadyMediumWrap>
                   <Ready />
                 </ReadyMediumWrap>

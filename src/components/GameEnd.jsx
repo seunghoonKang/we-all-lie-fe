@@ -6,12 +6,15 @@ import { ReactComponent as WeAllLieWhiteLogo } from '../assets/we_all_lie_white_
 import { useNavigate, useParams } from 'react-router-dom';
 import { socket } from '../shared/socket';
 import Button from '../elements/Button';
+import { useCookies } from 'react-cookie';
 
 const GameEnd = () => {
   const navigate = useNavigate();
   const param = useParams();
+  const [cookies] = useCookies(['nickname']);
+
   const GoOutBtn = () => {
-    socket.emit('leaveRoom', param.id);
+    socket.emit('leaveRoom', param.id, cookies.nickname);
     socket.on('leaveRoom', () => {
       navigate('/home');
     });
