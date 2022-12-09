@@ -25,7 +25,7 @@ const Login = () => {
         <BtnWrap>
           <DescriptionModal>
             <Modalimg
-              class="hover:bg-orange-400 rounded-md"
+              className="rounded-md hover:bg-orange-400"
               onClick={() => {
                 setPlayModal(!playModal);
               }}
