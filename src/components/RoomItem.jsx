@@ -20,9 +20,9 @@ const RoomItem = ({ roominfo }) => {
     } else {
       socket.emit('enterRoom', roominfo?._id, cookies.nickname);
       dispatch(getRoomInfo(roominfo));
-      socket.on('userNickname', (userNickname) => {
-        dispatch(getUserNickname(userNickname));
-      });
+      // socket.on('userNickname', (userNickname) => {
+      //   dispatch(getUserNickname(userNickname));
+      // });
       navigate(`/room/${roominfo?._id}`);
     }
   };
