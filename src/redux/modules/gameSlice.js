@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   asker: '',
   answerer: '',
-  words: [
+  showWords: [
     '배드민턴',
     '농구',
     '클라이밍',
@@ -29,7 +29,7 @@ const initialState = {
   category: '장소',
   spy: 'Agent_프리티강',
   gameOperation: 0,
-  giveCategory: [],
+  sendCategory: [],
 };
 
 const gameSlice = createSlice({
@@ -37,14 +37,19 @@ const gameSlice = createSlice({
   initialState,
   reducers: {
     giveCategory: (state, action) => {
-      state.giveCategory = action.payload;
+      state.sendCategory = action.payload;
+      console.log('여기는 카테코리 액션 들어옴', action.payload);
+    },
+    giveSpy: (state, action) => {
+      state.spy = action.payload;
+      console.log('스파이 오라이~', action.payload);
     },
     gameOperation: (state, action) => {
       state.gameOperation = action.payload;
-      console.log(action.payload);
+      console.log('다음 페이지 넘기는 값', action.payload);
     },
   },
 });
 
-export const { giveCategory, gameOperation } = gameSlice.actions;
+export const { giveCategory, giveSpy, gameOperation } = gameSlice.actions;
 export default gameSlice.reducer;

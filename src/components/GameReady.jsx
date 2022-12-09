@@ -6,11 +6,16 @@ import Camera from '../elements/Camera1';
 import { useState, useEffect } from 'react';
 import { socket } from '../shared/socket';
 import { useParams } from 'react-router-dom';
-import { gameOperation, giveCategory } from '../redux/modules/gameSlice';
+import {
+  gameOperation,
+  giveCategory,
+  giveSpy,
+} from '../redux/modules/gameSlice';
 import { ReactComponent as Ready } from '../assets/r_eady.svg';
 import { ReactComponent as Prepared } from '../assets/prepared_cat.svg';
 import { useSelector, useDispatch } from 'react-redux';
 import CommonModal from '../elements/CommonModal';
+import { getUserNickname } from '../redux/modules/roomSlice';
 
 const GameReady = () => {
   const [ready, setReady] = useState(false);
@@ -18,64 +23,73 @@ const GameReady = () => {
   const [pendingReady, setPendingReady] = useState([]);
   const param = useParams();
   const dispatch = useDispatch();
-  const userNickname = useSelector((state) => state.room.userNickname);
-  // console.log('받아오는 닉네임 확인', userNickname);
-  const giveCategory = useSelector((state) => state.game.giveCategory);
-  // console.log('과연 들어왔니?', giveCategory);
+  const initialState = [
+    { nickname: '', boolkey: false },
+    { nickname: '', boolkey: false },
+    { nickname: '', boolkey: false },
+    { nickname: '', boolkey: false },
+    { nickname: '', boolkey: false },
+    { nickname: '', boolkey: false },
+    { nickname: '', boolkey: false },
+    { nickname: '', boolkey: false },
+  ];
 
-  const [userCameras, setUserCameras] = useState([
-    { nickname: '', boolkey: false },
-    { nickname: '', boolkey: false },
-    { nickname: '', boolkey: false },
-    { nickname: '', boolkey: false },
-    { nickname: '', boolkey: false },
-    { nickname: '', boolkey: false },
-    { nickname: '', boolkey: false },
-    { nickname: '', boolkey: false },
-  ]);
+  const [userCameras, setUserCameras] = useState(
+    initialState
+    // { nickname: '', boolkey: false },
+    // { nickname: '', boolkey: false },
+    // { nickname: '', boolkey: false },
+    // { nickname: '', boolkey: false },
+    // { nickname: '', boolkey: false },
+    // { nickname: '', boolkey: false },
+    // { nickname: '', boolkey: false },
+    // { nickname: '', boolkey: false },
+  );
 
   const ReadyHandler = () => {
-    socket.emit('ready', param.id);
     setReady(!ready);
+    socket.emit('ready', param.id, ready);
   };
 
   //게임레디 확인
   socket.on('ready', (nic, bool) => {
-    setPendingReady([
-      // ...pendingReady,
-      { nickname: nic, boolkey: bool },
-    ]);
+    setPendingReady([{ nickname: nic, boolkey: bool }]);
   });
-  // console.log(pendingReady);
+  console.log(pendingReady);
 
   //닉네임 변경
-  const Vacancy = () => {
-    for (let item = 0; item < userNickname.length; item++) {
-      if (userCameras[item].nickname === '') {
-        userCameras[item].nickname = userNickname[item];
-        // console.log(userCameras[nicItem].nickname);
-      }
-    }
-  };
-  // console.log('8개의 배열형태', userCameras);
+  socket.on('userNickname', (userNickname) => {
+    console.log('너의 닉은 받아오니?', userNickname);
+  });
 
+  const Vacancy = () => {
+    console.log(1);
+    socket.on('userNickname', (userNickname) => {
+      console.log('유저닉', userNickname);
+      dispatch(getUserNickname(userNickname));
+      setUserCameras(initialState);
+      for (let item = 0; item < userNickname.length; item++) {
+        if (userCameras[item].nickname !== userNickname[item]) {
+          userCameras[item].nickname = userNickname[item];
+        }
+      }
+    });
+    return userCameras;
+  };
   Vacancy();
 
   //불값 변경
   const GameReadyBool = () => {
     for (let int = 0; int < 8; int++) {
-      // console.log('카메라 불값', userCameras[int].nickname);
-      // console.log('팬딩 불값', pendingReady[int].nickname);
       if (userCameras[int].nickname === pendingReady[0]?.nickname) {
         userCameras[int].boolkey = pendingReady[0].boolkey;
       }
     }
     return userCameras;
   };
-  // console.log('과연 불 값 변경?', userCameras);
-
   GameReadyBool();
 
+  const userNickname = useSelector((state) => state.room.userNickname);
   const currentUser = userNickname.length;
 
   const currentReadyUSer = [
@@ -94,25 +108,35 @@ const GameReady = () => {
   // 현재 접속한 유저와 true인 유저와 같다면 alert창을 띄어야 한다.
   useEffect(() => {
     let timer = setTimeout(() => {
-      if (currentUser >= 4 && currentUser === trueUser.length) {
+      if (currentUser >= 3 && currentUser === trueUser.length) {
         setTrueAlert(!trueAlert);
+        //4명 이상이 준비시 스파이 받아옴 리덕스에 넣기 Agent_융징이 이렇게 들어옴
+        socket.on('spyUser', (spyUser) => {
+          console.log('이건 스파이', spyUser);
+          dispatch(giveSpy(spyUser));
+        });
+
+        //4명 이상이 준비시 카테고리 받아옴
+        socket.on('gameStart', (gameStart) => {
+          console.log('이건 카테고리', gameStart);
+          dispatch(giveCategory(gameStart));
+        });
       } else if (currentUser > trueUser.length) {
         setTrueAlert(false);
       }
+      // dispatch(gameOperation(1));
     }, 5000);
+
     return () => {
       clearTimeout(timer);
     };
   }, [trueUser]);
 
-  //4명 이상이 준비시 카테고리 받아옴
-  socket.on('gameStart', (gameStart) => {
-    console.log('게임시작됐는지 확인', gameStart);
-    dispatch(giveCategory(gameStart));
-    // setTimeout(()=> {
-    dispatch(gameOperation(1));
-    // },1000)
-  });
+  const sendCategory = useSelector((state) => state.game.sendCategory);
+  console.log('과연 들어왔니?', sendCategory);
+
+  const spy = useSelector((state) => state.game.spy);
+  console.log('스파이', spy);
 
   return (
     <ReadyLayout>
@@ -123,7 +147,6 @@ const GameReady = () => {
           time
         ></CommonModal>
       ) : (
-        // setTrueAlert(!trueAlert)
         <></>
       )}
       <MainHeader />
@@ -133,9 +156,10 @@ const GameReady = () => {
           <h1>준비 버튼을 클릭하세요 ! </h1>
           <span>모든 플레이어가 준비되면 자동으로 게임이 시작됩니다.</span>
           <ReadyButton>
-            <div onClick={ReadyHandler}>{!ready ? '준비하기' : '준비완료'}</div>{' '}
+            <div onClick={ReadyHandler}>{!ready ? '준비완료' : '준비하기'}</div>{' '}
           </ReadyButton>
         </ReadyButtonSection>
+
         <Users>
           {userCameras.map((person) =>
             person.boolkey === true ? (
@@ -162,7 +186,6 @@ const ReadyLayout = styled.div`
   width: 100%;
   height: 90vh;
   min-height: 650px;
-  /* background-color: white; */
   border-radius: 5px;
 `;
 
@@ -222,7 +245,6 @@ const ReadyMediumWrap = styled.div`
   width: 100%;
   height: 3%;
   padding: 5px 0 0 5px;
-  /* background-color: orange; */
 `;
 
 const ReadyNickName = styled.div`

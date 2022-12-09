@@ -1,16 +1,16 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import styled, { ThemeContext } from 'styled-components';
+import styled from 'styled-components';
 import { getRoomInfo, getUserNickname } from '../redux/modules/roomSlice';
 import { socket } from '../shared/socket';
-import { ReactComponent as UnockedIcon } from '../assets/unlocked.svg';
+import { ReactComponent as UnLockedIcon } from '../assets/unlocked.svg';
+import { ReactComponent as LockedIcon } from '../assets/locked.svg';
 import Button from '../elements/Button';
 
 const RoomItem = ({ roominfo }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const themeContext = useContext(ThemeContext);
   const enterRoomHandler = () => {
     if (roominfo?.currentCount > 8) {
       alert('정원이 초과되었습니다.');
@@ -25,7 +25,7 @@ const RoomItem = ({ roominfo }) => {
   };
 
   return (
-    <RoomContainer theme={themeContext}>
+    <RoomContainer>
       <RoomContents>
         <RoomContentsContainer>
           <div className="flex">
@@ -34,7 +34,10 @@ const RoomItem = ({ roominfo }) => {
           </div>
           <RoomInfos>
             <div className="flex justify-center items-center mr-[8px] pl-[7px]">
-              <UnockedIcon width="16" height="16" fill="none" />
+              {/* {roominfo?.private && (
+                <LockedIcon width="16" height="16" fill="none" />
+              )} */}
+              {<UnLockedIcon width="16" height="16" fill="none" />}
             </div>
             <InfoDiv>{roominfo?.currentCount} / 8 </InfoDiv>
             <InfoDiv>{roominfo?.gameMode === false ? 'EASY' : 'HARD'}</InfoDiv>

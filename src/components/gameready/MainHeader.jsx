@@ -18,6 +18,7 @@ const MainHeader = () => {
     //퇴장이벤트
     alert('홈 화면으로 슈우웅');
     socket.emit('leaveRoom', param.id);
+
     socket.on('leaveRoom', () => {
       navigate('/home');
     });
