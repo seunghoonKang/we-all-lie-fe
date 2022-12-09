@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { ReactComponent as LockedIcon } from '../../assets/locked_white.svg';
 import { ReactComponent as UnlockedIcon } from '../../assets/unlocked_white.svg';
 
-const MediumHeader = () => {
+const MediumHeader = ({}) => {
   //게임 정보 있는 헤더
   const getRoomInfo = useSelector((state) => state.room.roomInfos);
   // console.log(getRoomInfo);
