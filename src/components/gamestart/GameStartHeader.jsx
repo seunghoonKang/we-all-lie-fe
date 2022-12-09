@@ -19,8 +19,12 @@ const GameStartHeader = ({ setEarlyVote }) => {
   const param = useParams();
   const dispatch = useDispatch();
   const [earlyVoteInfo, setEarlyVoteInfo] = useState();
-
+  const nickname = cookies.nickname;
   const tempGoOutBtn = () => {
+    //나가기 버튼 눌렀을 때 퇴장메세지 이벤트 emit
+    socket.emit('leaveRoomMsg', param.id, nickname);
+    console.log('나가기버튼 누름');
+    //퇴장 이벤트
     alert('방 나가기 소켓 임시로 넣었음');
     socket.emit('leaveRoom', param.id);
     socket.on('leaveRoom', () => {
