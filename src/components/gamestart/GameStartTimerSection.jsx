@@ -7,7 +7,7 @@ const GameStartTimerSection = () => {
     <TimerContainer>
       <TimerDiv>
         <MinWidthTimerDiv>
-          <Timer min="8" />
+          <Timer min="7" />
         </MinWidthTimerDiv>
       </TimerDiv>
     </TimerContainer>
@@ -32,7 +32,7 @@ const TimerDiv = styled.div`
   color: #fff;
   background-color: #222;
   animation-name: progressTimeBar;
-  animation-duration: 10s;
+  animation-duration: 420s;
   animation-iteration-count: 1;
   animation-direction: reverse;
   animation-timing-function: linear;
