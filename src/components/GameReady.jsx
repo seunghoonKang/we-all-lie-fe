@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import CommonModal from '../elements/CommonModal';
 import { getUserNickname } from '../redux/modules/roomSlice';
 import { useCookies } from 'react-cookie';
+import { useMemo } from 'react';
 import {
   gameOperation,
   giveCategory,
@@ -25,7 +26,8 @@ const GameReady = () => {
   const [cookies] = useCookies(['nickname']);
   const param = useParams();
   const dispatch = useDispatch();
-
+  const userNick = useSelector((state) => state.room.userNickname);
+  console.log(userNick);
   const initialState = [
     { nickname: '', boolkey: false, id: 1 },
     { nickname: '', boolkey: false, id: 2 },
@@ -51,24 +53,23 @@ const GameReady = () => {
   console.log(pendingReady);
 
   //닉네임 변경
-  // socket.on('userNickname', (userNickname) => {
-  //   console.log('너의 닉은 받아오니?', userNickname);
-  // });
+  socket.on('userNickname', (userNickname) => {
+    dispatch(getUserNickname(userNickname));
+  });
 
-  const Vacancy = () => {
+  const vacancy = useMemo(() => {
     socket.on('userNickname', (userNickname) => {
       console.log('유저닉', userNickname);
-      dispatch(getUserNickname(userNickname));
+      //dispatch(getUserNickname(userNickname));
       setUserCameras(initialState);
       for (let item = 0; item < userNickname.length; item++) {
         if (userCameras[item].nickname !== userNickname[item]) {
           userCameras[item].nickname = userNickname[item];
         }
       }
+      return userCameras;
     });
-    return userCameras;
-  };
-  Vacancy();
+  }, [userCameras]);
 
   //불값 변경
   const GameReadyBool = () => {
