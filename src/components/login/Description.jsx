@@ -1,13 +1,12 @@
 import styled from 'styled-components';
 import { React } from 'react';
 import MainSwiper from './MainSwiper';
-import { ReactComponent as CloseIcon } from '../../assets/close_icon.svg';
 
 const Description = ({ closeDescription }) => {
   //게임 설명 닫기
-  const closeBtnHandler = () => {
-    closeDescription();
-  };
+  // const closeBtnHandler = () => {
+  //   closeDescription();
+  // };
 
   return (
     <ModalContainer>

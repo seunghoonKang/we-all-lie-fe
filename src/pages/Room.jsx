@@ -46,7 +46,7 @@ const Room = () => {
                 <GameReady />
                 {/* <GameStart /> */}
                 {/* {goFromStartToVote ? <GameVote /> : <GameStart />} */}
-                <GameVote />
+                {/* <GameVote /> */}
               </Game>
               <RoomChat />
             </>

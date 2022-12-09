@@ -11,6 +11,7 @@ import { ReactComponent as SendIcon } from '../assets/icon_send.svg';
 
 //민형님 주소
 import { io } from 'socket.io-client';
+import UserInfo from './UserInfo';
 export const socket = io('https://minhyeongi.xyz', {
   cors: {
     origin: '*',
@@ -19,6 +20,7 @@ export const socket = io('https://minhyeongi.xyz', {
 });
 
 const Chat = () => {
+  const [userOpen, setUserOpen] = useState(false);
   const themeContext = useContext(ThemeContext);
   const navigate = useNavigate();
   //채팅방 열고닫기 구현하려면 {showChat} props로 받아오기
@@ -103,9 +105,14 @@ const Chat = () => {
   // console.log(chat);
   return (
     <ChatLayout theme={themeContext}>
-      <MyProfile onClick={() => navigate(`/user/`)}>
+      <MyProfile
+      //  onClick={() => navigate(`/user/`)}
+      >
         {/* 나중에 user 는 모달로 할수도 */}
         My ∨
+        {userOpen === true && (
+          <UserInfo UserModal={() => setUserOpen(!userOpen)}> </UserInfo>
+        )}
       </MyProfile>
       <ChatTop>
         <p style={{ fontSize: '30px' }}>CHAT</p>

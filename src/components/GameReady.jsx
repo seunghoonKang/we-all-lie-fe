@@ -34,17 +34,7 @@ const GameReady = () => {
     { nickname: '', boolkey: false },
   ];
 
-  const [userCameras, setUserCameras] = useState(
-    initialState
-    // { nickname: '', boolkey: false },
-    // { nickname: '', boolkey: false },
-    // { nickname: '', boolkey: false },
-    // { nickname: '', boolkey: false },
-    // { nickname: '', boolkey: false },
-    // { nickname: '', boolkey: false },
-    // { nickname: '', boolkey: false },
-    // { nickname: '', boolkey: false },
-  );
+  const [userCameras, setUserCameras] = useState(initialState);
 
   const ReadyHandler = () => {
     setReady(!ready);
@@ -63,7 +53,6 @@ const GameReady = () => {
   });
 
   const Vacancy = () => {
-    console.log(1);
     socket.on('userNickname', (userNickname) => {
       console.log('유저닉', userNickname);
       dispatch(getUserNickname(userNickname));
@@ -140,17 +129,15 @@ const GameReady = () => {
 
   return (
     <ReadyLayout>
-      {trueAlert === true ? (
+      {trueAlert === true && (
         <CommonModal
           main="잠시 후 게임이 시작됩니다! "
           sub="카메라 앞에 앉아 게임을 준비해주세요."
           time
         ></CommonModal>
-      ) : (
-        <></>
       )}
       <MainHeader />
-      <MediumHeader />
+      <MediumHeader></MediumHeader>
       <ReadyLayoutSection>
         <ReadyButtonSection>
           <h1>준비 버튼을 클릭하세요 ! </h1>
