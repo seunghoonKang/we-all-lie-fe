@@ -33,7 +33,7 @@ const Room = () => {
   } else {
     return (
       <>
-        <Notice />
+        {gameOperation !== 0 ? <Notice black="black" /> : <Notice />}
         <Box>
           {gameOperation !== 3 ? (
             <>
@@ -41,19 +41,15 @@ const Room = () => {
                 {/* 본인 컴포넌트말고 주석하면 돼용 */}
                 {/* {gameOperation === 0 && <GameReady />}
                 {gameOperation === 1 && <GameStart />}
-                {gameOperation === 2 && <GameVote />}
-                {gameOperation === 1 ? <GameStart /> : <GameReady />} */}
-                <GameReady />
-                {/* <GameStart /> */}
-                {/* {goFromStartToVote ? <GameVote /> : <GameStart />} */}
+                {gameOperation === 2 && <GameVote />} */}
+                {/* <GameReady /> */}
+                <GameStart />
                 {/* <GameVote /> */}
               </Game>
               <RoomChat />
             </>
           ) : (
-            {
-              /* <GameEnd /> */
-            }
+            <GameEnd />
           )}
         </Box>
       </>

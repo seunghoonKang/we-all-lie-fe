@@ -1,7 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
-* { font-family: 'Pretendard', 'sans-serif'; }
+* { font-family: 'pretendard', 'sans-serif'; }
 
 *, *::before, *::after {
 box-sizing: border-box;

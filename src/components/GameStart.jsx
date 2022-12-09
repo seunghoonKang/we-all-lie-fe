@@ -89,7 +89,9 @@ const GameStart = () => {
         <GameCardSection>
           <Question>
             <GameStartTimerSection />
-            <SelectCategoryImg category={category} width="424" height="197" />
+            <CategoryImgDiv>
+              <SelectCategoryImg category={category} width="424" height="197" />
+            </CategoryImgDiv>
           </Question>
           <CorrectCardSection />
         </GameCardSection>
@@ -132,8 +134,14 @@ const GameCardSection = styled.section`
   gap: 16px;
 `;
 
+const CategoryImgDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Question = styled.div`
-  width: 26.5rem;
+  width: 30vw;
   height: 14.5625rem;
   display: flex;
   flex-direction: column;
