@@ -19,11 +19,7 @@ const MainHeader = () => {
     socket.emit('leaveRoomMsg', param.id, nickname);
     console.log('나가기버튼 누름');
     //퇴장이벤트
-    alert('홈 화면으로 슈우웅');
     socket.emit('leaveRoom', param.id, nickname);
-    socket.on('userNickname', (userNickname) => {
-      dispatch(getUserNickname(userNickname));
-    });
     socket.on('leaveRoom', () => {
       navigate('/home');
     });
