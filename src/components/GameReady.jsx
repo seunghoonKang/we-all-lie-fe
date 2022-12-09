@@ -6,16 +6,17 @@ import Camera from '../elements/Camera1';
 import { useState, useEffect } from 'react';
 import { socket } from '../shared/socket';
 import { useParams } from 'react-router-dom';
-import {
-  gameOperation,
-  giveCategory,
-  giveSpy,
-} from '../redux/modules/gameSlice';
 import { ReactComponent as Ready } from '../assets/r_eady.svg';
 import { ReactComponent as Prepared } from '../assets/prepared_cat.svg';
 import { useSelector, useDispatch } from 'react-redux';
 import CommonModal from '../elements/CommonModal';
 import { getUserNickname } from '../redux/modules/roomSlice';
+import { useCookies } from 'react-cookie';
+import {
+  gameOperation,
+  giveCategory,
+  giveSpy,
+} from '../redux/modules/gameSlice';
 
 const GameReady = () => {
   const [ready, setReady] = useState(false);
@@ -23,22 +24,24 @@ const GameReady = () => {
   const [pendingReady, setPendingReady] = useState([]);
   const param = useParams();
   const dispatch = useDispatch();
+  const [cookies] = useCookies(['nickname']);
+  const nickname = cookies.nickname;
   const initialState = [
-    { nickname: '', boolkey: false },
-    { nickname: '', boolkey: false },
-    { nickname: '', boolkey: false },
-    { nickname: '', boolkey: false },
-    { nickname: '', boolkey: false },
-    { nickname: '', boolkey: false },
-    { nickname: '', boolkey: false },
-    { nickname: '', boolkey: false },
+    { id: 1, nickname: '', boolkey: false },
+    { id: 2, nickname: '', boolkey: false },
+    { id: 3, nickname: '', boolkey: false },
+    { id: 4, nickname: '', boolkey: false },
+    { id: 5, nickname: '', boolkey: false },
+    { id: 6, nickname: '', boolkey: false },
+    { id: 7, nickname: '', boolkey: false },
+    { id: 8, nickname: '', boolkey: false },
   ];
 
   const [userCameras, setUserCameras] = useState(initialState);
 
   const ReadyHandler = () => {
     setReady(!ready);
-    socket.emit('ready', param.id, ready);
+    socket.emit('ready', param.id, ready, nickname);
   };
 
   //게임레디 확인
@@ -48,9 +51,9 @@ const GameReady = () => {
   console.log(pendingReady);
 
   //닉네임 변경
-  socket.on('userNickname', (userNickname) => {
-    console.log('너의 닉은 받아오니?', userNickname);
-  });
+  // socket.on('userNickname', (userNickname) => {
+  //   console.log('너의 닉은 받아오니?', userNickname);
+  // });
 
   const Vacancy = () => {
     socket.on('userNickname', (userNickname) => {
@@ -101,13 +104,13 @@ const GameReady = () => {
         setTrueAlert(!trueAlert);
         //4명 이상이 준비시 스파이 받아옴 리덕스에 넣기 Agent_융징이 이렇게 들어옴
         socket.on('spyUser', (spyUser) => {
-          console.log('이건 스파이', spyUser);
+          // console.log('이건 스파이', spyUser);
           dispatch(giveSpy(spyUser));
         });
 
         //4명 이상이 준비시 카테고리 받아옴
         socket.on('gameStart', (gameStart) => {
-          console.log('이건 카테고리', gameStart);
+          // console.log('이건 카테고리', gameStart);
           dispatch(giveCategory(gameStart));
         });
       } else if (currentUser > trueUser.length) {
@@ -122,10 +125,10 @@ const GameReady = () => {
   }, [trueUser]);
 
   const sendCategory = useSelector((state) => state.game.sendCategory);
-  console.log('과연 들어왔니?', sendCategory);
+  // console.log('과연 들어왔니?', sendCategory);
 
   const spy = useSelector((state) => state.game.spy);
-  console.log('스파이', spy);
+  // console.log('스파이', spy);
 
   return (
     <ReadyLayout>
@@ -150,7 +153,7 @@ const GameReady = () => {
         <Users>
           {userCameras.map((person) =>
             person.boolkey === true ? (
-              <ReadyWrap>
+              <ReadyWrap key={person.id}>
                 <ReadyMediumWrap>
                   <Ready />
                 </ReadyMediumWrap>
@@ -158,7 +161,7 @@ const GameReady = () => {
                 <ReadyNickName>{person.nickname}</ReadyNickName>
               </ReadyWrap>
             ) : (
-              <Camera person={person.nickname} />
+              <Camera person={person.nickname} key={person.id} />
             )
           )}
         </Users>

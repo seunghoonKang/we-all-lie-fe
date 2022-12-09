@@ -20,12 +20,12 @@ export const socket = io('https://minhyeongi.xyz', {
 });
 
 const Chat = () => {
-  const [userOpen, setUserOpen] = useState(false);
   const themeContext = useContext(ThemeContext);
   const navigate = useNavigate();
   //채팅방 열고닫기 구현하려면 {showChat} props로 받아오기
   let nickname = '익명';
   const [cookies, setCookie] = useCookies(['nickname']);
+  const [userOpenModal, setUserOpenModal] = useState(false);
   const [userCnt, setUserCnt] = useState(0);
   const [chat, setChat] = useState([
     // { notice: '뀨띠님이 입장하셨습니다' },
@@ -105,13 +105,14 @@ const Chat = () => {
   // console.log(chat);
   return (
     <ChatLayout theme={themeContext}>
-      <MyProfile
-      //  onClick={() => navigate(`/user/`)}
-      >
-        {/* 나중에 user 는 모달로 할수도 */}
-        My ∨
-        {userOpen === true && (
-          <UserInfo UserModal={() => setUserOpen(!userOpen)}> </UserInfo>
+      <MyProfile onClick={() => setUserOpenModal(!userOpenModal)}>
+        {/* 나중에 user 는 모달로 할수도 */}My ∨
+        {userOpenModal === true && (
+          <UserInfo
+            closeUseModal={() => {
+              setUserOpenModal(!userOpenModal);
+            }}
+          />
         )}
       </MyProfile>
       <ChatTop>
@@ -126,7 +127,7 @@ const Chat = () => {
 
         {chat.map((a) => {
           return a.notice ? (
-            <Notice key={a.msgId}>{a.notice}</Notice>
+            <Notice key={a.msgId}>{a.notice}</Notice> //key빼봄
           ) : (
             a.msg &&
               (a.name == nickname ? (
@@ -166,6 +167,7 @@ const Chat = () => {
         })}
       </ChatRow>
       <Form onSubmit={msgSubmitHandler}>
+        {/* <p>프로필?</p> */}
         <input type="text" ref={msgInput} placeholder="여따 할말혀!" required />
         <button>
           <SendIcon />
