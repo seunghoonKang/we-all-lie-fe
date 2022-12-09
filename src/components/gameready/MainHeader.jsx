@@ -5,9 +5,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { socket } from '../../shared/socket';
 import { useCookies } from 'react-cookie';
 import { ReactComponent as WeAllLieLogo } from '../../assets/we_all_lie_white_logo.svg';
+import { getUserNickname } from '../../redux/modules/roomSlice';
+import { useDispatch } from 'react-redux';
 
 const MainHeader = () => {
   const param = useParams();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [cookies, setCookies] = useCookies(['nickname']);
   const nickname = cookies.nickname;
@@ -18,7 +21,9 @@ const MainHeader = () => {
     //퇴장이벤트
     alert('홈 화면으로 슈우웅');
     socket.emit('leaveRoom', param.id, nickname);
-
+    socket.on('userNickname', (userNickname) => {
+      dispatch(getUserNickname(userNickname));
+    });
     socket.on('leaveRoom', () => {
       navigate('/home');
     });
