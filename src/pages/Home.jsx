@@ -24,29 +24,24 @@ const Home = () => {
   // //새로고침방지
   useBeforeunload((event) => event.preventDefault());
 
-  socket.on('showRoom', (room) => {
-    setRooms(room);
-    //console.log(rooms);
-  });
+  // socket.on('showRoom', (room) => {
+  //   setRooms(room);
+  //   //console.log(rooms);
+  // });
 
-  // useEffect(() => {
+  useEffect(() => {
+    socket.on('showRoom', (room) => {
+      setRooms(room);
+      //console.log(rooms);
+    });
+  }, [rooms]);
+
+  // setInterval(() => {
   //   socket.on('showRoom', (room) => {
   //     setRooms(room);
   //     console.log(rooms);
   //   });
-  // }, [rooms]);
-
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     socket.on('showRoom', (room) => {
-  //       setRooms(room);
-  //       console.log(rooms);
-  //     });
-  //   }, 100);
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, []);
+  // }, 1000);
 
   useEffect(() => {
     dispatch(gameOperation(0));
