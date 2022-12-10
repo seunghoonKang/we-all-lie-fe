@@ -2,7 +2,6 @@ import React from 'react';
 import { useCookies } from 'react-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import GivenWord from './GivenWord';
 
 const WordExamples = (props) => {
   const words = useSelector((state) => state.game.showWords);
@@ -15,107 +14,36 @@ const WordExamples = (props) => {
   const spyClickWord = (word) => {
     if (spy === nickname) {
       props.setSpyAnswer(word);
-      console.log('word::', word);
-      console.log('spyAnswer::', props.spyAnswer);
+      console.log('선택한 word', word);
+      console.log('spyAnswer에 적용 잘 됐나?', props.spyAnswer);
     }
   };
 
   return (
     <>
+      {/* 내가 스파이라면 onClick 적용 */}
       {spy === cookies.nickname ? (
-        <CorrectCard>
-          <CorrectAnswer>
-            <WhatWords>제시어</WhatWords>
-            <AnswerCategoryDiv>{category} / ?</AnswerCategoryDiv>
-          </CorrectAnswer>
-          <IllustSection>
-            {words.map((word) => {
-              // return <GivenWord word={word} key={word} />;
-              <Word key={word} onClick={() => spyClickWord(word)}>
-                {word}
-              </Word>;
-            })}
-          </IllustSection>
-        </CorrectCard>
+        <>
+          {words.map((word) => {
+            <Word key={word} onClick={() => spyClickWord(word)}>
+              {word}
+            </Word>;
+          })}
+        </>
       ) : (
-        <CorrectCard>
-          <CorrectAnswer>
-            <AnswerCategoryDiv>
-              {category}/{answerWord}
-            </AnswerCategoryDiv>
-          </CorrectAnswer>
-          <IllustSection>
-            {words.map((word) => {
-              return <Word key={word}>{word}</Word>;
-            })}
-          </IllustSection>
-        </CorrectCard>
+        // 내가 스파이가 아니라면 보기만 할 수 있음
+        <>
+          {words.map((word) => {
+            <Word key={word}>{word}</Word>;
+          })}
+        </>
       )}
     </>
   );
 };
 export default WordExamples;
 
-const CorrectCard = styled.div`
-  width: 100%;
-  height: 14.5625rem;
-  background-color: #fff;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  margin-top: 15px;
-  margin-right: 18px;
-`;
-
-const CorrectAnswer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-weight: 700;
-  font-size: 16px;
-  width: 100%;
-  height: 56px;
-  border-radius: 6px 6px 0 0;
-  background-color: #f5f5f5;
-`;
-
-const WhatWords = styled.div`
-  width: 42px;
-  height: 20px;
-  margin: 0 0 0 27px;
-`;
-
-const AnswerCategoryDiv = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 158px;
-  height: 38px;
-  background-color: ${(props) => props.theme.color.lionBlack};
-  color: ${(props) => props.theme.color.white};
-  font-weight: 700;
-  font-size: ${(props) => props.theme.fontSize.sm};
-  border-radius: 6px;
-  margin-top: 9px;
-  margin-right: 10px;
-  margin-bottom: 9px;
-`;
-
-const Word = styled.div``;
-const IllustSection = styled.div`
-  width: 100%;
-  height: 12.0625rem;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  background-color: #f5f5f5;
-  gap: 3px;
-  padding-bottom: 10px;
-  border-radius: 0 0 6px 6px;
-  ${Word} {
-    width: 130px;
-    height: 43px;
-  }
+const Word = styled.div`
+  width: 130px;
+  height: 43px;
 `;

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,6 +9,7 @@ import Camera from '../elements/Camera';
 import CommonModal from '../elements/CommonModal';
 import Timer from '../elements/Timer';
 import { socket } from '../shared/socket';
+import { getUserNickname } from '../redux/modules/roomSlice';
 import WordExamples from './gamevote/WordExamples';
 import CorrectCardSection from './gamestart/CorrectCardSection';
 
@@ -17,30 +18,46 @@ const GameVote = () => {
   const param = useParams();
   const dispatch = useDispatch();
   const [cookies, setCookies] = useCookies(['nickname']);
-  const [voteModal, setVoteModal] = useState(false);
+  const [voteModal, setVoteModal] = useState(false); //투표 버튼 모달
+  const [voteDoneModal, setVoteDoneModal] = useState(false); //투표완료 모달
   const [voteStatus, setVoteStatus] = useState(false);
   const [spyAlive, setSpyAlive] = useState(0); //전체투표에서 스파이가 이겼는지(True) 졌는지(False) 투표전 initialState (0)
   const [spyAnswer, setSpyAnswer] = useState(); //스파이가 클릭한 제시어 initialState(빈값)
   const [spyAnswerStatus, setSpyAnswerStatus] = useState(false); //스파이가 제시어를 클릭 했는지(True) 안했는지(False) initialState(false)
   const [timeout, setTimeout] = useState(false);
   const userNickname = useSelector((state) => state.room.userNickname); //유저닉네임 들고오기
-
-  const userCameras = [
-    { nickName: 'a' },
-    { nickName: 'b' },
-    { nickName: 'c' },
-    { nickName: 'd' },
-    { nickName: 'e' },
-    { nickName: 'f' },
-    { nickName: 'g' },
-    { nickName: 'h' },
+  const myNickname = cookies.nickname;
+  const [stamp, setStamp] = useState(`${myNickname}`); //기본값이 본인으로 선택
+  const initialState = [
+    { nickname: '' },
+    { nickname: '' },
+    { nickname: '' },
+    { nickname: '' },
+    { nickname: '' },
+    { nickname: '' },
+    { nickname: '' },
+    { nickname: '' },
   ];
-  const nickname = cookies.nickname;
-  const userLength = userCameras.length;
-  const [stamp, setStamp] = useState(`${nickname}`); //기본값이 본인으로 선택
+  const [userCameras, setUserCameras] = useState(initialState);
+  const fillInTheEmptySeats = useMemo(() => {
+    socket.emit('userNickname', param.id);
+    socket.on('userNickname', (user) => {
+      console.log(user);
+      setUserCameras(initialState);
+      for (let i = 0; i < user.length; i++) {
+        if (userCameras[i].nickname !== user[i]) {
+          userCameras[i].nickname = user[i];
+        }
+      }
+      // dispatch(getUserNickname([...userCameras]));
+      return userCameras;
+    });
+  }, [userCameras]);
 
+  const userLength = userCameras.length;
   console.log('userNickname::', userNickname);
   console.log('voteStatus::', voteStatus);
+  console.log('userCameras 확인', userCameras);
 
   /* 
   투표 기본값 : 본인 (O) -> stamp가 찍혀있진 않음
@@ -67,7 +84,10 @@ const GameVote = () => {
         setVoteStatus(true);
       }
       console.log('시간초 다 됐음');
+
       //321모달 띄워주기
+      setVoteDoneModal(true);
+
       //임의로 setSpyAlive 값 받은 척 ! (dev/main PR 할땐 주석처리하기)
       // setSpyAlive(false);
     }
@@ -103,6 +123,13 @@ const GameVote = () => {
 
   return (
     <Layout>
+      {voteDoneModal && (
+        <CommonModal
+          main="모든 유저의 투표가 완료되었습니다."
+          sub="잠시 뒤 게임 결과가 공개됩니다!"
+          time
+        />
+      )}
       <HeaderSection>📌 모든 유저가 투표를 진행하고 있습니다.</HeaderSection>
       <TimerContainer>
         <TimerDiv>
@@ -177,14 +204,13 @@ const GameVote = () => {
       {spyAlive === false ? (
         <CardContainer>
           <WordExamples spyAnswer={spyAnswer} setSpyAnswer={setSpyAnswer} />
-          {/* <CorrectCardSection /> */}
         </CardContainer>
       ) : (
         <Users userLength={userLength}>
-          {userCameras.map((person) => (
+          {userCameras.map((person, index) => (
             <Camera
-              person={person.nickName}
-              key={person.nickName}
+              person={person.nickname}
+              key={index}
               stamp={stamp}
               setStamp={setStamp}
               voteStatus={voteStatus}
@@ -314,7 +340,15 @@ const Vote = styled.div`
   }
 `;
 
-const CardContainer = styled.div``;
+const CardContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly; //가로 띄우기
+  align-content: space-evenly; //세로 띄우기
+  width: 100%;
+  height: 50vh;
+  min-height: 312px;
+`;
 
 const Users = styled.div`
   display: flex;

@@ -15,7 +15,7 @@ import { getUserNickname } from '../redux/modules/roomSlice';
 
 const GameStart = () => {
   const dispatch = useDispatch();
-  const userNickname = useSelector((state) => state.room.userNickname);
+  // const userNickname = useSelector((state) => state.room.userNickname);
   // const category = useSelector((state) => state.game.category);
   const category = useSelector((state) => state.game.sendCategory.category);
 
@@ -43,10 +43,13 @@ const GameStart = () => {
       setUserCameras(initialState);
       for (let i = 0; i < user.length; i++) {
         if (userCameras[i].nickname !== user[i]) {
-          userCameras[i].nickname = user[i];
+          let newuserCameras = initialState;
+          newuserCameras[i].nickname = user[i];
+          setUserCameras(newuserCameras);
+          // userCameras[i].nickname = user[i];
         }
       }
-      dispatch(getUserNickname([...userCameras]));
+      dispatch(getUserNickname(userCameras));
       return userCameras;
     });
   }, [userCameras]);
