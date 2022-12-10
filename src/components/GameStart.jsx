@@ -24,7 +24,7 @@ const GameStart = () => {
   const param = useParams();
   const totalTime = 30000;
 
-  const initialState = [
+  let initialState = [
     { nickname: '' },
     { nickname: '' },
     { nickname: '' },
@@ -46,13 +46,11 @@ const GameStart = () => {
           userCameras[i].nickname = user[i];
         }
       }
-      dispatch(getUserNickname([...userCameras]));
+      dispatch(getUserNickname(userCameras));
       return userCameras;
     });
   }, [userCameras]);
 
-  //console.log(words, answerWord, category, spy);
-  //console.log(userCameras);
   /* 시간되면 모달 띄우기 7분으로 따라가기 */
   const votePage = () => {
     setTimeout(() => {
