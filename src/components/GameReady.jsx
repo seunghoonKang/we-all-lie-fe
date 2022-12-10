@@ -105,7 +105,7 @@ const GameReady = () => {
 
   //접속인원 4명 이상 + 현재 접속인원 === true인원 맞는지 확인
   useEffect(() => {
-    if (currentUser >= 1 && currentUser === trueUser.length) {
+    if (currentUser >= 4 && currentUser === trueUser.length) {
       //스파이 유저 받는 소켓
       socket.on('spyUser', (spyUser) => {
         console.log('이건 스파이', spyUser);
@@ -118,7 +118,7 @@ const GameReady = () => {
       });
       setTimeout(() => {
         setTrueAlert(false);
-        // dispatch(gameOperation(1));
+        dispatch(gameOperation(1));
       }, 5000);
       setTrueAlert(!trueAlert);
     } else if (currentUser > trueUser.length) {
