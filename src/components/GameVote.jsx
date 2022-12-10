@@ -28,6 +28,7 @@ const GameVote = () => {
   const userNickname = useSelector((state) => state.room.userNickname); //유저닉네임 들고오기
   const myNickname = cookies.nickname;
   const [stamp, setStamp] = useState(`${myNickname}`); //기본값이 본인으로 선택
+
   const initialState = [
     { nickname: '' },
     { nickname: '' },
@@ -39,7 +40,24 @@ const GameVote = () => {
     { nickname: '' },
   ];
   const [userCameras, setUserCameras] = useState(initialState);
-  const fillInTheEmptySeats = useMemo(() => {
+
+  // const fillInTheEmptySeats = useMemo(() => {
+  //   socket.emit('userNickname', param.id);
+  //   socket.on('userNickname', (user) => {
+  //     console.log(user);
+  //     setUserCameras(initialState);
+  //     for (let i = 0; i < user.length; i++) {
+  //       if (userCameras[i].nickname !== user[i]) {
+  //         userCameras[i].nickname = user[i];
+  //       }
+  //     }
+  //     dispatch(getUserNickname(userCameras));
+  //     return userCameras;
+  //   });
+  // }, [userCameras]);
+
+  //2
+  useEffect(() => {
     socket.emit('userNickname', param.id);
     socket.on('userNickname', (user) => {
       console.log(user);
@@ -49,15 +67,13 @@ const GameVote = () => {
           userCameras[i].nickname = user[i];
         }
       }
-      // dispatch(getUserNickname([...userCameras]));
       return userCameras;
     });
-  }, [userCameras]);
+  }, []);
 
-  const userLength = userCameras.length;
-  console.log('userNickname::', userNickname);
-  console.log('voteStatus::', voteStatus);
-  console.log('userCameras 확인', userCameras);
+  // console.log('userNickname::', userNickname);
+  // console.log('voteStatus::', voteStatus);
+  // console.log('userCameras 확인', userCameras);
 
   /* 
   투표 기본값 : 본인 (O) -> stamp가 찍혀있진 않음
@@ -206,7 +222,17 @@ const GameVote = () => {
           <WordExamples spyAnswer={spyAnswer} setSpyAnswer={setSpyAnswer} />
         </CardContainer>
       ) : (
-        <Users userLength={userLength}>
+        <Users>
+          {/* {userCameras.map((person, index) => (
+            <Camera
+              person={person.nickname}
+              key={index}
+              stamp={stamp}
+              setStamp={setStamp}
+              voteStatus={voteStatus}
+              setVoteStatus={setVoteStatus}
+            />
+          ))} */}
           {userCameras.map((person, index) => (
             <Camera
               person={person.nickname}

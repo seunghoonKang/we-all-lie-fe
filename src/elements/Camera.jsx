@@ -17,7 +17,7 @@ const Camera = ({ person, stamp, setStamp, voteStatus, setVoteStatus }) => {
   return (
     <>
       <Wrap onClick={arrestedToggle}>
-        <NickName>{person.nickname}</NickName>
+        <NickName>{person}</NickName>
         {stamp === person && (
           <Arrested>
             <img src={arrestedstamp} alt="투표 지목된 사람" />
