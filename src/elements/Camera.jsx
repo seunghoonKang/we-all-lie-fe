@@ -61,6 +61,7 @@ const NickName = styled.div`
   /* width: 204px; */
   width: 100%;
   height: 28px;
+  line-height: 28px;
   background-color: #dfdfdf;
   color: #2b2b2b;
   font-weight: 600;

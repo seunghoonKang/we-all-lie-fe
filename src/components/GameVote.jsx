@@ -48,7 +48,10 @@ const GameVote = () => {
   //     setUserCameras(initialState);
   //     for (let i = 0; i < user.length; i++) {
   //       if (userCameras[i].nickname !== user[i]) {
-  //         userCameras[i].nickname = user[i];
+  //         let newuserCameras = [...userCameras];
+  //         newuserCameras[i].nickname = user[i];
+  //         setUserCameras(newuserCameras);
+  //         // userCameras[i].nickname = user[i];
   //       }
   //     }
   //     dispatch(getUserNickname(userCameras));
@@ -56,7 +59,6 @@ const GameVote = () => {
   //   });
   // }, [userCameras]);
 
-  //2
   useEffect(() => {
     socket.emit('userNickname', param.id);
     socket.on('userNickname', (user) => {
@@ -64,12 +66,31 @@ const GameVote = () => {
       setUserCameras(initialState);
       for (let i = 0; i < user.length; i++) {
         if (userCameras[i].nickname !== user[i]) {
-          userCameras[i].nickname = user[i];
+          let newuserCameras = [...userCameras];
+          newuserCameras[i].nickname = user[i];
+          setUserCameras(newuserCameras);
+          // userCameras[i].nickname = user[i];
         }
       }
+      dispatch(getUserNickname(userCameras));
       return userCameras;
     });
   }, []);
+
+  //2
+  // useEffect(() => {
+  //   socket.emit('userNickname', param.id);
+  //   socket.on('userNickname', (user) => {
+  //     console.log(user);
+  //     setUserCameras(initialState);
+  //     for (let i = 0; i < user.length; i++) {
+  //       if (userCameras[i].nickname !== user[i]) {
+  //         userCameras[i].nickname = user[i];
+  //       }
+  //     }
+  //     return userCameras;
+  //   });
+  // }, []);
 
   // console.log('userNickname::', userNickname);
   // console.log('voteStatus::', voteStatus);
