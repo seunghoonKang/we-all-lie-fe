@@ -30,8 +30,8 @@ const GameReady = () => {
 
   // console.log('너는 계속 찍히니?', userNick);
   // console.log('이거 준비임', ready);
-  //유저 기본 틀
 
+  //유저 기본 틀
   const initialState = [
     { nickname: '', boolkey: false, id: 1 },
     { nickname: '', boolkey: false, id: 2 },
@@ -60,17 +60,18 @@ const GameReady = () => {
   }, [userCameras]);
 
   //게임 준비 보냄
-
   const ReadyHandler = () => {
     setReady((prev) => !prev);
     socket.emit('ready', param.id, `${ready}`, cookies.nickname);
   };
 
   //게임 준비 받음
-  socket.on('ready', (nic, bool) => {
-    setPendingReady([{ nickname: nic, boolkey: bool }]);
-  });
-  console.log('게임레디 확인', pendingReady);
+  useEffect(() => {
+    socket.on('ready', (nic, bool) => {
+      setPendingReady([{ nickname: nic, boolkey: bool }]);
+    });
+    console.log('게임레디 확인', pendingReady);
+  }, [pendingReady]);
 
   //닉네임 변경
   socket.on('userNickname', (userNickname) => {
@@ -90,7 +91,6 @@ const GameReady = () => {
 
   //준비한 유저 숫자
   const currentUser = userCameras.filter((user) => user.nickname !== '').length;
-
   const currentReadyUSer = [
     userCameras[0].boolkey,
     userCameras[1].boolkey,
@@ -101,38 +101,30 @@ const GameReady = () => {
     userCameras[6].boolkey,
     userCameras[7].boolkey,
   ];
-
   const trueUser = currentReadyUSer.filter((user) => user === true);
 
   //접속인원 4명 이상 + 현재 접속인원 === true인원 맞는지 확인
   useEffect(() => {
-    if (currentUser >= 4 && currentUser === trueUser.length) {
-      let timer = setTimeout(() => {
-        setTrueAlert(!trueAlert);
-        //4명 이상이 준비시 스파이 받아옴 리덕스에 넣기 Agent_융징이 이렇게 들어옴
-        socket.on('spyUser', (spyUser) => {
-          console.log('이건 스파이', spyUser);
-          dispatch(giveSpy(spyUser));
-        });
-
-        //4명 이상이 준비시 카테고리 받아옴
-        socket.on('gameStart', (gameStart) => {
-          console.log('이건 카테고리', gameStart);
-          dispatch(giveCategory(gameStart));
-        });
+    if (currentUser >= 1 && currentUser === trueUser.length) {
+      //스파이 유저 받는 소켓
+      socket.on('spyUser', (spyUser) => {
+        console.log('이건 스파이', spyUser);
+        dispatch(giveSpy(spyUser));
+      });
+      //카테고리 받는 소켓
+      socket.on('gameStart', (gameStart) => {
+        console.log('이건 카테고리', gameStart);
+        dispatch(giveCategory(gameStart));
+      });
+      setTimeout(() => {
+        setTrueAlert(false);
+        // dispatch(gameOperation(1));
       }, 5000);
-
-      let changeGameOperation = setTimeout(() => {
-        dispatch(gameOperation(1));
-      }, 10000);
+      setTrueAlert(!trueAlert);
     } else if (currentUser > trueUser.length) {
       setTrueAlert(false);
     }
-    // dispatch(gameOperation(1));
-    // return () => {
-    //   clearTimeout(timer);
-    // };
-  }, [trueUser]);
+  }, [pendingReady]);
 
   return (
     <ReadyLayout>
