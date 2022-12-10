@@ -1,24 +1,30 @@
 import React, { useContext, useState } from 'react';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { gameOperation } from '../redux/modules/gameSlice';
 import { useParams } from 'react-router-dom';
 import styled, { ThemeContext } from 'styled-components';
 import Camera from '../elements/Camera';
 import CommonModal from '../elements/CommonModal';
 import Timer from '../elements/Timer';
 import { socket } from '../shared/socket';
+import WordExamples from './gamevote/WordExamples';
+import CorrectCardSection from './gamestart/CorrectCardSection';
 
 const GameVote = () => {
   // const themeContext = useContext(ThemeContext);
   const param = useParams();
+  const dispatch = useDispatch();
   const [cookies, setCookies] = useCookies(['nickname']);
   const [voteModal, setVoteModal] = useState(false);
   const [voteStatus, setVoteStatus] = useState(false);
-  const [spyWin, setSpyWin] = useState(0);
-  const [spyGuess, setSpyGuess] = useState(0);
+  const [spyAlive, setSpyAlive] = useState(0); //전체투표에서 스파이가 이겼는지(True) 졌는지(False) 투표전 initialState (0)
+  const [spyAnswer, setSpyAnswer] = useState(); //스파이가 클릭한 제시어 initialState(빈값)
+  const [spyAnswerStatus, setSpyAnswerStatus] = useState(false); //스파이가 제시어를 클릭 했는지(True) 안했는지(False) initialState(false)
   const [timeout, setTimeout] = useState(false);
   const userNickname = useSelector((state) => state.room.userNickname); //유저닉네임 들고오기
+
   const userCameras = [
     { nickName: 'a' },
     { nickName: 'b' },
@@ -49,55 +55,55 @@ const GameVote = () => {
   스파이가 이겼는지 졌는지
   */
 
-  //투표시간 setTimeout 걸기
-  //내가 아직 투표를 하지 않았다면 현재 stamp 찍혀있는 사람으로 자동 emit
-
-  if (timeout === true) {
-    if (voteStatus === false) {
-      socket.emit('voteSpy', param.id, stamp);
-      console.log('투표를 안해서 마지막으로 클릭한 사람 보내줌 ::', stamp);
-      setVoteStatus(true);
-    }
-  }
-
-  //내가 선택한 사람 닉네임 = stamp
+  //내가 마지막으로 선택한 사람 닉네임 = stamp
   console.log('stamp::', stamp);
+
+  //00:00 일때 미투표상태일시 현재 stamp 찍혀있는 사람으로 자동 emit
+  useEffect(() => {
+    if (timeout === true) {
+      if (voteStatus === false) {
+        socket.emit('voteSpy', param.id, stamp);
+        console.log('투표를 안해서 마지막으로 클릭한 사람 보내줌 ::', stamp);
+        setVoteStatus(true);
+      }
+      console.log('시간초 다 됐음');
+      //321모달 띄워주기
+      //임의로 setSpyAlive 값 받은 척 ! (dev/main PR 할땐 주석처리하기)
+      // setSpyAlive(false);
+    }
+  }, [timeout]);
 
   //내가 스파이 유저 선택. => CommonModal.jsx 로 이동
   //socket.emit('voteSpy', param.id, stamp);
 
-  //스파이 투표 종료 후 개인 결과 집계.
-  //socket.emit('voteRecord');
-
-  //투표결과, 스파이가 이겼는지 결과 on 받기
-  socket.on('spyWin', (bool) => {
-    setSpyWin(bool);
+  //투표결과, 스파이가 이겼는지 결과(boolean) on 받기
+  socket.on('spyWin', (result) => {
+    //이겼는지(True) 졌는지(False) 값
+    setSpyAlive(result);
   });
 
-  //투표결과, (socket.on 안에 쓰지 않은 이유 : socket 은 몇번이고 실시간 통신이 이루어지기 때문에, 그 때마다 if문도 실행 될 것 같아서)
-  if (spyWin === true) {
-    //스파이가 이겼다면, 스파이 승리 화면 컴포넌트로 넘어가기
-  } else if (spyWin === false) {
-    //스파이가 졌다면, 스파이가 제시어 맞추는 컴포넌트로 넘어가기
-    //스파이가 제시어를 맞췄는지 결과 on 받기
-    socket.on('spyGuess', (bool) => {
-      setSpyGuess(bool);
-    });
-    if (spyGuess === true) {
-      //스파이가 이겼다면, 스파이 승리 화면 컴포넌트로 넘어가기
-    } else if (spyGuess === false) {
-      //스파이가 졌다면, 스파이 패배 화면 컴포넌트로 넘어가기
+  //전체투표 결과1 : spyAlive(true) 스파이가 이겼을때, 스파이 승리 화면 컴포넌트로 넘어가기
+  useEffect(() => {
+    spyAlive === true && dispatch(gameOperation(3));
+  }, [spyAlive]);
+
+  //스파이가 제시어를 고른 뒤 게임 결과
+  socket.on('endGame', (bool) => {
+    //bool 값에 따라서 아래 조건문 실행
+    if (bool === true) {
+      //스파이가 제시어를 맞췄다면, 스파이 승리 화면 컴포넌트로 넘어가기
+      dispatch(gameOperation(3));
+    } else if (bool === false) {
+      //스파이가 제시어를 못 맞췄다면, 스파이 패배 화면 컴포넌트로 넘어가기
     }
-  }
+  });
+
+  //스파이 투표 종료 후 개인 결과 집계.
+  //socket.emit('voteRecord', nickname);
 
   return (
-    <Layout
-    // theme={themeContext}
-    >
+    <Layout>
       <HeaderSection>📌 모든 유저가 투표를 진행하고 있습니다.</HeaderSection>
-      {/* <Timer>
-        <Time></Time>
-      </Timer> */}
       <TimerContainer>
         <TimerDiv>
           <MinWidthTimerDiv>
@@ -105,7 +111,37 @@ const GameVote = () => {
           </MinWidthTimerDiv>
         </TimerDiv>
       </TimerContainer>
-      {voteStatus ? (
+
+      {spyAlive === false ? (
+        //전체투표 결과2 : spyAlive(false) 스파이가 졌을때, 스파이가 키워드 선택하는 걸 띄워주기
+        <Vote>
+          <VoteTitle>키워드는 무엇일까요?</VoteTitle>
+          <VoteContent>
+            검거를 피할 마지막 기회! 추측한 키워드를 선택하세요
+          </VoteContent>
+          <VoteButton onClick={() => setVoteModal(!voteModal)}>
+            선택하기
+          </VoteButton>
+          {spyAnswerStatus && voteModal === true ? (
+            <CommonModal
+              main="이 키워드를 선택할까요?"
+              sub="키워드 선택 이후 수정은 불가합니다."
+              firstBtn="다시선택"
+              secBtn="선택하기"
+              // voteStatus={voteStatus}
+              // setVoteStatus={setVoteStatus}
+              // voteModal={voteModal}
+              // setVoteModal={setVoteModal}
+              // stamp={stamp}
+              // param={param}
+              socket={socket}
+              //state 넘겨주기
+            ></CommonModal>
+          ) : (
+            <></>
+          )}
+        </Vote>
+      ) : voteStatus ? (
         <Vote>
           <VoteTitle>투표 완료</VoteTitle>
           <VoteContent>다른 플레이어의 투표를 기다리는 중입니다.</VoteContent>
@@ -138,19 +174,25 @@ const GameVote = () => {
           )}
         </Vote>
       )}
-
-      <Users userLength={userLength}>
-        {userCameras.map((person) => (
-          <Camera
-            person={person.nickName}
-            key={person.nickName}
-            stamp={stamp}
-            setStamp={setStamp}
-            voteStatus={voteStatus}
-            setVoteStatus={setVoteStatus}
-          />
-        ))}
-      </Users>
+      {spyAlive === false ? (
+        <CardContainer>
+          <WordExamples spyAnswer={spyAnswer} setSpyAnswer={setSpyAnswer} />
+          {/* <CorrectCardSection /> */}
+        </CardContainer>
+      ) : (
+        <Users userLength={userLength}>
+          {userCameras.map((person) => (
+            <Camera
+              person={person.nickName}
+              key={person.nickName}
+              stamp={stamp}
+              setStamp={setStamp}
+              voteStatus={voteStatus}
+              setVoteStatus={setVoteStatus}
+            />
+          ))}
+        </Users>
+      )}
     </Layout>
   );
 };
@@ -271,6 +313,8 @@ const Vote = styled.div`
     margin-top: 20px;
   }
 `;
+
+const CardContainer = styled.div``;
 
 const Users = styled.div`
   display: flex;
