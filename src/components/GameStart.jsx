@@ -21,7 +21,7 @@ const GameStart = () => {
   const [modalStatus, setModalStatus] = useState(false);
   const [earlyVote, setEarlyVote] = useState(false);
   const param = useParams();
-  const totalTime = 420000;
+  const totalTime = 30000;
 
   const userCameras = [
     { nickName: '빈자리' },
