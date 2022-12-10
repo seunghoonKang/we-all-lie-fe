@@ -10,7 +10,7 @@ const SelectCategoryImg = ({ category, width, height }) => {
     <>
       {category === '스포츠' && <CategorySport width={width} height={height} />}
       {category === '음식' && <CategoryFood width={width} height={height} />}
-      {category === '도시' && <CategoryCountry width={width} height={height} />}
+      {category === '나라' && <CategoryCountry width={width} height={height} />}
       {category === '동물' && <CategoryAnimal width={width} height={height} />}
       {category === '장소' && <CategoryPlace width={width} height={height} />}
     </>

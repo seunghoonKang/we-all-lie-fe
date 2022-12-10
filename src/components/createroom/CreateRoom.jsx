@@ -105,7 +105,7 @@ const CreateRoom = ({ closeModal }) => {
                   navigate(`/room/${room._id}`);
                 });
                 setSubmitting(false);
-              }, 500);
+              }, 1);
             }}
           >
             {({ errors, touched }) => (
