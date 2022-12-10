@@ -46,7 +46,7 @@ const gameSlice = createSlice({
     },
     gameOperation: (state, action) => {
       state.gameOperation = action.payload;
-      console.log('다음 페이지 넘기는 값', action.payload);
+      //console.log('다음 페이지 넘기는 값', action.payload);
     },
   },
 });

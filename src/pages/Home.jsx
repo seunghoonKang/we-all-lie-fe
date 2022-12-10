@@ -4,14 +4,17 @@ import CreateRoom from '../components/createroom/CreateRoom';
 import RoomItem from '../components/RoomItem';
 import Notice from '../elements/Notice';
 import Chat from '../components/Chat';
-import styled, { ThemeContext } from 'styled-components';
+import styled from 'styled-components';
 import { socket } from '../shared/socket';
 import { useBeforeunload } from 'react-beforeunload';
 import { useNavigate } from 'react-router-dom';
 import { ReactComponent as WeAllLieWhiteLogo } from '../assets/we_all_lie_white_logo.svg';
+import { useDispatch } from 'react-redux';
+import { gameOperation } from '../redux/modules/gameSlice';
+
 const Home = () => {
   //채팅방 열고 닫기 코드 (나중에 필요없으면 props들과 함께 지우기)
-  const themeContext = useContext(ThemeContext);
+  const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
   const [rooms, setRooms] = useState();
   const [cookies] = useCookies(['nickname']);
@@ -46,6 +49,10 @@ const Home = () => {
   // }, []);
 
   useEffect(() => {
+    dispatch(gameOperation(0));
+  }, []);
+
+  useEffect(() => {
     socket.emit('getNickname', nickname);
 
     //로그인 안하면 로비입장 못하게 하기 (useEffect 안에 넣어야 navigate 먹어요)
@@ -59,7 +66,7 @@ const Home = () => {
   if (cookies.nickname == null) {
   } else {
     return (
-      <div theme={themeContext}>
+      <div>
         <Notice />
         <Box>
           <List>
