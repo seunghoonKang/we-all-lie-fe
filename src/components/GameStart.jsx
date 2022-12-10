@@ -11,41 +11,45 @@ import SelectCategoryImg from './gamestart/SelectCategoryImg';
 import CorrectCardSection from './gamestart/CorrectCardSection';
 import GameStartTimerSection from './gamestart/GameStartTimerSection';
 import CommonModal from '../elements/CommonModal';
+import { getUserNickname } from '../redux/modules/roomSlice';
 
 const GameStart = () => {
   const dispatch = useDispatch();
   const userNickname = useSelector((state) => state.room.userNickname);
-  const category = useSelector((state) => state.game.category);
-  // const category = useSelector((state) => state.game.givecategory.category);
+  // const category = useSelector((state) => state.game.category);
+  const category = useSelector((state) => state.game.sendCategory.category);
 
   const [modalStatus, setModalStatus] = useState(false);
   const [earlyVote, setEarlyVote] = useState(false);
   const param = useParams();
-  const totalTime = 420000;
+  const totalTime = 30000;
 
-  const userCameras = [
-    { nickName: '빈자리' },
-    { nickName: '빈자리' },
-    { nickName: '빈자리' },
-    { nickName: '빈자리' },
-    { nickName: '빈자리' },
-    { nickName: '빈자리' },
-    { nickName: '빈자리' },
-    { nickName: '빈자리' },
+  const initialState = [
+    { nickname: '' },
+    { nickname: '' },
+    { nickname: '' },
+    { nickname: '' },
+    { nickname: '' },
+    { nickname: '' },
+    { nickname: '' },
+    { nickname: '' },
   ];
+  const [userCameras, setUserCameras] = useState(initialState);
 
   const fillInTheEmptySeats = useMemo(() => {
-    for (let step = 0; step < 8; step++) {
-      if (userCameras[step].nickName === '빈자리') {
-        userCameras[step].nickName = userNickname[step];
+    socket.emit('userNickname', param.id);
+    socket.on('userNickname', (user) => {
+      console.log(user);
+      setUserCameras(initialState);
+      for (let i = 0; i < user.length; i++) {
+        if (userCameras[i].nickname !== user[i]) {
+          userCameras[i].nickname = user[i];
+        }
       }
-    }
-    return userCameras;
+      dispatch(getUserNickname([...userCameras]));
+      return userCameras;
+    });
   }, [userCameras]);
-
-  useEffect(() => {
-    socket.emit('setNowVote', param.id);
-  }, []);
 
   //console.log(words, answerWord, category, spy);
   //console.log(userCameras);
@@ -97,7 +101,7 @@ const GameStart = () => {
         </GameCardSection>
         <VideoContainer>
           {userCameras.map((person, i) => (
-            <Camera person={person.nickName} key={i} />
+            <Camera person={person.nickname} key={i} />
           ))}
         </VideoContainer>
       </GameEntireContainer>

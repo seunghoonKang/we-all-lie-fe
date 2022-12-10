@@ -15,6 +15,7 @@ const GameStartHeader = ({ setEarlyVote }) => {
   const [disabledBtn, setDisabledBtn] = useState('투표준비');
   const [cookies] = useCookies(['nickname']);
   const userNickname = useSelector((state) => state.room.userNickname);
+  const realUser = userNickname.filter((user) => user.nickname !== '');
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const param = useParams();
@@ -45,7 +46,7 @@ const GameStartHeader = ({ setEarlyVote }) => {
     //cookies에 있는 닉네임과 같은 사람이라면 투표
     //투표완료 되면 버튼 다시 비활성화
     for (let i = 0; i < userNickname.length; i++) {
-      if (userNickname[i] === cookies.nickname) {
+      if (userNickname[i].nickname === cookies.nickname) {
         setEarlyVote(true);
         socket.emit('nowVote', param.id, true, cookies.nickname);
         setDisabledBtn('투표완료');
@@ -58,7 +59,7 @@ const GameStartHeader = ({ setEarlyVote }) => {
   //socket을 통해 사전투표를 계속 감지하고 있는다.
   socket.on('nowVote', (voteInfos) => {
     setEarlyVoteInfo(voteInfos);
-    if (voteInfos.currNowVoteCount >= Math.ceil(userNickname.length / 2)) {
+    if (Number(voteInfos.currNowVoteCount) === realUser.length) {
       setModalStatus(true);
       modalset();
       clearTimeout(modalset);
@@ -69,7 +70,7 @@ const GameStartHeader = ({ setEarlyVote }) => {
   useEffect(() => {
     const checkNotDisabledBtn = setTimeout(() => {
       setDisabledBtn('투표하기');
-    }, 140000);
+    }, 3000);
 
     return () => {
       clearTimeout(checkNotDisabledBtn);
@@ -81,7 +82,7 @@ const GameStartHeader = ({ setEarlyVote }) => {
       {modalStatus ? (
         <CommonModal
           main="잠시 후 투표가 시작됩니다. "
-          sub="과반수가 투표를 요청하여 투표가 진행됩니다."
+          sub="모두가 투표요청하여 곧 투표가 진행됩니다."
           time
         ></CommonModal>
       ) : (
@@ -100,7 +101,7 @@ const GameStartHeader = ({ setEarlyVote }) => {
           </VoteIconDiv>
           <div className=" pr-2">
             {earlyVoteInfo?.currNowVoteCount || 0}/
-            {earlyVoteInfo?.currGameRoomUsers || userNickname.length}
+            {earlyVoteInfo?.currGameRoomUsers || realUser.length}
           </div>
         </div>
       </HeaderTitle>

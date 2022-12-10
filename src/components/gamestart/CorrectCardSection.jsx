@@ -5,12 +5,12 @@ import { useCookies } from 'react-cookie';
 import GivenWord from './GivenWord';
 
 const CorrectCardSection = () => {
-  const words = useSelector((state) => state.game.showWords);
-  const answerWord = useSelector((state) => state.game.answerWord);
-  const category = useSelector((state) => state.game.category);
-  // const words = useSelector((state) => state.game.givecategory.showWords);
-  // const answerWord = useSelector((state) => state.game.givecategory.answerWord);
-  // const category = useSelector((state) => state.game.givecategory.category);
+  // const words = useSelector((state) => state.game.showWords);
+  // const answerWord = useSelector((state) => state.game.answerWord);
+  // const category = useSelector((state) => state.game.category);
+  const words = useSelector((state) => state.game.sendCategory.showWords);
+  const answerWord = useSelector((state) => state.game.sendCategory.answerWord);
+  const category = useSelector((state) => state.game.sendCategory.category);
   const spy = useSelector((state) => state.game.spy);
   const [cookies] = useCookies(['nickname']);
   return (
