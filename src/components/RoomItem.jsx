@@ -8,27 +8,44 @@ import { ReactComponent as LockedIcon } from '../assets/locked.svg';
 import { useCookies } from 'react-cookie';
 import styled from 'styled-components';
 import Button from '../elements/Button';
+import CommonModal from '../elements/CommonModal';
 
 const RoomItem = ({ roominfo }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [cookies] = useCookies(['nickname']);
+  const [checkRoomStatus, setCheckRoomStatus] = useState('');
 
   const enterRoomHandler = () => {
     if (roominfo?.currentCount > 8) {
-      alert('정원이 초과되었습니다.');
+      setCheckRoomStatus('정원초과');
+      setTimeout(() => {
+        setCheckRoomStatus('');
+      }, 2000);
+    } else if (roominfo?.roomStatus === true) {
+      setCheckRoomStatus('게임중');
+      setTimeout(() => {
+        setCheckRoomStatus('');
+      }, 2000);
     } else {
       socket.emit('enterRoom', roominfo?._id, cookies.nickname);
       dispatch(getRoomInfo(roominfo));
       // socket.on('userNickname', (userNickname) => {
       //   dispatch(getUserNickname(userNickname));
       // });
+      setCheckRoomStatus('');
       navigate(`/room/${roominfo?._id}`);
     }
   };
 
   return (
     <RoomContainer>
+      {checkRoomStatus === '정원초과' && (
+        <CommonModal main="정원이 초과되었습니다." />
+      )}
+      {checkRoomStatus === '게임중' && (
+        <CommonModal main="게임이 시작된 방입니다." />
+      )}
       <RoomContents>
         <RoomContentsContainer>
           <div className="flex">
