@@ -46,7 +46,7 @@ const GameStart = () => {
   //         userCameras[i].nickname = user[i];
   //       }
   //     }
-  //     // dispatch(getUserNickname(userCameras));
+  //     dispatch(getUserNickname(userCameras));
   //     return userCameras;
   //   });
   // }, [userCameras]);
@@ -58,7 +58,10 @@ const GameStart = () => {
       setUserCameras(initialState);
       for (let i = 0; i < user.length; i++) {
         if (userCameras[i].nickname !== user[i]) {
-          userCameras[i].nickname = user[i];
+          let newuserCameras = [...userCameras];
+          newuserCameras[i].nickname = user[i];
+          setUserCameras(newuserCameras);
+          // userCameras[i].nickname = user[i];
         }
       }
       dispatch(getUserNickname(userCameras));
