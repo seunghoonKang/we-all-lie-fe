@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  spy: 'Agent_프리티강',
+  spy: 'Agent_징영이(●>◡<●)',
   gameOperation: 0,
   sendCategory: {
     category: '장소',

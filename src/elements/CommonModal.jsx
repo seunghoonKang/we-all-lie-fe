@@ -25,7 +25,7 @@ const CommonModal = ({ ...props }) => {
     console.log('voteStatus 상태', props.voteStatus);
   };
 
-  //Sec Btn : 투표완료 핸들러
+  //Sec Btn : 투표완료 핸들러 & 스파이 키워드 선택완료 핸들러
   const completeVote = () => {
     //내가 스파이 유저 선택.
     props.socket.emit('voteSpy', props.param.id, props.stamp);
