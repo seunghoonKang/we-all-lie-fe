@@ -24,7 +24,7 @@ const Timer = ({ min, sec, timeout, setTimeout }) => {
 
   useEffect(() => {
     if (count.current <= 0) {
-      timeout && setTimeout(true);
+      timeout === false && setTimeout(true);
       clearInterval(interval.current);
     }
   }, [second]);

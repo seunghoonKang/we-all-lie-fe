@@ -10,6 +10,7 @@ import CommonModal from '../elements/CommonModal';
 import Timer from '../elements/Timer';
 import { socket } from '../shared/socket';
 import WordExamples from './gamevote/WordExamples';
+import CorrectCardSection from './gamestart/CorrectCardSection';
 
 const GameVote = () => {
   // const themeContext = useContext(ThemeContext);
@@ -18,10 +19,9 @@ const GameVote = () => {
   const [cookies, setCookies] = useCookies(['nickname']);
   const [voteModal, setVoteModal] = useState(false);
   const [voteStatus, setVoteStatus] = useState(false);
-  const [spyAlive, setSpyAlive] = useState(0); //전체투표에서 스파이가 이겼는지 졌는지
-  const [spyNeedAnswer, setSpyNeedAnswer] = useState(false); //필요없을지도
-  const [spyAnswer, setSpyAnswer] = useState(); //전체투표에서 스파이가 졌을때 맞추는 단어
-  const [spyAnswerStatus, setSpyAnswerStatus] = useState(false);
+  const [spyAlive, setSpyAlive] = useState(0); //전체투표에서 스파이가 이겼는지(True) 졌는지(False) 투표전 initialState (0)
+  const [spyAnswer, setSpyAnswer] = useState(); //스파이가 클릭한 제시어 initialState(빈값)
+  const [spyAnswerStatus, setSpyAnswerStatus] = useState(false); //스파이가 제시어를 클릭 했는지(True) 안했는지(False) initialState(false)
   const [timeout, setTimeout] = useState(false);
   const userNickname = useSelector((state) => state.room.userNickname); //유저닉네임 들고오기
 
@@ -59,33 +59,32 @@ const GameVote = () => {
   console.log('stamp::', stamp);
 
   //00:00 일때 미투표상태일시 현재 stamp 찍혀있는 사람으로 자동 emit
-  if (timeout === true) {
-    if (voteStatus === false) {
-      socket.emit('voteSpy', param.id, stamp);
-      console.log('투표를 안해서 마지막으로 클릭한 사람 보내줌 ::', stamp);
-      setVoteStatus(true);
+  useEffect(() => {
+    if (timeout === true) {
+      if (voteStatus === false) {
+        socket.emit('voteSpy', param.id, stamp);
+        console.log('투표를 안해서 마지막으로 클릭한 사람 보내줌 ::', stamp);
+        setVoteStatus(true);
+      }
+      console.log('시간초 다 됐음');
+      //321모달 띄워주기
+      //임의로 setSpyAlive 값 받은 척 ! (dev/main PR 할땐 주석처리하기)
+      // setSpyAlive(false);
     }
-  }
+  }, [timeout]);
 
   //내가 스파이 유저 선택. => CommonModal.jsx 로 이동
   //socket.emit('voteSpy', param.id, stamp);
 
   //투표결과, 스파이가 이겼는지 결과(boolean) on 받기
   socket.on('spyWin', (result) => {
+    //이겼는지(True) 졌는지(False) 값
     setSpyAlive(result);
   });
 
-  //전체투표 결과1 : 스파이가 이겼을때, 스파이 승리 화면 컴포넌트로 넘어가기
+  //전체투표 결과1 : spyAlive(true) 스파이가 이겼을때, 스파이 승리 화면 컴포넌트로 넘어가기
   useEffect(() => {
     spyAlive === true && dispatch(gameOperation(3));
-
-    // if (spyAlive === true) {
-    //   dispatch();
-    // } else if (spyAlive === false) {
-    //   spyGuessStatus();
-    //   //스파이가 제시어를 맞췄는지 결과 emit 하기 => CommonModal로 넘김
-    //   // socket.emit('spyGuess', (param.id, spyGuess, nickname));
-    // }
   }, [spyAlive]);
 
   //스파이가 제시어를 고른 뒤 게임 결과
@@ -114,7 +113,7 @@ const GameVote = () => {
       </TimerContainer>
 
       {spyAlive === false ? (
-        //전체투표 결과2 : (스파이)스파이가 졌을때, 스파이가 키워드 선택하는 걸 띄워주기
+        //전체투표 결과2 : spyAlive(false) 스파이가 졌을때, 스파이가 키워드 선택하는 걸 띄워주기
         <Vote>
           <VoteTitle>키워드는 무엇일까요?</VoteTitle>
           <VoteContent>
@@ -123,7 +122,7 @@ const GameVote = () => {
           <VoteButton onClick={() => setVoteModal(!voteModal)}>
             선택하기
           </VoteButton>
-          {stamp && voteModal === true ? (
+          {spyAnswerStatus && voteModal === true ? (
             <CommonModal
               main="이 키워드를 선택할까요?"
               sub="키워드 선택 이후 수정은 불가합니다."
@@ -177,7 +176,8 @@ const GameVote = () => {
       )}
       {spyAlive === false ? (
         <CardContainer>
-          <WordExamples />
+          <WordExamples spyAnswer={spyAnswer} setSpyAnswer={setSpyAnswer} />
+          {/* <CorrectCardSection /> */}
         </CardContainer>
       ) : (
         <Users userLength={userLength}>
@@ -313,6 +313,8 @@ const Vote = styled.div`
     margin-top: 20px;
   }
 `;
+
+const CardContainer = styled.div``;
 
 const Users = styled.div`
   display: flex;

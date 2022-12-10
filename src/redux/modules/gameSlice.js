@@ -27,7 +27,7 @@ const initialState = {
   ],
   answerWord: '골프',
   category: '장소',
-  spy: 'Agent_프리티강',
+  spy: 'Agent_징영이(●>◡<●)',
   gameOperation: 0,
   sendCategory: [],
 };
