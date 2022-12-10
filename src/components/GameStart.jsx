@@ -36,14 +36,29 @@ const GameStart = () => {
   ];
   const [userCameras, setUserCameras] = useState(initialState);
 
-  const fillInTheEmptySeats = useMemo(() => {
+  // const fillInTheEmptySeats = useMemo(() => {
+  //   socket.emit('userNickname', param.id);
+  //   socket.on('userNickname', (user) => {
+  //     console.log(user);
+  //     setUserCameras(initialState);
+  //     for (let i = 0; i < user.length; i++) {
+  //       if (userCameras[i].nickname !== user[i]) {
+  //         userCameras[i].nickname = user[i];
+  //       }
+  //     }
+  //     dispatch(getUserNickname(userCameras));
+  //     return userCameras;
+  //   });
+  // }, [userCameras]);
+
+  useEffect(() => {
     socket.emit('userNickname', param.id);
     socket.on('userNickname', (user) => {
       console.log(user);
       setUserCameras(initialState);
       for (let i = 0; i < user.length; i++) {
         if (userCameras[i].nickname !== user[i]) {
-          let newuserCameras = initialState;
+          let newuserCameras = [...userCameras];
           newuserCameras[i].nickname = user[i];
           setUserCameras(newuserCameras);
           // userCameras[i].nickname = user[i];
@@ -52,7 +67,7 @@ const GameStart = () => {
       dispatch(getUserNickname(userCameras));
       return userCameras;
     });
-  }, [userCameras]);
+  }, []);
 
   /* 시간되면 모달 띄우기 7분으로 따라가기 */
   const votePage = () => {
