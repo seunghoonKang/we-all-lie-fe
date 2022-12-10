@@ -30,6 +30,7 @@ const CorrectCardSection = () => {
       ) : (
         <CorrectCard>
           <CorrectAnswer>
+            <WhatWords>제시어</WhatWords>
             <AnswerCategoryDiv>
               {category}/{answerWord}
             </AnswerCategoryDiv>
