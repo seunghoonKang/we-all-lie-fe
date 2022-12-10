@@ -59,7 +59,7 @@ const GameStartHeader = ({ setEarlyVote }) => {
   //socket을 통해 사전투표를 계속 감지하고 있는다.
   socket.on('nowVote', (voteInfos) => {
     setEarlyVoteInfo(voteInfos);
-    if ((voteInfos.currNowVoteCount = realUser.length)) {
+    if (Number(voteInfos.currNowVoteCount) === realUser.length) {
       setModalStatus(true);
       modalset();
       clearTimeout(modalset);
