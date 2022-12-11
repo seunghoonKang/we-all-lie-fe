@@ -24,7 +24,8 @@ const GameVote = () => {
   const [spyAlive, setSpyAlive] = useState(0); //전체투표에서 스파이가 이겼는지(True) 졌는지(False) 투표전 initialState (0)
   const [spyAnswer, setSpyAnswer] = useState(); //스파이가 클릭한 제시어 initialState(빈값)
   const [spyAnswerStatus, setSpyAnswerStatus] = useState(false); //스파이가 제시어를 클릭 했는지(True) 안했는지(False) initialState(false)
-  const [timeout, setTimeout] = useState(false);
+  const [timerZero, setTimerZero] = useState(false);
+  const [timerAgain, setTimerAain] = useState(false);
   const userNickname = useSelector((state) => state.room.userNickname); //유저닉네임 들고오기
   const myNickname = cookies.nickname;
   const [stamp, setStamp] = useState(`${myNickname}`); //기본값이 본인으로 선택
@@ -82,7 +83,7 @@ const GameVote = () => {
 
   //00:00 일때 미투표상태일시 현재 stamp 찍혀있는 사람으로 자동 emit
   useEffect(() => {
-    if (timeout === true) {
+    if (timerZero === true) {
       if (voteStatus === false) {
         socket.emit('voteSpy', param.id, stamp);
         console.log('투표를 안해서 마지막으로 클릭한 사람 보내줌 ::', stamp);
@@ -96,7 +97,7 @@ const GameVote = () => {
       //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석처리하기)*****
       setSpyAlive(false);
     }
-  }, [timeout]);
+  }, [timerZero]);
   //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석처리하기)*****
   useEffect(() => {
     setTimeout(() => {
@@ -134,6 +135,8 @@ const GameVote = () => {
     }
   });
 
+  console.log('spyAnswer 잘 들어왔나', spyAnswer);
+
   //스파이 투표 종료 후 개인 결과 집계.
   //socket.emit('voteRecord', nickname);
 
@@ -150,7 +153,7 @@ const GameVote = () => {
       <TimerContainer>
         <TimerDiv>
           <MinWidthTimerDiv>
-            <Timer sec="20" timeout={timeout} setTimeout={setTimeout} />
+            <Timer sec="20" timerZero={timerZero} setTimerZero={setTimerZero} />
           </MinWidthTimerDiv>
         </TimerDiv>
       </TimerContainer>
@@ -374,6 +377,7 @@ const CardContainer = styled.div`
   width: 100%;
   height: 50vh;
   min-height: 312px;
+  background-color: gray;
 `;
 
 const Users = styled.div`

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 const WordExamples = (props) => {
-  const words = useSelector((state) => state.game.showWords);
+  const words = useSelector((state) => state.game.sendCategory.showWords);
   const answerWord = useSelector((state) => state.game.sendCategory.answerWord);
   const category = useSelector((state) => state.game.category);
   const spy = useSelector((state) => state.game.spy); //스파이 닉네임 들고오기
@@ -15,26 +15,29 @@ const WordExamples = (props) => {
     if (spy === nickname) {
       props.setSpyAnswer(a);
       console.log('선택한 word', a);
-      console.log('spyAnswer에 적용 잘 됐나?', props.spyAnswer);
+      // console.log('spyAnswer에 적용 잘 됐나?', props.spyAnswer);
     }
   };
-  console.log('words 찍어보기', words);
+  // console.log('answerWord 찍어보기', answerWord);
+  // console.log('words 찍어보기', words);
   return (
     <>
       {/* 내가 스파이라면 onClick 적용 */}
       {spy === cookies.nickname ? (
         <>
-          {words?.map((word) => {
-            <Word key={word} onClick={() => spyClickWord(word)}>
-              {word}
-            </Word>;
+          {words.map((word) => {
+            return (
+              <Word key={word} onClick={() => spyClickWord(word)}>
+                {word}
+              </Word>
+            );
           })}
         </>
       ) : (
         // 내가 스파이가 아니라면 보기만 할 수 있음
         <>
           {words.map((word) => {
-            <Word key={word}>{word}</Word>;
+            return <Word key={word}>{word}</Word>;
           })}
         </>
       )}
@@ -44,6 +47,11 @@ const WordExamples = (props) => {
 export default WordExamples;
 
 const Word = styled.div`
-  width: 130px;
+  /* width: 130px; */
+  width: 17%;
   height: 43px;
+  cursor: pointer;
+  text-align: center;
+  line-height: 43px;
+  background-color: pink;
 `;
