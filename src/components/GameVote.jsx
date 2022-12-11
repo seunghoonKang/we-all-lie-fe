@@ -44,7 +44,7 @@ const GameVote = () => {
 
   useEffect(() => {
     //다같이 테스트 할때는 아래 주석 풀고 initialState 원상복귀
-    /*socket.emit('userNickname', param.id);
+    socket.emit('userNickname', param.id);
     socket.on('userNickname', (user) => {
       console.log(user);
       setUserCameras(initialState);
@@ -58,7 +58,7 @@ const GameVote = () => {
       }
       dispatch(getUserNickname(userCameras));
       return userCameras;
-    });*/
+    });
   }, []);
 
   /* 
@@ -109,6 +109,7 @@ const GameVote = () => {
   //투표결과, 스파이가 이겼는지 결과(boolean) on 받기
   //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석풀기)*****
   socket.on('spyWin', (result) => {
+    console.log('spyWin 받았다:', result);
     //이겼는지(True) 졌는지(False) 값
     setTimeout(() => {
       setVoteDoneModal(false);
