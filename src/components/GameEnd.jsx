@@ -55,7 +55,7 @@ const GameEnd = () => {
         </Button>
       </LogoImg>
       <GameEndHeader spyWin={spyWin} setSpyWin={setSpyWin} />
-      {/* <GameEndContents spyWin={spyWin} setSpyWin={setSpyWin} /> */}
+      <GameEndContents spyWin={spyWin} setSpyWin={setSpyWin} />
     </GameEndEntireContainer>
   );
 };

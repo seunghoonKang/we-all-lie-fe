@@ -81,7 +81,11 @@ const GameStart = () => {
   const changeGameOperation = () => {
     setTimeout(() => {
       setModalStatus(false);
-      dispatch(gameOperation(2));
+      if (gameOperation === 2 || 3) {
+        return;
+      } else {
+        dispatch(gameOperation(2));
+      }
     }, totalTime + 7000);
   };
 
