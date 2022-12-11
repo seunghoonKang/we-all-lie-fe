@@ -48,7 +48,7 @@ const GameVote = () => {
           // userCameras[i] = user[i];
         }
       }
-      dispatch(getUserNickname(userCameras));
+      // dispatch(getUserNickname(userCameras));
       return userCameras;
     });
   }, []);
