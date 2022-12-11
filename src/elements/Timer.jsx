@@ -4,7 +4,7 @@ const padStartTime = (num) => {
   return String(num).padStart(2, '0');
 };
 
-const Timer = ({ min, sec, timeout, setTimeout }) => {
+const Timer = ({ min, sec, timerZero, setTimerZero }) => {
   const Min = min ? parseInt(min) : 0;
   const Sec = sec ? parseInt(sec) : 0;
   const count = useRef(Min * 60 + Sec);
@@ -24,7 +24,9 @@ const Timer = ({ min, sec, timeout, setTimeout }) => {
 
   useEffect(() => {
     if (count.current <= 0) {
-      timeout === false && setTimeout(true);
+      //00:00됐을때 timerZero State 값 바꿔주기 (미투표자 자동투표하기 위해)
+      timerZero == false && setTimerZero(true);
+      console.log('timerZero', timerZero);
       clearInterval(interval.current);
     }
   }, [second]);

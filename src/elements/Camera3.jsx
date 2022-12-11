@@ -13,7 +13,7 @@ const Camera3 = ({ nickname }) => {
 
 const Wrap = styled.div`
   min-height: 140px;
-  width: 13vw;
+  width: 13%;
   background-color: #e8e8e8;
   border-radius: 5px;
   display: flex;
