@@ -39,20 +39,21 @@ const GameVote = () => {
     socket.on('userNickname', (user) => {
       console.log(user);
       setUserCameras(initialState);
-      setUserCameras(...user);
-      // for (let i = 0; i < user.length; i++) {
-      //   if (userCameras[i] !== user[i]) {
-      //     let newuserCameras = [...userCameras];
-      //     newuserCameras[i] = user[i];
-      //     setUserCameras(newuserCameras);
-      //     // userCameras[i].nickname = user[i];
-      //   }
-      // }
+      // setUserCameras(...user);
+      for (let i = 0; i < user.length; i++) {
+        if (userCameras[i] !== user[i]) {
+          let newuserCameras = initialState;
+          newuserCameras[i] = user[i];
+          setUserCameras(newuserCameras);
+          // userCameras[i] = user[i];
+        }
+      }
       dispatch(getUserNickname(userCameras));
       return userCameras;
     });
   }, []);
 
+  console.log(userCameras);
   /* 
   투표 기본값 : 본인 (O) -> stamp가 찍혀있진 않음
   투표 시간이 다 되었을때, 투표 처리
