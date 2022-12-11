@@ -31,11 +31,11 @@ const GameVote = () => {
   const [stamp, setStamp] = useState(`${myNickname}`); //기본값이 본인으로 선택
 
   const initialState = [
-    { nickname: `${myNickname}` },
-    { nickname: '2' },
-    { nickname: '3' },
-    { nickname: '4' },
-    { nickname: '5' },
+    { nickname: '' },
+    { nickname: '' },
+    { nickname: '' },
+    { nickname: '' },
+    { nickname: '' },
     { nickname: '' },
     { nickname: '' },
     { nickname: '' },
@@ -60,10 +60,6 @@ const GameVote = () => {
       return userCameras;
     });*/
   }, []);
-
-  // console.log('userNickname::', userNickname);
-  // console.log('voteStatus::', voteStatus);
-  // console.log('userCameras 확인', userCameras);
 
   /* 
   투표 기본값 : 본인 (O) -> stamp가 찍혀있진 않음
@@ -91,36 +87,34 @@ const GameVote = () => {
       }
       console.log('시간초 다 됐음');
 
-      //321모달 띄워주기
+      //전체투표 끝나고 321모달 띄워주기
       setVoteDoneModal(true);
 
       //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석처리하기)*****
-      setTimeout(() => {
-        setSpyAlive(true); //true => 스파이 승리 면 / false => 스파이 키워드 선택 화면
-      }, 5000);
+      // setTimeout(() => {
+      //   setSpyAlive(true); //true => 스파이 승리 면 / false => 스파이 키워드 선택 화면
+      // }, 5000);
     }
   }, [timerZero]);
   //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석처리하기)*****
-  useEffect(() => {
-    setTimeout(() => {
-      setVoteDoneModal(false);
-      // dispatch(gameOperation(3));
-    }, 5000);
-  }, [voteDoneModal]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setVoteDoneModal(false);
+  //   }, 5000);
+  // }, [voteDoneModal]);
 
-  //내가 스파이 유저 선택. => CommonModal.jsx 로 이동
+  //스파이 추정 유저 투표로 선택. => CommonModal.jsx 로 이동
   //socket.emit('voteSpy', param.id, stamp);
 
   //투표결과, 스파이가 이겼는지 결과(boolean) on 받기
   //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석풀기)*****
-  // socket.on('spyWin', (result) => {
-  //   //이겼는지(True) 졌는지(False) 값
-  //   setTimeout(() => {
-  //     setVoteDoneModal(false);
-  //     setSpyAlive(result);
-  //     dispatch(gameOperation(3));
-  //   }, 4000);
-  // });
+  socket.on('spyWin', (result) => {
+    //이겼는지(True) 졌는지(False) 값
+    setTimeout(() => {
+      setVoteDoneModal(false);
+      setSpyAlive(result);
+    }, 4000);
+  });
 
   //전체투표 결과1 : spyAlive(true) 스파이가 이겼을때, 스파이 승리 화면 컴포넌트로 넘어가기
   useEffect(() => {
