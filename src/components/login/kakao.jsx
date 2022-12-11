@@ -8,12 +8,12 @@ import { useState } from 'react';
 import Spinner from '../../elements/Spinner';
 import UserInfo from '../UserInfo';
 import { useDispatch } from 'react-redux';
-import { __getUser } from '../../redux/modules/userSlice';
+import { getToken } from '../../redux/modules/roomSlice';
 
 //리다이렉트 화면
 const Kakao = () => {
   const navigator = useNavigate();
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [cookies, setCookie] = useCookies(['nickname']);
   // const [token, setToken] = useState('');
 
@@ -40,18 +40,17 @@ const Kakao = () => {
             },
           }
         );
-        console.log(res2);
+        // console.log(res2);
         const nickname = res2.data.nickname;
         // console.log(nickname);
-        console.log(res2.data);
+        // console.log(res2.data);
         setCookie('nickname', nickname, {
           path: '/',
           secure: true,
           sameSite: 'none',
         });
-        // const accessToken = res2.data.accessToken;
-        // setToken(accessToken);
-        // dispatch(__getUser(accessToken));
+        const accessToken = res2.data.accessToken;
+        localStorage.setItem('token', accessToken);
 
         if (res2.status == 200 || 201) {
           window.location.replace('/home');
@@ -70,12 +69,6 @@ const Kakao = () => {
   useEffect(() => {
     Token();
   }, [Token()]);
-
-  // console.log(token);
-
-  // useEffect(() => {
-  //   dispatch(__getUser(token));
-  // }, []);
 
   return <Spinner />;
 };
