@@ -5,8 +5,6 @@ import styled from 'styled-components';
 
 const WordExamples = (props) => {
   const words = useSelector((state) => state.game.sendCategory.showWords);
-  const answerWord = useSelector((state) => state.game.sendCategory.answerWord);
-  const category = useSelector((state) => state.game.category);
   const spy = useSelector((state) => state.game.spy); //스파이 닉네임 들고오기
   const [cookies] = useCookies(['nickname']);
   const nickname = cookies.nickname;
@@ -14,19 +12,27 @@ const WordExamples = (props) => {
   const spyClickWord = (a) => {
     if (spy === nickname) {
       props.setSpyAnswer(a);
-      console.log('선택한 word', a);
-      // console.log('spyAnswer에 적용 잘 됐나?', props.spyAnswer);
+      // console.log('선택한 word', a);
     }
   };
-  // console.log('answerWord 찍어보기', answerWord);
-  // console.log('words 찍어보기', words);
+
+  console.log('spyAnswer에 적용 잘 됐나?', props.spyAnswer);
+
   return (
     <>
       {/* 내가 스파이라면 onClick 적용 */}
       {spy === cookies.nickname ? (
         <>
           {words.map((word) => {
-            return (
+            return word === props.spyAnswer ? (
+              <Word
+                key={word}
+                onClick={() => spyClickWord(word)}
+                style={{ background: 'gray' }}
+              >
+                {word}
+              </Word>
+            ) : (
               <Word key={word} onClick={() => spyClickWord(word)}>
                 {word}
               </Word>
