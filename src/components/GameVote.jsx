@@ -30,37 +30,20 @@ const GameVote = () => {
   const [stamp, setStamp] = useState(`${myNickname}`); //기본값이 본인으로 선택
 
   const initialState = [
-    { nickname: '' },
-    { nickname: '' },
-    { nickname: '' },
-    { nickname: '' },
-    { nickname: '' },
+    { nickname: `${myNickname}` },
+    { nickname: '2' },
+    { nickname: '3' },
+    { nickname: '4' },
+    { nickname: '5' },
     { nickname: '' },
     { nickname: '' },
     { nickname: '' },
   ];
   const [userCameras, setUserCameras] = useState(initialState);
 
-  // const fillInTheEmptySeats = useMemo(() => {
-  //   socket.emit('userNickname', param.id);
-  //   socket.on('userNickname', (user) => {
-  //     console.log(user);
-  //     setUserCameras(initialState);
-  //     for (let i = 0; i < user.length; i++) {
-  //       if (userCameras[i].nickname !== user[i]) {
-  //         let newuserCameras = [...userCameras];
-  //         newuserCameras[i].nickname = user[i];
-  //         setUserCameras(newuserCameras);
-  //         // userCameras[i].nickname = user[i];
-  //       }
-  //     }
-  //     dispatch(getUserNickname(userCameras));
-  //     return userCameras;
-  //   });
-  // }, [userCameras]);
-
   useEffect(() => {
-    socket.emit('userNickname', param.id);
+    //다같이 테스트 할때는 아래 주석 풀고 initialState 원상복귀
+    /*socket.emit('userNickname', param.id);
     socket.on('userNickname', (user) => {
       console.log(user);
       setUserCameras(initialState);
@@ -74,23 +57,8 @@ const GameVote = () => {
       }
       dispatch(getUserNickname(userCameras));
       return userCameras;
-    });
+    });*/
   }, []);
-
-  //2
-  // useEffect(() => {
-  //   socket.emit('userNickname', param.id);
-  //   socket.on('userNickname', (user) => {
-  //     console.log(user);
-  //     setUserCameras(initialState);
-  //     for (let i = 0; i < user.length; i++) {
-  //       if (userCameras[i].nickname !== user[i]) {
-  //         userCameras[i].nickname = user[i];
-  //       }
-  //     }
-  //     return userCameras;
-  //   });
-  // }, []);
 
   // console.log('userNickname::', userNickname);
   // console.log('voteStatus::', voteStatus);
@@ -125,10 +93,17 @@ const GameVote = () => {
       //321모달 띄워주기
       setVoteDoneModal(true);
 
-      //임의로 setSpyAlive 값 받은 척 ! (dev/main PR 할땐 주석처리하기)
-      // setSpyAlive(false);
+      //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석처리하기)*****
+      setSpyAlive(false);
     }
   }, [timeout]);
+  //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석처리하기)*****
+  useEffect(() => {
+    setTimeout(() => {
+      setVoteDoneModal(false);
+      // dispatch(gameOperation(3));
+    }, 4000);
+  }, [voteDoneModal]);
 
   //내가 스파이 유저 선택. => CommonModal.jsx 로 이동
   //socket.emit('voteSpy', param.id, stamp);
@@ -137,6 +112,10 @@ const GameVote = () => {
   socket.on('spyWin', (result) => {
     //이겼는지(True) 졌는지(False) 값
     setSpyAlive(result);
+    setTimeout(() => {
+      setVoteDoneModal(false);
+      dispatch(gameOperation(3));
+    }, 4000);
   });
 
   //전체투표 결과1 : spyAlive(true) 스파이가 이겼을때, 스파이 승리 화면 컴포넌트로 넘어가기

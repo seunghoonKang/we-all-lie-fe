@@ -18,7 +18,6 @@ const GameStart = () => {
   // const userNickname = useSelector((state) => state.room.userNickname);
   // const category = useSelector((state) => state.game.category);
   const category = useSelector((state) => state.game.sendCategory.category);
-
   const [modalStatus, setModalStatus] = useState(false);
   const [earlyVote, setEarlyVote] = useState(false);
   const param = useParams();
