@@ -4,7 +4,7 @@ import Button from '../../elements/Button';
 import styled from 'styled-components';
 import ModalTimer from '../../elements/ModalTimer';
 
-const GameEndHeader = () => {
+const GameEndHeader = (props) => {
   const restartBtnHandler = () => {
     console.log('다시시작');
   };
@@ -16,7 +16,11 @@ const GameEndHeader = () => {
           <MegaphoneDiv>
             <Megaphone width="15" height="13" fill="none" />
           </MegaphoneDiv>
-          <div>스파이를 맞추지 못해 스파이가 승리했습니다.</div>
+          {props.spyWin ? (
+            <div>스파이를 맞추지 못해 스파이가 승리했습니다!</div>
+          ) : (
+            <div>스파이가 잡혔습니다!</div>
+          )}
         </div>
       </HeaderTitle>
       <ButtonContainer>

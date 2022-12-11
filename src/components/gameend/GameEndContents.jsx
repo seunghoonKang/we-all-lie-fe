@@ -124,7 +124,7 @@ const SpyName = styled.div`
   position: absolute;
   top: 43vh;
   left: 16px;
-  width: 10rem;
+  width: 12rem;
   height: 40px;
   display: flex;
   justify-content: center;
