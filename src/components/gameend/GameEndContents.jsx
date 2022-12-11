@@ -55,7 +55,7 @@ const GameEndContents = () => {
       </GameCardSection>
       <EndGameCameraEntireDiv>
         {userCameras.map((person, i) => (
-          <Camera3 nickname={person.nickName} index={i} />
+          <Camera3 nickname={person.nickName} key={i} />
         ))}
       </EndGameCameraEntireDiv>
     </GameEndEntireContainer>
