@@ -28,11 +28,29 @@ const CommonModal = ({ ...props }) => {
   //Sec Btn : 투표완료 핸들러 & 스파이 키워드 선택완료 핸들러
   const completeVote = () => {
     //내가 스파이 유저 선택.
-    props.socket.emit('voteSpy', props.param.id, props.stamp);
+    console.log('spyAlive 들어와있니?', props.spyAlive);
+    if (props.spyAlive === 'a') {
+      console.log('spyAlive === a 실행됨');
+      props.socket.emit('voteSpy', props.param.id, props.stamp);
+      props.setVoteModal(!props.voteModal);
+      console.log(`${props.stamp}투표완료!`);
+      console.log('voteStatus 상태', props.voteStatus);
+      props.setVoteStatus(true);
+    }
+
+    //스파이가 키워드 선택하는 로직
+    if (props.spyAlive === false && props.spyAnswerStatus === false) {
+      console.log('스파이가 선택한 키워드 emit 실행됨');
+      props.socket.emit('spyGuess', props.param.id, props.spyAnswer);
+      console.log('스파이 선택키워드', props.spyAnswer);
+      props.setSpyAnswerStatus(!props.spyAnswerStatus);
+      console.log('*spyAnswerStatus', props.spyAnswerStatus);
+    }
+    // props.spyAnswer &&
+    //   props.socket.emit('spyGuess', props.param.id, props.spyAnswer);
+
+    //선택완료 후 모달 닫기
     props.setVoteModal(!props.voteModal);
-    console.log(`${props.stamp}투표완료!`);
-    props.setVoteStatus(!props.voteStatus);
-    console.log('voteStatus 상태', props.voteStatus);
   };
 
   return (

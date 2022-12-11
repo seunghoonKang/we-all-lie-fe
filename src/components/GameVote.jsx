@@ -21,9 +21,9 @@ const GameVote = () => {
   const [voteModal, setVoteModal] = useState(false); //투표 버튼 모달
   const [voteDoneModal, setVoteDoneModal] = useState(false); //투표완료 모달
   const [voteStatus, setVoteStatus] = useState(false);
-  const [spyAlive, setSpyAlive] = useState(0); //전체투표에서 스파이가 이겼는지(True) 졌는지(False) 투표전 initialState (0)
+  const [spyAlive, setSpyAlive] = useState('a'); //전체투표에서 스파이가 이겼는지(True) 졌는지(False) 투표전 initialState (a)
   const [spyAnswer, setSpyAnswer] = useState(); //스파이가 클릭한 제시어 initialState(빈값)
-  const [spyAnswerStatus, setSpyAnswerStatus] = useState(false); //스파이가 제시어를 클릭 했는지(True) 안했는지(False) initialState(false)
+  const [spyAnswerStatus, setSpyAnswerStatus] = useState(false); //스파이가 제시어를 전송 했는지(True) 안했는지(False) initialState(false)
   const [timerZero, setTimerZero] = useState(false);
   const [timerAgain, setTimerAain] = useState(false);
   const userNickname = useSelector((state) => state.room.userNickname); //유저닉네임 들고오기
@@ -75,7 +75,7 @@ const GameVote = () => {
   첫번쨰 파라미터는 항상 방번호로 emit하기
   사람들이 투표했을 때 스파이가 걸렸는지 아닌지 'spyWin'
   스파이가 걸렸을 때 제시어를 맞췄는지 아닌지 'spyGuess'
-  스파이가 이겼는지 졌는지
+  스파이가 이겼는지 졌는지 'endGame'
   */
 
   //내가 마지막으로 선택한 사람 닉네임 = stamp
@@ -95,7 +95,9 @@ const GameVote = () => {
       setVoteDoneModal(true);
 
       //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석처리하기)*****
-      setSpyAlive(false);
+      setTimeout(() => {
+        setSpyAlive(true); //true => 스파이 승리 면 / false => 스파이 키워드 선택 화면
+      }, 5000);
     }
   }, [timerZero]);
   //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석처리하기)*****
@@ -103,35 +105,39 @@ const GameVote = () => {
     setTimeout(() => {
       setVoteDoneModal(false);
       // dispatch(gameOperation(3));
-    }, 4000);
+    }, 5000);
   }, [voteDoneModal]);
 
   //내가 스파이 유저 선택. => CommonModal.jsx 로 이동
   //socket.emit('voteSpy', param.id, stamp);
 
   //투표결과, 스파이가 이겼는지 결과(boolean) on 받기
-  socket.on('spyWin', (result) => {
-    //이겼는지(True) 졌는지(False) 값
-    setSpyAlive(result);
-    setTimeout(() => {
-      setVoteDoneModal(false);
-      dispatch(gameOperation(3));
-    }, 4000);
-  });
+  //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석풀기)*****
+  // socket.on('spyWin', (result) => {
+  //   //이겼는지(True) 졌는지(False) 값
+  //   setTimeout(() => {
+  //     setVoteDoneModal(false);
+  //     setSpyAlive(result);
+  //     dispatch(gameOperation(3));
+  //   }, 4000);
+  // });
 
   //전체투표 결과1 : spyAlive(true) 스파이가 이겼을때, 스파이 승리 화면 컴포넌트로 넘어가기
   useEffect(() => {
     spyAlive === true && dispatch(gameOperation(3));
   }, [spyAlive]);
 
-  //스파이가 제시어를 고른 뒤 게임 결과
+  //스파이가 제시어를 고른 뒤 게임 결과 (console말고는 다른점 없음,,) => GameEndContents에도 씀
   socket.on('endGame', (bool) => {
     //bool 값에 따라서 아래 조건문 실행
     if (bool === true) {
       //스파이가 제시어를 맞췄다면, 스파이 승리 화면 컴포넌트로 넘어가기
+      console.log('스파이승리');
       dispatch(gameOperation(3));
     } else if (bool === false) {
       //스파이가 제시어를 못 맞췄다면, 스파이 패배 화면 컴포넌트로 넘어가기
+      console.log('스파이패배');
+      dispatch(gameOperation(3));
     }
   });
 
@@ -168,18 +174,23 @@ const GameVote = () => {
           <VoteButton onClick={() => setVoteModal(!voteModal)}>
             선택하기
           </VoteButton>
-          {spyAnswerStatus && voteModal === true ? (
+          {/* {spyAnswerStatus && voteModal === true ? ( */}
+          {spyAnswer && voteModal === true ? (
             <CommonModal
               main="이 키워드를 선택할까요?"
               sub="키워드 선택 이후 수정은 불가합니다."
               firstBtn="다시선택"
               secBtn="선택하기"
+              spyAlive={spyAlive}
               // voteStatus={voteStatus}
               // setVoteStatus={setVoteStatus}
-              // voteModal={voteModal}
-              // setVoteModal={setVoteModal}
+              voteModal={voteModal}
+              setVoteModal={setVoteModal}
+              spyAnswer={spyAnswer}
+              spyAnswerStatus={spyAnswerStatus}
+              setSpyAnswerStatus={setSpyAnswerStatus}
               // stamp={stamp}
-              // param={param}
+              param={param}
               socket={socket}
               //state 넘겨주기
             ></CommonModal>
@@ -207,6 +218,7 @@ const GameVote = () => {
               sub="투표 완료후 재투표는 불가합니다."
               firstBtn="다시선택"
               secBtn="투표하기"
+              spyAlive={spyAlive}
               voteStatus={voteStatus}
               setVoteStatus={setVoteStatus}
               voteModal={voteModal}

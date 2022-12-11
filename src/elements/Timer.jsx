@@ -24,8 +24,9 @@ const Timer = ({ min, sec, timerZero, setTimerZero }) => {
 
   useEffect(() => {
     if (count.current <= 0) {
-      console.log('timerZero', timerZero);
+      //00:00됐을때 timerZero State 값 바꿔주기 (미투표자 자동투표하기 위해)
       timerZero == false && setTimerZero(true);
+      console.log('timerZero', timerZero);
       clearInterval(interval.current);
     }
   }, [second]);
