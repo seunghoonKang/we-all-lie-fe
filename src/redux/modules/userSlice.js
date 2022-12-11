@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const initialState = {
-  userDetail: [],
+  data: [],
   isLoading: false,
   error: null,
 };
@@ -10,10 +10,9 @@ const initialState = {
 export const __getUser = createAsyncThunk(
   'userSlice/get',
   async (payload, thunkAPI) => {
-    // const token = localStorage.getItem('token');
-    console.log(payload);
+    const token = payload;
     const headers = {
-      //   Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     };
     try {
       const { data } = await axios.get(`https://minhyeongi.xyz/api/user`, {
@@ -36,7 +35,7 @@ const userSlice = createSlice({
     },
     [__getUser.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.userDetail = action.payload;
+      state.data = action.payload;
     },
     [__getUser.rejected]: (state, action) => {
       state.isLoading = false;
