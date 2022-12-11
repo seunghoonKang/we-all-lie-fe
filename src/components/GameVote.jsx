@@ -48,7 +48,7 @@ const GameVote = () => {
           // userCameras[i] = user[i];
         }
       }
-      dispatch(getUserNickname(userCameras));
+      // dispatch(getUserNickname(userCameras));
       return userCameras;
     });
   }, []);
@@ -122,6 +122,8 @@ const GameVote = () => {
 
   //스파이가 제시어를 고른 뒤 게임 결과 (console말고는 다른점 없음,,) => GameEndContents에도 씀
   socket.on('endGame', (bool) => {
+    //=> spyGuess 이후에 자동으로 emit 되고 있는지? / 이 방 모두에게 뿌려주는 지?
+    console.log('endGame 받아왔다!');
     //bool 값에 따라서 아래 조건문 실행
     if (bool === true) {
       //스파이가 제시어를 맞췄다면, 스파이 승리 화면 컴포넌트로 넘어가기

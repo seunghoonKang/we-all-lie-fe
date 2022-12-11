@@ -10,36 +10,36 @@ import { useCookies } from 'react-cookie';
 import { useState } from 'react';
 
 const GameEnd = () => {
-  // const navigate = useNavigate();
-  // const param = useParams();
-  // const [cookies] = useCookies(['nickname']);
-  // const [spyWin, setSpyWin] = useState(true);
+  const navigate = useNavigate();
+  const param = useParams();
+  const [cookies] = useCookies(['nickname']);
+  const [spyWin, setSpyWin] = useState(true);
 
-  // const GoOutBtn = () => {
-  //   socket.emit('leaveRoom', param.id, cookies.nickname);
-  //   socket.on('leaveRoom', () => {
-  //     navigate('/home');
-  //   });
-  //   navigate('/home');
-  // };
+  const GoOutBtn = () => {
+    socket.emit('leaveRoom', param.id, cookies.nickname);
+    socket.on('leaveRoom', () => {
+      navigate('/home');
+    });
+    navigate('/home');
+  };
 
-  // //스파이가 제시어를 고른 뒤 게임 결과
-  // socket.on('endGame', (bool) => {
-  //   //bool 값에 따라서 아래 조건문 실행
-  //   if (bool === true) {
-  //     //스파이가 제시어를 맞췄다면, 스파이 승리 화면 컴포넌트로 넘어가기
-  //     console.log('스파이승리');
-  //     setSpyWin(true); //state 값 유지
-  //   } else if (bool === false) {
-  //     //스파이가 제시어를 못 맞췄다면, 스파이 패배 화면 컴포넌트로 넘어가기
-  //     console.log('스파이패배');
-  //     setSpyWin(false);
-  //   }
-  // });
+  //스파이가 제시어를 고른 뒤 게임 결과
+  socket.on('endGame', (bool) => {
+    //bool 값에 따라서 아래 조건문 실행
+    if (bool === true) {
+      //스파이가 제시어를 맞췄다면, 스파이 승리 화면 컴포넌트로 넘어가기
+      console.log('스파이승리');
+      setSpyWin(true); //state 값 유지
+    } else if (bool === false) {
+      //스파이가 제시어를 못 맞췄다면, 스파이 패배 화면 컴포넌트로 넘어가기
+      console.log('스파이패배');
+      setSpyWin(false);
+    }
+  });
 
   return (
     <GameEndEntireContainer>
-      {/* <LogoImg>
+      <LogoImg>
         <WeAllLieWhiteLogo />
         <Button
           type={'button'}
@@ -55,8 +55,7 @@ const GameEnd = () => {
         </Button>
       </LogoImg>
       <GameEndHeader spyWin={spyWin} setSpyWin={setSpyWin} />
-      <GameEndContents spyWin={spyWin} setSpyWin={setSpyWin} /> */}
-      게임 엔드 왔다~!
+      {/* <GameEndContents spyWin={spyWin} setSpyWin={setSpyWin} /> */}
     </GameEndEntireContainer>
   );
 };
