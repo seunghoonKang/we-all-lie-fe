@@ -31,6 +31,13 @@ const CreateRoom = ({ closeModal }) => {
       : (setEasyModeColor('white'), setHardModeColor('gray'));
   };
 
+  const [onlyOne, setOnlyOne] = useState(true);
+  const onlyOneHandler = () => {
+    setTimeout(() => {
+      setOnlyOne(!onlyOne);
+    }, 100);
+  };
+
   //모달 오픈, 닫기 시 위치 고정
   useEffect(() => {
     document.body.style.cssText = `
@@ -105,7 +112,7 @@ const CreateRoom = ({ closeModal }) => {
                   navigate(`/room/${room._id}`);
                 });
                 setSubmitting(false);
-              }, 1);
+              }, 100);
             }}
           >
             {({ errors, touched }) => (
@@ -202,12 +209,19 @@ const CreateRoom = ({ closeModal }) => {
                 >
                   취소하기
                 </button> */}
-                  <button
-                    type="submit"
-                    className="border-solid border-[#ff7300] border-[1px] min-w-[110px] min-h-[40px] mb-5 rounded-md text-[#ff7300] font-bold text-[14px]"
-                  >
-                    개설하기
-                  </button>
+                  {onlyOne ? (
+                    <SubmitBtn type="submit" onClick={onlyOneHandler}>
+                      개설하기
+                    </SubmitBtn>
+                  ) : (
+                    <DisabledSubmitBtn
+                      type="submit"
+                      onClick={onlyOneHandler}
+                      disabled={true}
+                    >
+                      개설하기
+                    </DisabledSubmitBtn>
+                  )}
                 </div>
               </Form>
             )}
@@ -293,6 +307,27 @@ const ModeBtn = styled.div`
   border-radius: 6px;
   margin-right: 6px;
   background-color: ${(props) => props.color};
+`;
+
+const SubmitBtn = styled.button`
+  border: solid #ff7300 1px;
+  min-width: 110px;
+  min-height: 40px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  color: #ff7300;
+  font-size: 14px;
+  font-weight: 700;
+`;
+const DisabledSubmitBtn = styled.button`
+  border: solid #ff7300 1px;
+  min-width: 110px;
+  min-height: 40px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  color: #ff7300;
+  font-size: 14px;
+  font-weight: 700;
 `;
 
 export default CreateRoom;

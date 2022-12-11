@@ -21,10 +21,11 @@ const GameVote = () => {
   const [voteModal, setVoteModal] = useState(false); //투표 버튼 모달
   const [voteDoneModal, setVoteDoneModal] = useState(false); //투표완료 모달
   const [voteStatus, setVoteStatus] = useState(false);
-  const [spyAlive, setSpyAlive] = useState(0); //전체투표에서 스파이가 이겼는지(True) 졌는지(False) 투표전 initialState (0)
+  const [spyAlive, setSpyAlive] = useState('a'); //전체투표에서 스파이가 이겼는지(True) 졌는지(False) 투표전 initialState (a)
   const [spyAnswer, setSpyAnswer] = useState(); //스파이가 클릭한 제시어 initialState(빈값)
-  const [spyAnswerStatus, setSpyAnswerStatus] = useState(false); //스파이가 제시어를 클릭 했는지(True) 안했는지(False) initialState(false)
-  const [timeout, setTimeout] = useState(false);
+  const [spyAnswerStatus, setSpyAnswerStatus] = useState(false); //스파이가 제시어를 전송 했는지(True) 안했는지(False) initialState(false)
+  const [timerZero, setTimerZero] = useState(false);
+  const [timerAgain, setTimerAain] = useState(false);
   const userNickname = useSelector((state) => state.room.userNickname); //유저닉네임 들고오기
   const myNickname = cookies.nickname;
   const [stamp, setStamp] = useState(`${myNickname}`); //기본값이 본인으로 선택
@@ -41,26 +42,9 @@ const GameVote = () => {
   ];
   const [userCameras, setUserCameras] = useState(initialState);
 
-  // const fillInTheEmptySeats = useMemo(() => {
-  //   socket.emit('userNickname', param.id);
-  //   socket.on('userNickname', (user) => {
-  //     console.log(user);
-  //     setUserCameras(initialState);
-  //     for (let i = 0; i < user.length; i++) {
-  //       if (userCameras[i].nickname !== user[i]) {
-  //         let newuserCameras = [...userCameras];
-  //         newuserCameras[i].nickname = user[i];
-  //         setUserCameras(newuserCameras);
-  //         // userCameras[i].nickname = user[i];
-  //       }
-  //     }
-  //     dispatch(getUserNickname(userCameras));
-  //     return userCameras;
-  //   });
-  // }, [userCameras]);
-
   useEffect(() => {
-    socket.emit('userNickname', param.id);
+    //다같이 테스트 할때는 아래 주석 풀고 initialState 원상복귀
+    /*socket.emit('userNickname', param.id);
     socket.on('userNickname', (user) => {
       console.log(user);
       setUserCameras(initialState);
@@ -74,27 +58,8 @@ const GameVote = () => {
       }
       dispatch(getUserNickname(userCameras));
       return userCameras;
-    });
+    });*/
   }, []);
-
-  //2
-  // useEffect(() => {
-  //   socket.emit('userNickname', param.id);
-  //   socket.on('userNickname', (user) => {
-  //     console.log(user);
-  //     setUserCameras(initialState);
-  //     for (let i = 0; i < user.length; i++) {
-  //       if (userCameras[i].nickname !== user[i]) {
-  //         userCameras[i].nickname = user[i];
-  //       }
-  //     }
-  //     return userCameras;
-  //   });
-  // }, []);
-
-  // console.log('userNickname::', userNickname);
-  // console.log('voteStatus::', voteStatus);
-  // console.log('userCameras 확인', userCameras);
 
   /* 
   투표 기본값 : 본인 (O) -> stamp가 찍혀있진 않음
@@ -106,7 +71,7 @@ const GameVote = () => {
   첫번쨰 파라미터는 항상 방번호로 emit하기
   사람들이 투표했을 때 스파이가 걸렸는지 아닌지 'spyWin'
   스파이가 걸렸을 때 제시어를 맞췄는지 아닌지 'spyGuess'
-  스파이가 이겼는지 졌는지
+  스파이가 이겼는지 졌는지 'endGame'
   */
 
   //내가 마지막으로 선택한 사람 닉네임 = stamp
@@ -114,7 +79,7 @@ const GameVote = () => {
 
   //00:00 일때 미투표상태일시 현재 stamp 찍혀있는 사람으로 자동 emit
   useEffect(() => {
-    if (timeout === true) {
+    if (timerZero === true) {
       if (voteStatus === false) {
         socket.emit('voteSpy', param.id, stamp);
         console.log('투표를 안해서 마지막으로 클릭한 사람 보내줌 ::', stamp);
@@ -122,21 +87,33 @@ const GameVote = () => {
       }
       console.log('시간초 다 됐음');
 
-      //321모달 띄워주기
+      //전체투표 끝나고 321모달 띄워주기
       setVoteDoneModal(true);
 
-      //임의로 setSpyAlive 값 받은 척 ! (dev/main PR 할땐 주석처리하기)
-      // setSpyAlive(false);
+      //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석처리하기)*****
+      // setTimeout(() => {
+      //   setSpyAlive(true); //true => 스파이 승리 면 / false => 스파이 키워드 선택 화면
+      // }, 5000);
     }
-  }, [timeout]);
+  }, [timerZero]);
+  //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석처리하기)*****
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setVoteDoneModal(false);
+  //   }, 5000);
+  // }, [voteDoneModal]);
 
-  //내가 스파이 유저 선택. => CommonModal.jsx 로 이동
+  //스파이 추정 유저 투표로 선택. => CommonModal.jsx 로 이동
   //socket.emit('voteSpy', param.id, stamp);
 
   //투표결과, 스파이가 이겼는지 결과(boolean) on 받기
+  //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석풀기)*****
   socket.on('spyWin', (result) => {
     //이겼는지(True) 졌는지(False) 값
-    setSpyAlive(result);
+    setTimeout(() => {
+      setVoteDoneModal(false);
+      setSpyAlive(result);
+    }, 4000);
   });
 
   //전체투표 결과1 : spyAlive(true) 스파이가 이겼을때, 스파이 승리 화면 컴포넌트로 넘어가기
@@ -144,16 +121,21 @@ const GameVote = () => {
     spyAlive === true && dispatch(gameOperation(3));
   }, [spyAlive]);
 
-  //스파이가 제시어를 고른 뒤 게임 결과
+  //스파이가 제시어를 고른 뒤 게임 결과 (console말고는 다른점 없음,,) => GameEndContents에도 씀
   socket.on('endGame', (bool) => {
     //bool 값에 따라서 아래 조건문 실행
     if (bool === true) {
       //스파이가 제시어를 맞췄다면, 스파이 승리 화면 컴포넌트로 넘어가기
+      console.log('스파이승리');
       dispatch(gameOperation(3));
     } else if (bool === false) {
       //스파이가 제시어를 못 맞췄다면, 스파이 패배 화면 컴포넌트로 넘어가기
+      console.log('스파이패배');
+      dispatch(gameOperation(3));
     }
   });
+
+  console.log('spyAnswer 잘 들어왔나', spyAnswer);
 
   //스파이 투표 종료 후 개인 결과 집계.
   //socket.emit('voteRecord', nickname);
@@ -171,7 +153,7 @@ const GameVote = () => {
       <TimerContainer>
         <TimerDiv>
           <MinWidthTimerDiv>
-            <Timer sec="20" timeout={timeout} setTimeout={setTimeout} />
+            <Timer sec="20" timerZero={timerZero} setTimerZero={setTimerZero} />
           </MinWidthTimerDiv>
         </TimerDiv>
       </TimerContainer>
@@ -186,18 +168,23 @@ const GameVote = () => {
           <VoteButton onClick={() => setVoteModal(!voteModal)}>
             선택하기
           </VoteButton>
-          {spyAnswerStatus && voteModal === true ? (
+          {/* {spyAnswerStatus && voteModal === true ? ( */}
+          {spyAnswer && voteModal === true ? (
             <CommonModal
               main="이 키워드를 선택할까요?"
               sub="키워드 선택 이후 수정은 불가합니다."
               firstBtn="다시선택"
               secBtn="선택하기"
+              spyAlive={spyAlive}
               // voteStatus={voteStatus}
               // setVoteStatus={setVoteStatus}
-              // voteModal={voteModal}
-              // setVoteModal={setVoteModal}
+              voteModal={voteModal}
+              setVoteModal={setVoteModal}
+              spyAnswer={spyAnswer}
+              spyAnswerStatus={spyAnswerStatus}
+              setSpyAnswerStatus={setSpyAnswerStatus}
               // stamp={stamp}
-              // param={param}
+              param={param}
               socket={socket}
               //state 넘겨주기
             ></CommonModal>
@@ -225,6 +212,7 @@ const GameVote = () => {
               sub="투표 완료후 재투표는 불가합니다."
               firstBtn="다시선택"
               secBtn="투표하기"
+              spyAlive={spyAlive}
               voteStatus={voteStatus}
               setVoteStatus={setVoteStatus}
               voteModal={voteModal}
@@ -395,6 +383,7 @@ const CardContainer = styled.div`
   width: 100%;
   height: 50vh;
   min-height: 312px;
+  background-color: gray;
 `;
 
 const Users = styled.div`
