@@ -1,39 +1,46 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Camera3 from '../../elements/Camera3';
 import SelectCategoryImg from '../gamestart/SelectCategoryImg';
 
 const GameEndContents = () => {
-  const category = useSelector((state) => state.game.category);
-  const answerWord = useSelector((state) => state.game.answerWord);
+  const answerWord = useSelector((state) => state.game.sendCategory.answerWord);
+  const category = useSelector((state) => state.game.sendCategory.category);
   const spy = useSelector((state) => state.game.spy);
   let userNickname = useSelector((state) => state.room.userNickname);
+  console.log(spy);
 
   //스파이 빼고 나머지 유저들 고르기
+
   const exceptSpy = () => {
-    return (userNickname = userNickname.filter((nick) => nick !== spy));
+    return (userNickname = userNickname.filter(
+      (nick) => nick.nickname !== spy
+    ));
   };
   exceptSpy();
 
   let userCameras = [
-    { nickName: '빈자리' },
-    { nickName: '빈자리' },
-    { nickName: '빈자리' },
-    { nickName: '빈자리' },
-    { nickName: '빈자리' },
-    { nickName: '빈자리' },
-    { nickName: '빈자리' },
+    { nickName: '빈자리', id: 1 },
+    { nickName: '빈자리', id: 2 },
+    { nickName: '빈자리', id: 3 },
+    { nickName: '빈자리', id: 4 },
+    { nickName: '빈자리', id: 5 },
+    { nickName: '빈자리', id: 6 },
+    { nickName: '빈자리', id: 7 },
   ];
 
   //스파이 외 나머지 유저들 자리  채우기
   const fillInTheEmptySeats = () => {
     for (let i = 0; i < userCameras.length; i++) {
-      if (userNickname[i] && userCameras[i].nickName === '빈자리') {
-        userCameras[i].nickName = userNickname[i];
+      if (
+        userNickname[i].nickname !== '' &&
+        userCameras[i].nickName === '빈자리'
+      ) {
+        userCameras[i].nickName = userNickname[i].nickname;
       }
-      return userCameras;
     }
+    return userCameras;
   };
   fillInTheEmptySeats();
 
@@ -54,8 +61,8 @@ const GameEndContents = () => {
         </CorrectCard>
       </GameCardSection>
       <EndGameCameraEntireDiv>
-        {userCameras.map((person, i) => (
-          <Camera3 nickname={person.nickName} key={i} />
+        {userCameras.map((person) => (
+          <Camera3 nickname={person.nickName} key={person.id} />
         ))}
       </EndGameCameraEntireDiv>
     </GameEndEntireContainer>
