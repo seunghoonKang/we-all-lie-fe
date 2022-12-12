@@ -1,13 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ReactComponent as Megaphone } from '../../assets/megaphone.svg';
 import Button from '../../elements/Button';
 import styled from 'styled-components';
 import ModalTimer from '../../elements/ModalTimer';
+import { useSelector } from 'react-redux';
 
-const GameEndHeader = (props) => {
+const GameEndHeader = () => {
+  const [spyWin, setSpyWin] = useState(true);
+  const gameResult = useSelector((state) => state.game.gameResult);
+
   const restartBtnHandler = () => {
     console.log('다시시작');
   };
+
+  useEffect(() => {
+    console.log(gameResult);
+    gameResult === 1 && setSpyWin(true);
+    gameResult === 2 && setSpyWin(false);
+  }, []);
 
   return (
     <HeaderSection>
@@ -16,8 +26,8 @@ const GameEndHeader = (props) => {
           <MegaphoneDiv>
             <Megaphone width="15" height="13" fill="none" />
           </MegaphoneDiv>
-          {props.spyWin ? (
-            <div>스파이를 맞추지 못해 스파이가 승리했습니다!</div>
+          {spyWin ? (
+            <div>스파이가 승리했습니다!</div>
           ) : (
             <div>스파이가 잡혔습니다!</div>
           )}
