@@ -46,6 +46,7 @@ const Room = () => {
                 {/* <GameStart /> */}
                 {/* <GameVote /> */}
               </Game>
+              {/* <GameEnd /> */}
               <RoomChat />
             </>
           ) : (

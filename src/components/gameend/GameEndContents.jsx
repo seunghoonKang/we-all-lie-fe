@@ -1,48 +1,80 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Camera3 from '../../elements/Camera3';
 import SelectCategoryImg from '../gamestart/SelectCategoryImg';
+import { socket } from '../../shared/socket';
+import { useParams } from 'react-router-dom';
 
 const GameEndContents = () => {
+  const param = useParams();
   const answerWord = useSelector((state) => state.game.sendCategory.answerWord);
   const category = useSelector((state) => state.game.sendCategory.category);
   const spy = useSelector((state) => state.game.spy);
-  let userNickname = useSelector((state) => state.room.userNickname);
-  console.log(spy);
+  //let userNickname = useSelector((state) => state.room.userNickname);
 
   //스파이 빼고 나머지 유저들 고르기
 
-  const exceptSpy = () => {
-    return (userNickname = userNickname.filter(
-      (nick) => nick.nickname !== spy
-    ));
-  };
-  exceptSpy();
+  // let userCameras = [
+  //   { nickName: '빈자리', id: 1 },
+  //   { nickName: '빈자리', id: 2 },
+  //   { nickName: '빈자리', id: 3 },
+  //   { nickName: '빈자리', id: 4 },
+  //   { nickName: '빈자리', id: 5 },
+  //   { nickName: '빈자리', id: 6 },
+  //   { nickName: '빈자리', id: 7 },
+  // ];
 
-  let userCameras = [
-    { nickName: '빈자리', id: 1 },
-    { nickName: '빈자리', id: 2 },
-    { nickName: '빈자리', id: 3 },
-    { nickName: '빈자리', id: 4 },
-    { nickName: '빈자리', id: 5 },
-    { nickName: '빈자리', id: 6 },
-    { nickName: '빈자리', id: 7 },
-  ];
+  // const exceptSpy = () => {
+  //   return (userNickname = userNickname.filter(
+  //     (nick) => nick.nickname !== spy
+  //   ));
+  // };
+  // exceptSpy();
+
+  // useEffect(() => {
+  //   socket.emit('userNickname', param.id);
+  //   socket.on('userNickname', (user) => {
+  //     console.log(user);
+  //     setUserCameras(initialState);
+  //     for (let i = 0; i < user.length; i++) {
+  //       if (userCameras[i].nickname !== user[i]) {
+  //         let newuserCameras = [...userCameras];
+  //         newuserCameras[i].nickname = user[i];
+  //         setUserCameras(newuserCameras);
+  //       }
+  //     }
+
+  //     return userCameras;
+  //   });
+  // }, []);
 
   //스파이 외 나머지 유저들 자리  채우기
-  const fillInTheEmptySeats = () => {
-    for (let i = 0; i < userCameras.length; i++) {
-      if (
-        userNickname[i].nickname !== '' &&
-        userCameras[i].nickName === '빈자리'
-      ) {
-        userCameras[i].nickName = userNickname[i].nickname;
-      }
-    }
-    return userCameras;
-  };
-  fillInTheEmptySeats();
+  // const fillInTheEmptySeats = () => {
+  //   for (let i = 0; i < userCameras.length; i++) {
+  //     if (
+  //       userNickname[i].nickname !== '' &&
+  //       userCameras[i].nickName === '빈자리'
+  //     ) {
+  //       userCameras[i].nickName = userNickname[i].nickname;
+  //     }
+  //   }
+  //   return userCameras;
+  // };
+  // fillInTheEmptySeats();
+
+  let initialState = [];
+  const [userCameras, setUserCameras] = useState(initialState);
+
+  useEffect(() => {
+    socket.emit('userNickname', param.id);
+    socket.on('userNickname', (user) => {
+      const exceptSpy = user.filter((nick) => nick !== spy);
+      //exceptSpy.pop();
+      setUserCameras([...exceptSpy]);
+      return userCameras;
+    });
+  }, []);
 
   return (
     <GameEndEntireContainer>
@@ -61,8 +93,8 @@ const GameEndContents = () => {
         </CorrectCard>
       </GameCardSection>
       <EndGameCameraEntireDiv>
-        {userCameras.map((person) => (
-          <Camera3 nickname={person.nickName} key={person.id} />
+        {userCameras.map((person, i) => (
+          <Camera3 nickname={person} key={i} />
         ))}
       </EndGameCameraEntireDiv>
     </GameEndEntireContainer>
