@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { useDispatch, useSelector } from 'react-redux';
-import { gameOperation } from '../redux/modules/gameSlice';
+import { gameOperation, gameResult } from '../redux/modules/gameSlice';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Camera from '../elements/Camera';
@@ -23,7 +23,7 @@ const GameVote = () => {
   const [spyAnswer, setSpyAnswer] = useState(); //스파이가 클릭한 제시어 initialState(빈값)
   const [spyAnswerStatus, setSpyAnswerStatus] = useState(false); //스파이가 제시어를 전송 했는지(True) 안했는지(False) initialState(false)
   const [timerZero, setTimerZero] = useState(false);
-  const [timerAgain, setTimerAain] = useState(false);
+  const [timerAgain, setTimerAgain] = useState(false); //Timer 다시 재생
   const myNickname = cookies.nickname;
   const [stamp, setStamp] = useState(`${myNickname}`); //기본값이 본인으로 선택
   const spy = useSelector((state) => state.game.spy); //스파이 닉네임 들고오기
@@ -85,22 +85,20 @@ const GameVote = () => {
       if (spy === myNickname) {
         if (spyAnswerStatus === false) {
           socket.emit('spyGuess', param.id, spyAnswer, myNickname);
+          console.log('스파이가 마지막으로 클릭한 키워드 보내줌 ::', spyAnswer);
         }
       }
-      console.log('시간초 다 됐음');
+      console.log('시간초 끝!');
 
       //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석처리하기)*****
-      setTimeout(() => {
-        setSpyAlive(true); //true => 스파이 승리 화면 / false => 스파이 키워드 선택 화면
-      }, 5000);
+      // setVoteDoneModal(true);
+      // setTimeout(() => {
+      //   setSpyAlive(false); //true => 스파이 승리 화면 / false => 스파이 키워드 선택 화면
+      //   setVoteDoneModal(false);
+      //   setTimerAgain(true);
+      // }, 5000);
     }
   }, [timerZero]);
-  //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석처리하기)*****
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setVoteDoneModal(false);
-  //   }, 5000);
-  // }, [voteDoneModal]);
 
   //스파이 추정 유저 투표로 선택. => CommonModal.jsx 로 이동
   //socket.emit('voteSpy', param.id, stamp);
@@ -112,7 +110,7 @@ const GameVote = () => {
   });
 
   //투표결과, 스파이가 이겼는지 결과(boolean) on 받기
-  //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석풀기)*****
+  //*********************************(dev/main PR 할땐 주석풀기)*****
   socket.on('spyWin', (result) => {
     console.log('spyWin 받았다:', result);
     //전체투표 끝나고 321모달 띄워주기
@@ -121,7 +119,11 @@ const GameVote = () => {
     setTimeout(() => {
       setVoteDoneModal(false);
       setSpyAlive(result);
-    }, 4000);
+      //스파이가 찍혔다면, 타이머 다시 재생
+      if (result === false) {
+        setTimerAgain(true);
+      }
+    }, 5000);
   });
 
   //전체투표 결과1 : spyAlive(true) 스파이가 이겼을때, 스파이 승리 화면 컴포넌트로 넘어가기
@@ -137,10 +139,12 @@ const GameVote = () => {
     if (bool === true) {
       //스파이가 제시어를 맞췄다면, 스파이 승리 화면 컴포넌트로 넘어가기
       console.log('스파이승리');
+      dispatch(gameResult(1));
       dispatch(gameOperation(3));
     } else if (bool === false) {
       //스파이가 제시어를 못 맞췄다면, 스파이 패배 화면 컴포넌트로 넘어가기
       console.log('스파이패배');
+      dispatch(gameResult(2));
       dispatch(gameOperation(3));
     }
   });
@@ -159,13 +163,38 @@ const GameVote = () => {
           time
         />
       )}
-      <HeaderSection>📌 모든 유저가 투표를 진행하고 있습니다.</HeaderSection>
+      {spyAlive === false ? (
+        <HeaderSection>
+          📌 스파이가 검거되어 스파이가 키워드를 선택하고 있습니다.
+        </HeaderSection>
+      ) : (
+        <HeaderSection>📌 모든 유저가 투표를 진행하고 있습니다.</HeaderSection>
+      )}
+
       <TimerContainer>
-        <TimerDiv>
-          <MinWidthTimerDiv>
-            <Timer sec="20" timerZero={timerZero} setTimerZero={setTimerZero} />
-          </MinWidthTimerDiv>
-        </TimerDiv>
+        {spyAlive !== false && (
+          <TimerDiv sec={'20'}>
+            <MinWidthTimerDiv>
+              <Timer
+                sec="20"
+                timerZero={timerZero}
+                setTimerZero={setTimerZero}
+              />
+            </MinWidthTimerDiv>
+          </TimerDiv>
+        )}
+        {timerAgain && (
+          <TimerDiv sec={'30'}>
+            <MinWidthTimerDiv>
+              <Timer
+                sec="30"
+                timerZero={timerZero}
+                setTimerZero={setTimerZero}
+              />
+            </MinWidthTimerDiv>
+          </TimerDiv>
+        )}
+        {/* <Timer sec="20" timerZero={timerZero} setTimerZero={setTimerZero} /> */}
       </TimerContainer>
 
       {spyAlive === false ? (
@@ -279,22 +308,6 @@ const HeaderSection = styled.section`
   margin-bottom: 20px; ;
 `;
 
-// const Time = styled.div``;
-// const Timer = styled.div`
-//   width: 100%;
-//   height: 40px;
-//   background-color: ${(props) => props.theme.color.gray1};
-//   border-radius: 6px;
-//   overflow: hidden;
-//   position: relative;
-//   ${Time} {
-//     width: 100%;
-//     height: 40px;
-//     background-color: ${(props) => props.theme.color.lionBlack};
-//     position: absolute;
-//     left: -50%;
-//   }
-// `;
 const TimerContainer = styled.div`
   position: relative;
   width: 100%;
@@ -313,7 +326,8 @@ const TimerDiv = styled.div`
   color: #fff;
   background-color: #222;
   animation-name: progressTimeBar;
-  animation-duration: 20s;
+  /* animation-duration: 20s; */
+  animation-duration: ${(props) => props.sec}s;
   animation-iteration-count: 1;
   animation-direction: reverse;
   animation-timing-function: linear;
@@ -384,7 +398,7 @@ const CardContainer = styled.div`
   width: 100%;
   height: 50vh;
   min-height: 312px;
-  background-color: gray;
+  /* background-color: gray; */
 `;
 
 const Users = styled.div`

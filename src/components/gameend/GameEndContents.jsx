@@ -76,7 +76,7 @@ const GameEndContents = () => {
     socket.emit('userNickname', param.id);
     socket.on('userNickname', (user) => {
       const exceptSpy = user.filter((nick) => nick !== spy);
-      //exceptSpy.pop();
+      exceptSpy.pop();
       setUserCameras([...exceptSpy]);
       return userCameras;
     });

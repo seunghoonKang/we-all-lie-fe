@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   spy: 'Agent_징영이(●>◡<●)',
   gameOperation: 0,
+  gameResult: 0,
   sendCategory: {
     category: '장소',
     answerWord: '골프',
@@ -47,8 +48,12 @@ const gameSlice = createSlice({
       state.gameOperation = action.payload;
       //console.log('다음 페이지 넘기는 값', action.payload);
     },
+    gameResult: (state, action) => {
+      state.gameResult = action.payload;
+    },
   },
 });
 
-export const { giveCategory, giveSpy, gameOperation } = gameSlice.actions;
+export const { giveCategory, giveSpy, gameOperation, gameResult } =
+  gameSlice.actions;
 export default gameSlice.reducer;
