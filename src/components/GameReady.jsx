@@ -47,7 +47,7 @@ const GameReady = () => {
 
   const vacancy = useMemo(() => {
     socket.on('userNickname', (userNickname) => {
-      // console.log('유저닉', userNickname);
+      console.log('소켓에서 받아옴?', userNickname);
       //dispatch(getUserNickname(userNickname));
       setUserCameras(initialState);
       for (let item = 0; item < userNickname.length; item++) {
@@ -58,6 +58,8 @@ const GameReady = () => {
       return userCameras;
     });
   }, [userCameras]);
+
+  console.log('userCameras 적용 됨?', userCameras);
 
   //게임 준비 보냄
   const ReadyHandler = () => {
