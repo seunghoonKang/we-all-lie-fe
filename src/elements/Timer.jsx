@@ -13,6 +13,7 @@ const Timer = ({ min, sec, timerZero, setTimerZero }) => {
   const [minute, setMinute] = useState(padStartTime(Min));
   const [second, setSecond] = useState(padStartTime(Sec));
 
+  //기본로직
   useEffect(() => {
     interval.current = setInterval(() => {
       count.current -= 1;
@@ -22,11 +23,13 @@ const Timer = ({ min, sec, timerZero, setTimerZero }) => {
     }, 1000);
   }, []);
 
+  //기본로직
   useEffect(() => {
     if (count.current <= 0) {
       //00:00됐을때 timerZero State 값 바꿔주기 (미투표자 자동투표하기 위해)
       timerZero == false && setTimerZero(true);
       console.log('timerZero', timerZero);
+      //기본로직
       clearInterval(interval.current);
     }
   }, [second]);
