@@ -1,23 +1,21 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { gameOperation } from '../redux/modules/gameSlice';
 import { useParams } from 'react-router-dom';
-import styled, { ThemeContext } from 'styled-components';
+import styled from 'styled-components';
 import Camera from '../elements/Camera';
 import CommonModal from '../elements/CommonModal';
 import Timer from '../elements/Timer';
 import { socket } from '../shared/socket';
-import { getUserNickname } from '../redux/modules/roomSlice';
 import WordExamples from './gamevote/WordExamples';
-import CorrectCardSection from './gamestart/CorrectCardSection';
 
 const GameVote = () => {
   // const themeContext = useContext(ThemeContext);
   const param = useParams();
   const dispatch = useDispatch();
-  const [cookies, setCookies] = useCookies(['nickname']);
+  const [cookies] = useCookies(['nickname']);
   const [voteModal, setVoteModal] = useState(false); //투표 버튼 모달
   const [voteDoneModal, setVoteDoneModal] = useState(false); //투표완료 모달
   const [voteStatus, setVoteStatus] = useState(false);
@@ -26,34 +24,40 @@ const GameVote = () => {
   const [spyAnswerStatus, setSpyAnswerStatus] = useState(false); //스파이가 제시어를 전송 했는지(True) 안했는지(False) initialState(false)
   const [timerZero, setTimerZero] = useState(false);
   const [timerAgain, setTimerAain] = useState(false);
-  const userNickname = useSelector((state) => state.room.userNickname); //유저닉네임 들고오기
   const myNickname = cookies.nickname;
   const [stamp, setStamp] = useState(`${myNickname}`); //기본값이 본인으로 선택
+  const spy = useSelector((state) => state.game.spy); //스파이 닉네임 들고오기
 
   const initialState = ['', '', '', '', '', '', '', ''];
   const [userCameras, setUserCameras] = useState(initialState);
 
   useEffect(() => {
-    //다같이 테스트 할때는 아래 주석 풀고 initialState 원상복귀
     socket.emit('userNickname', param.id);
     socket.on('userNickname', (user) => {
       console.log(user);
-      setUserCameras(initialState);
-      // setUserCameras(...user);
-      for (let i = 0; i < user.length; i++) {
-        if (userCameras[i] !== user[i]) {
-          let newuserCameras = initialState;
-          newuserCameras[i] = user[i];
-          setUserCameras(newuserCameras);
-          // userCameras[i] = user[i];
-        }
-      }
-      // dispatch(getUserNickname(userCameras));
+      setUserCameras([...user]);
       return userCameras;
     });
   }, []);
+  // socket.emit('userNickname', param.id);
+  // socket.on('userNickname', (user) => {
+  //   console.log(user);
+  //   setUserCameras(initialState);
+  //   // setUserCameras(...user);
+  //   for (let i = 0; i < user.length; i++) {
+  //     if (userCameras[i] !== user[i]) {
+  //       let newuserCameras = initialState;
+  //       newuserCameras[i] = user[i];
+  //       setUserCameras(newuserCameras);
+  //       // userCameras[i] = user[i];
+  //     }
+  //   }
+  //   // dispatch(getUserNickname(userCameras));
+  //   return userCameras;
+  // });
 
   console.log(userCameras);
+
   /* 
   투표 기본값 : 본인 (O) -> stamp가 찍혀있진 않음
   투표 시간이 다 되었을때, 투표 처리
@@ -68,7 +72,7 @@ const GameVote = () => {
   */
 
   //내가 마지막으로 선택한 사람 닉네임 = stamp
-  console.log('stamp::', stamp);
+  // console.log('stamp::', stamp);
 
   //00:00 일때 미투표상태일시 현재 stamp 찍혀있는 사람으로 자동 emit
   useEffect(() => {
@@ -78,12 +82,17 @@ const GameVote = () => {
         console.log('투표를 안해서 마지막으로 클릭한 사람 보내줌 ::', stamp);
         setVoteStatus(true);
       }
+      if (spy === myNickname) {
+        if (spyAnswerStatus === false) {
+          socket.emit('spyGuess', param.id, spyAnswer, myNickname);
+        }
+      }
       console.log('시간초 다 됐음');
 
       //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석처리하기)*****
-      // setTimeout(() => {
-      //   setSpyAlive(true); //true => 스파이 승리 면 / false => 스파이 키워드 선택 화면
-      // }, 5000);
+      setTimeout(() => {
+        setSpyAlive(true); //true => 스파이 승리 화면 / false => 스파이 키워드 선택 화면
+      }, 5000);
     }
   }, [timerZero]);
   //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석처리하기)*****
@@ -233,19 +242,10 @@ const GameVote = () => {
         </CardContainer>
       ) : (
         <Users>
-          {/* {userCameras.map((person, index) => (
-            <Camera
-              person={person.nickname}
-              key={index}
-              stamp={stamp}
-              setStamp={setStamp}
-              voteStatus={voteStatus}
-              setVoteStatus={setVoteStatus}
-            />
-          ))} */}
           {userCameras.map((person, index) => (
             <Camera
               person={person}
+              //person={person.nickname}
               key={index}
               stamp={stamp}
               setStamp={setStamp}

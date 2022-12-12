@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Camera3 from '../../elements/Camera3';
 import SelectCategoryImg from '../gamestart/SelectCategoryImg';
@@ -14,6 +15,12 @@ const GameEndContents = () => {
   //let userNickname = useSelector((state) => state.room.userNickname);
 
   //스파이 빼고 나머지 유저들 고르기
+  // const exceptSpy = () => {
+  //   return (userNickname = userNickname.filter(
+  //     (nick) => nick.nickname !== spy
+  //   ));
+  // };
+  // exceptSpy();
 
   // let userCameras = [
   //   { nickName: '빈자리', id: 1 },
