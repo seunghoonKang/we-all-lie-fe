@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import Camera3 from '../../elements/Camera3';
 import SelectCategoryImg from '../gamestart/SelectCategoryImg';
 import { socket } from '../../shared/socket';
-import { useParams } from 'react-router-dom';
 
 const GameEndContents = () => {
   const param = useParams();
