@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { useDispatch, useSelector } from 'react-redux';
-import { gameOperation } from '../redux/modules/gameSlice';
+import { gameOperation, gameResult } from '../redux/modules/gameSlice';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Camera from '../elements/Camera';
@@ -139,10 +139,12 @@ const GameVote = () => {
     if (bool === true) {
       //스파이가 제시어를 맞췄다면, 스파이 승리 화면 컴포넌트로 넘어가기
       console.log('스파이승리');
+      dispatch(gameResult(1));
       dispatch(gameOperation(3));
     } else if (bool === false) {
       //스파이가 제시어를 못 맞췄다면, 스파이 패배 화면 컴포넌트로 넘어가기
       console.log('스파이패배');
+      dispatch(gameResult(2));
       dispatch(gameOperation(3));
     }
   });
@@ -161,7 +163,14 @@ const GameVote = () => {
           time
         />
       )}
-      <HeaderSection>📌 모든 유저가 투표를 진행하고 있습니다.</HeaderSection>
+      {spyAlive === false ? (
+        <HeaderSection>
+          📌 스파이가 검거되어 스파이가 키워드를 선택하고 있습니다.
+        </HeaderSection>
+      ) : (
+        <HeaderSection>📌 모든 유저가 투표를 진행하고 있습니다.</HeaderSection>
+      )}
+
       <TimerContainer>
         {spyAlive !== false && (
           <TimerDiv sec={'20'}>
