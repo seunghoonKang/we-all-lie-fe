@@ -28,7 +28,10 @@ const WordExamples = (props) => {
               <Word
                 key={word}
                 onClick={() => spyClickWord(word)}
-                // style={{ background: 'skyblue' }}
+                style={{
+                  // backgroundColor: '${(props) => props.theme.color.lionOrange}',
+                  backgroundColor: 'Orange',
+                }}
                 className="click"
               >
                 {word}
@@ -60,13 +63,14 @@ const Word = styled.div`
   cursor: pointer;
   text-align: center;
   line-height: 43px;
-  background-color: pink;
+  border: 1px solid gray;
+  /* background-color: pink; */
 
-  .click {
+  /* .click {
     background-color: ${(props) => props.theme.color.lionOrange};
   }
 
   & .click {
     background-color: ${(props) => props.theme.color.lionOrange};
-  }
+  } */
 `;
