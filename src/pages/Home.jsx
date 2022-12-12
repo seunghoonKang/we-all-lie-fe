@@ -34,6 +34,13 @@ const Home = () => {
       setRooms(room);
       //console.log(rooms);
     });
+  }, []);
+
+  useEffect(() => {
+    socket.on('showRoom', (room) => {
+      setRooms(room);
+      //console.log(rooms);
+    });
   }, [rooms]);
 
   // setInterval(() => {
