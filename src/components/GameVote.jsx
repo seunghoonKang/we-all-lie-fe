@@ -30,16 +30,7 @@ const GameVote = () => {
   const myNickname = cookies.nickname;
   const [stamp, setStamp] = useState(`${myNickname}`); //기본값이 본인으로 선택
 
-  const initialState = [
-    { nickname: '' },
-    { nickname: '' },
-    { nickname: '' },
-    { nickname: '' },
-    { nickname: '' },
-    { nickname: '' },
-    { nickname: '' },
-    { nickname: '' },
-  ];
+  const initialState = ['', '', '', '', '', '', '', ''];
   const [userCameras, setUserCameras] = useState(initialState);
 
   useEffect(() => {
@@ -48,19 +39,21 @@ const GameVote = () => {
     socket.on('userNickname', (user) => {
       console.log(user);
       setUserCameras(initialState);
+      // setUserCameras(...user);
       for (let i = 0; i < user.length; i++) {
-        if (userCameras[i].nickname !== user[i]) {
-          let newuserCameras = [...userCameras];
-          newuserCameras[i].nickname = user[i];
+        if (userCameras[i] !== user[i]) {
+          let newuserCameras = initialState;
+          newuserCameras[i] = user[i];
           setUserCameras(newuserCameras);
-          // userCameras[i].nickname = user[i];
+          // userCameras[i] = user[i];
         }
       }
-      dispatch(getUserNickname(userCameras));
+      // dispatch(getUserNickname(userCameras));
       return userCameras;
     });
   }, []);
 
+  console.log(userCameras);
   /* 
   투표 기본값 : 본인 (O) -> stamp가 찍혀있진 않음
   투표 시간이 다 되었을때, 투표 처리
@@ -87,9 +80,6 @@ const GameVote = () => {
       }
       console.log('시간초 다 됐음');
 
-      //전체투표 끝나고 321모달 띄워주기
-      setVoteDoneModal(true);
-
       //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석처리하기)*****
       // setTimeout(() => {
       //   setSpyAlive(true); //true => 스파이 승리 면 / false => 스파이 키워드 선택 화면
@@ -106,10 +96,18 @@ const GameVote = () => {
   //스파이 추정 유저 투표로 선택. => CommonModal.jsx 로 이동
   //socket.emit('voteSpy', param.id, stamp);
 
+  //백엔드에서 전달받은 에러
+  socket.on('error', (a, b) => {
+    console.log(a);
+    console.log(b);
+  });
+
   //투표결과, 스파이가 이겼는지 결과(boolean) on 받기
   //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석풀기)*****
   socket.on('spyWin', (result) => {
     console.log('spyWin 받았다:', result);
+    //전체투표 끝나고 321모달 띄워주기
+    setVoteDoneModal(true);
     //이겼는지(True) 졌는지(False) 값
     setTimeout(() => {
       setVoteDoneModal(false);
@@ -124,6 +122,8 @@ const GameVote = () => {
 
   //스파이가 제시어를 고른 뒤 게임 결과 (console말고는 다른점 없음,,) => GameEndContents에도 씀
   socket.on('endGame', (bool) => {
+    //=> spyGuess 이후에 자동으로 emit 되고 있는지? / 이 방 모두에게 뿌려주는 지?
+    console.log('endGame 받아왔다!');
     //bool 값에 따라서 아래 조건문 실행
     if (bool === true) {
       //스파이가 제시어를 맞췄다면, 스파이 승리 화면 컴포넌트로 넘어가기
@@ -245,7 +245,7 @@ const GameVote = () => {
           ))} */}
           {userCameras.map((person, index) => (
             <Camera
-              person={person.nickname}
+              person={person}
               key={index}
               stamp={stamp}
               setStamp={setStamp}
