@@ -107,14 +107,14 @@ const Chat = () => {
     <ChatLayout theme={themeContext}>
       <MyProfile onClick={() => setUserOpenModal(!userOpenModal)}>
         {/* 나중에 user 는 모달로 할수도 */}My ∨
-        {userOpenModal === true && (
-          <UserInfo
-            closeUseModal={() => {
-              setUserOpenModal(!userOpenModal);
-            }}
-          />
-        )}
       </MyProfile>
+      {userOpenModal === true && (
+        <UserInfo
+        // closeUseModal={() => {
+        //   setUserOpenModal(!userOpenModal);
+        // }}
+        />
+      )}
       <ChatTop>
         <p style={{ fontSize: '30px' }}>CHAT</p>
         <People>
