@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -7,14 +7,11 @@ import SelectCategoryImg from '../gamestart/SelectCategoryImg';
 import { socket } from '../../shared/socket';
 
 const GameEndContents = () => {
+  const param = useParams();
   const answerWord = useSelector((state) => state.game.sendCategory.answerWord);
   const category = useSelector((state) => state.game.sendCategory.category);
   const spy = useSelector((state) => state.game.spy);
-  let userNickname = useSelector((state) => state.room.userNickname);
-  console.log(spy);
-  const initialState = ['', '', '', '', '', '', '', ''];
-  const [userCameras, setUserCameras] = useState(initialState);
-  const param = useParams();
+  //let userNickname = useSelector((state) => state.room.userNickname);
 
   //스파이 빼고 나머지 유저들 고르기
   // const exceptSpy = () => {
@@ -34,6 +31,30 @@ const GameEndContents = () => {
   //   { nickName: '빈자리', id: 7 },
   // ];
 
+  // const exceptSpy = () => {
+  //   return (userNickname = userNickname.filter(
+  //     (nick) => nick.nickname !== spy
+  //   ));
+  // };
+  // exceptSpy();
+
+  // useEffect(() => {
+  //   socket.emit('userNickname', param.id);
+  //   socket.on('userNickname', (user) => {
+  //     console.log(user);
+  //     setUserCameras(initialState);
+  //     for (let i = 0; i < user.length; i++) {
+  //       if (userCameras[i].nickname !== user[i]) {
+  //         let newuserCameras = [...userCameras];
+  //         newuserCameras[i].nickname = user[i];
+  //         setUserCameras(newuserCameras);
+  //       }
+  //     }
+
+  //     return userCameras;
+  //   });
+  // }, []);
+
   //스파이 외 나머지 유저들 자리  채우기
   // const fillInTheEmptySeats = () => {
   //   for (let i = 0; i < userCameras.length; i++) {
@@ -48,18 +69,18 @@ const GameEndContents = () => {
   // };
   // fillInTheEmptySeats();
 
-  //뀨띠가 임의로 해봄
+  let initialState = [];
+  const [userCameras, setUserCameras] = useState(initialState);
+
   useEffect(() => {
-    // const spreadPeople = () => {
     socket.emit('userNickname', param.id);
     socket.on('userNickname', (user) => {
-      console.log(user);
-      setUserCameras([...user]);
+      const exceptSpy = user.filter((nick) => nick !== spy);
+      //exceptSpy.pop();
+      setUserCameras([...exceptSpy]);
       return userCameras;
     });
   }, []);
-
-  console.log('GameEndContents userCameras ::', userCameras);
 
   return (
     <GameEndEntireContainer>
@@ -78,9 +99,9 @@ const GameEndContents = () => {
         </CorrectCard>
       </GameCardSection>
       <EndGameCameraEntireDiv>
-        {userCameras.map(
-          (person, i) => person !== spy && <Camera3 nickname={person} key={i} />
-        )}
+        {userCameras.map((person, i) => (
+          <Camera3 nickname={person} key={i} />
+        ))}
       </EndGameCameraEntireDiv>
     </GameEndEntireContainer>
   );
