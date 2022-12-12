@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { __getUser, __putUser } from '../redux/modules/userSlice';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ReactComponent as NicknameMakeButton } from '../assets/user_make_button.svg';
 
 const UserInfo = () => {
   const [Correction, setCorrection] = useState(false);
@@ -62,10 +63,10 @@ const UserInfo = () => {
             )}
             <button
               onClick={(e) => {
+                e.preventDefault();
                 const userNickname = { nickname: nickRef.current.value };
                 //백에 닉네임 수정 요청
                 Correction === true && dispatch(__putUser(userNickname));
-
                 //쿠키도 바꾼다.
                 removeCookie('nickname');
                 setCookie('nickname', userNickname.nickname, {
@@ -76,7 +77,7 @@ const UserInfo = () => {
                 setCorrection(!Correction);
               }}
             >
-              {!Correction ? '수정하기' : '저장하기'}
+              <NicknameMakeButton className="rounded-md hover:bg-orange-400" />
             </button>
           </UserNick>
         </ProfilWrap>
@@ -98,18 +99,19 @@ const UserInfo = () => {
 export default UserInfo;
 
 const UserWrap = styled.div`
-  margin-top: 105px;
-  margin-right: 20px;
-  height: calc(30vh - 50px);
+  margin-right: 40px;
   min-height: 150px;
   min-width: 192px;
-  background-color: #8fb7b7;
+  background-color: ${(props) => props.theme.color.white};
   flex-direction: column;
   border-radius: 5px;
   display: flex;
   position: fixed;
   left: 84%;
-  top: 0;
+  top: 105px;
+  font-size: ${(props) => props.theme.fontSize.xs};
+  box-shadow: -4px 4px 10px 4px rgba(34, 34, 34, 0.05);
+  justify-content: space-around;
 `;
 
 const ProfilWrap = styled.div`
@@ -121,7 +123,6 @@ const ProfilWrap = styled.div`
 
 const Profil = styled.div`
   display: flex;
-  background: rgba(255, 255, 255, 0.5);
   justify-content: center;
   border-radius: 50%;
   min-width: 30px;
@@ -132,16 +133,14 @@ const Profil = styled.div`
 `;
 
 const UserNick = styled.div`
-  /* display: flex; */
   color: black;
-  background-color: #b5a689;
   padding: 0;
   font-weight: 700;
-  font-size: 14px;
+  font-size: ${(props) => props.theme.fontSize.sm};
 `;
 
 const MemberInfo = styled.div`
-  background-color: #dbd3c4;
+  background-color: ${(props) => props.theme.color.gray2};
   color: black;
   border-radius: 10px;
 `;
