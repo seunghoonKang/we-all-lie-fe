@@ -15,7 +15,7 @@ const GameStartHeader = ({ setEarlyVote }) => {
   const [disabledBtn, setDisabledBtn] = useState('투표준비');
   const [cookies] = useCookies(['nickname']);
   const userNickname = useSelector((state) => state.room.userNickname);
-  const realUser = userNickname.filter((user) => user.nickname !== '');
+  const realUser = userNickname.filter((user) => user !== '');
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const param = useParams();
@@ -46,7 +46,7 @@ const GameStartHeader = ({ setEarlyVote }) => {
     //cookies에 있는 닉네임과 같은 사람이라면 투표
     //투표완료 되면 버튼 다시 비활성화
     for (let i = 0; i < userNickname.length; i++) {
-      if (userNickname[i].nickname === cookies.nickname) {
+      if (userNickname[i] === cookies.nickname) {
         setEarlyVote(true);
         socket.emit('nowVote', param.id, true, cookies.nickname);
         setDisabledBtn('투표완료');

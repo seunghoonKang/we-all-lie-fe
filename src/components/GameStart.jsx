@@ -23,16 +23,7 @@ const GameStart = () => {
   const param = useParams();
   const totalTime = 30000;
 
-  let initialState = [
-    { nickname: '' },
-    { nickname: '' },
-    { nickname: '' },
-    { nickname: '' },
-    { nickname: '' },
-    { nickname: '' },
-    { nickname: '' },
-    { nickname: '' },
-  ];
+  let initialState = [];
   const [userCameras, setUserCameras] = useState(initialState);
 
   // const fillInTheEmptySeats = useMemo(() => {
@@ -50,20 +41,28 @@ const GameStart = () => {
   //   });
   // }, [userCameras]);
 
+  // useEffect(() => {
+  //   socket.emit('userNickname', param.id);
+  //   socket.on('userNickname', (user) => {
+  //     console.log(user);
+  //     setUserCameras(initialState);
+  //     for (let i = 0; i < user.length; i++) {
+  //       if (userCameras[i].nickname !== user[i]) {
+  //         let newuserCameras = [...userCameras];
+  //         newuserCameras[i].nickname = user[i];
+  //         setUserCameras(newuserCameras);
+  //         // userCameras[i].nickname = user[i];
+  //       }
+  //     }
+  //     dispatch(getUserNickname(userCameras));
+  //     return userCameras;
+  //   });
+  // }, []);
+
   useEffect(() => {
     socket.emit('userNickname', param.id);
     socket.on('userNickname', (user) => {
-      console.log(user);
-      setUserCameras(initialState);
-      for (let i = 0; i < user.length; i++) {
-        if (userCameras[i].nickname !== user[i]) {
-          let newuserCameras = [...userCameras];
-          newuserCameras[i].nickname = user[i];
-          setUserCameras(newuserCameras);
-          // userCameras[i].nickname = user[i];
-        }
-      }
-      dispatch(getUserNickname(userCameras));
+      setUserCameras([...user]);
       return userCameras;
     });
   }, []);
@@ -120,7 +119,7 @@ const GameStart = () => {
         </GameCardSection>
         <VideoContainer>
           {userCameras.map((person, i) => (
-            <Camera person={person.nickname} key={i} />
+            <Camera person={person} key={i} />
           ))}
         </VideoContainer>
       </GameEntireContainer>
