@@ -23,7 +23,7 @@ const GameVote = () => {
   const [spyAnswer, setSpyAnswer] = useState(); //스파이가 클릭한 제시어 initialState(빈값)
   const [spyAnswerStatus, setSpyAnswerStatus] = useState(false); //스파이가 제시어를 전송 했는지(True) 안했는지(False) initialState(false)
   const [timerZero, setTimerZero] = useState(false);
-  const [timerAgain, setTimerAain] = useState(false);
+  const [timerAgain, setTimerAgain] = useState(false); //Timer 다시 재생
   const myNickname = cookies.nickname;
   const [stamp, setStamp] = useState(`${myNickname}`); //기본값이 본인으로 선택
   const spy = useSelector((state) => state.game.spy); //스파이 닉네임 들고오기
@@ -85,17 +85,22 @@ const GameVote = () => {
       if (spy === myNickname) {
         if (spyAnswerStatus === false) {
           socket.emit('spyGuess', param.id, spyAnswer, myNickname);
+          console.log('스파이가 마지막으로 클릭한 키워드 보내줌 ::', spyAnswer);
         }
       }
-      console.log('시간초 다 됐음');
+      console.log('시간초 끝!');
 
       //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석처리하기)*****
+      setVoteDoneModal(true);
       setTimeout(() => {
-        setSpyAlive(true); //true => 스파이 승리 화면 / false => 스파이 키워드 선택 화면
+        setSpyAlive(false); //true => 스파이 승리 화면 / false => 스파이 키워드 선택 화면
+        setVoteDoneModal(false);
+        setTimerAgain(true);
       }, 5000);
     }
   }, [timerZero]);
-  //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석처리하기)*****
+
+  // //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석처리하기)*****
   // useEffect(() => {
   //   setTimeout(() => {
   //     setVoteDoneModal(false);
@@ -121,7 +126,7 @@ const GameVote = () => {
     setTimeout(() => {
       setVoteDoneModal(false);
       setSpyAlive(result);
-    }, 4000);
+    }, 5000);
   });
 
   //전체투표 결과1 : spyAlive(true) 스파이가 이겼을때, 스파이 승리 화면 컴포넌트로 넘어가기
@@ -161,11 +166,29 @@ const GameVote = () => {
       )}
       <HeaderSection>📌 모든 유저가 투표를 진행하고 있습니다.</HeaderSection>
       <TimerContainer>
-        <TimerDiv>
-          <MinWidthTimerDiv>
-            <Timer sec="20" timerZero={timerZero} setTimerZero={setTimerZero} />
-          </MinWidthTimerDiv>
-        </TimerDiv>
+        {spyAlive !== false && (
+          <TimerDiv sec={'20'}>
+            <MinWidthTimerDiv>
+              <Timer
+                sec="20"
+                timerZero={timerZero}
+                setTimerZero={setTimerZero}
+              />
+            </MinWidthTimerDiv>
+          </TimerDiv>
+        )}
+        {timerAgain && (
+          <TimerDiv sec={'30'}>
+            <MinWidthTimerDiv>
+              <Timer
+                sec="30"
+                timerZero={timerZero}
+                setTimerZero={setTimerZero}
+              />
+            </MinWidthTimerDiv>
+          </TimerDiv>
+        )}
+        {/* <Timer sec="20" timerZero={timerZero} setTimerZero={setTimerZero} /> */}
       </TimerContainer>
 
       {spyAlive === false ? (
@@ -313,7 +336,8 @@ const TimerDiv = styled.div`
   color: #fff;
   background-color: #222;
   animation-name: progressTimeBar;
-  animation-duration: 20s;
+  /* animation-duration: 20s; */
+  animation-duration: ${(props) => props.sec}s;
   animation-iteration-count: 1;
   animation-direction: reverse;
   animation-timing-function: linear;
@@ -384,7 +408,7 @@ const CardContainer = styled.div`
   width: 100%;
   height: 50vh;
   min-height: 312px;
-  background-color: gray;
+  /* background-color: gray; */
 `;
 
 const Users = styled.div`
