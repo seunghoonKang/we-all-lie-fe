@@ -21,6 +21,7 @@ const Kakao = () => {
   let code = new URL(window.location.href).searchParams.get('code');
 
   const Token = async () => {
+    window.localStorage.removeItem('token');
     try {
       const res = await axios.get(
         `https://minhyeongi.xyz/api/auth/kakao/callback?code=${code}`
