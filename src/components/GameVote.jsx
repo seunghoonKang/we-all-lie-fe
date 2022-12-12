@@ -91,21 +91,14 @@ const GameVote = () => {
       console.log('시간초 끝!');
 
       //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석처리하기)*****
-      setVoteDoneModal(true);
-      setTimeout(() => {
-        setSpyAlive(false); //true => 스파이 승리 화면 / false => 스파이 키워드 선택 화면
-        setVoteDoneModal(false);
-        setTimerAgain(true);
-      }, 5000);
+      // setVoteDoneModal(true);
+      // setTimeout(() => {
+      //   setSpyAlive(false); //true => 스파이 승리 화면 / false => 스파이 키워드 선택 화면
+      //   setVoteDoneModal(false);
+      //   setTimerAgain(true);
+      // }, 5000);
     }
   }, [timerZero]);
-
-  // //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석처리하기)*****
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setVoteDoneModal(false);
-  //   }, 5000);
-  // }, [voteDoneModal]);
 
   //스파이 추정 유저 투표로 선택. => CommonModal.jsx 로 이동
   //socket.emit('voteSpy', param.id, stamp);
@@ -117,7 +110,7 @@ const GameVote = () => {
   });
 
   //투표결과, 스파이가 이겼는지 결과(boolean) on 받기
-  //*****임의로 setSpyAlive socket으로 받은 척 ! (dev/main PR 할땐 주석풀기)*****
+  //*********************************(dev/main PR 할땐 주석풀기)*****
   socket.on('spyWin', (result) => {
     console.log('spyWin 받았다:', result);
     //전체투표 끝나고 321모달 띄워주기
@@ -126,6 +119,10 @@ const GameVote = () => {
     setTimeout(() => {
       setVoteDoneModal(false);
       setSpyAlive(result);
+      //스파이가 찍혔다면, 타이머 다시 재생
+      if (result === false) {
+        setTimerAgain(true);
+      }
     }, 5000);
   });
 
@@ -302,22 +299,6 @@ const HeaderSection = styled.section`
   margin-bottom: 20px; ;
 `;
 
-// const Time = styled.div``;
-// const Timer = styled.div`
-//   width: 100%;
-//   height: 40px;
-//   background-color: ${(props) => props.theme.color.gray1};
-//   border-radius: 6px;
-//   overflow: hidden;
-//   position: relative;
-//   ${Time} {
-//     width: 100%;
-//     height: 40px;
-//     background-color: ${(props) => props.theme.color.lionBlack};
-//     position: absolute;
-//     left: -50%;
-//   }
-// `;
 const TimerContainer = styled.div`
   position: relative;
   width: 100%;
