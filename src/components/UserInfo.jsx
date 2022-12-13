@@ -10,16 +10,15 @@ import { ReactComponent as NicknameMakeButton } from '../assets/user_make_button
 
 const UserInfo = () => {
   const [Correction, setCorrection] = useState(false);
-  const nickRef = useRef('');
+  const nickRef = useRef({});
   const token = localStorage.getItem('token');
   const [loginState, setLoginState] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies(['nickname']);
   const getUserInfo = useSelector((state) => state.user.data);
+  //에러 메세지 받을꺼임
   const { error } = useSelector((state) => state.user.data);
   const dispatch = useDispatch();
   const navigatino = useNavigate();
-
-  console.log('에러 메세지 받아볼려구', error);
 
   useEffect(() => {
     if (token) {
@@ -63,6 +62,10 @@ const UserInfo = () => {
             )}
             <button
               onClick={(e) => {
+                if (nickRef.current.value === '') {
+                  alert('내용을 입력해 주세요');
+                  return;
+                }
                 e.preventDefault();
                 const userNickname = { nickname: nickRef.current.value };
                 //백에 닉네임 수정 요청
@@ -84,11 +87,11 @@ const UserInfo = () => {
 
         {/* 승률 */}
         <MemberInfo>
-          스파이 승률
+          <div>스파이 승률</div>
           {getUserInfo.spyWinRating}%
         </MemberInfo>
         <MemberInfo>
-          스파이 정답률
+          <div>스파이 정답률</div>
           {getUserInfo.voteSpyRating}%
         </MemberInfo>
         <button onClick={logoutHandler}>로그아웃</button>
@@ -119,6 +122,7 @@ const ProfilWrap = styled.div`
   align-items: center;
   justify-content: center;
   gap: 12px;
+  margin: 5px;
 `;
 
 const Profil = styled.div`
@@ -143,4 +147,7 @@ const MemberInfo = styled.div`
   background-color: ${(props) => props.theme.color.gray2};
   color: black;
   border-radius: 10px;
+  display: flex;
+  justify-content: space-around;
+  margin: 5px;
 `;
