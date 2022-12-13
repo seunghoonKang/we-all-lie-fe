@@ -11,7 +11,7 @@ import { ReactComponent as SendIcon } from '../assets/icon_send.svg';
 
 //민형님 주소
 import { io } from 'socket.io-client';
-export const socket = io('https://wealllion.shop', {
+export const socket = io('https://minhyeongi.xyz', {
   cors: {
     origin: '*',
   },
