@@ -11,14 +11,13 @@ import { ReactComponent as NicknameMakeButton } from '../assets/user_make_button
 const UserInfo = () => {
   const [Correction, setCorrection] = useState(false);
   const nickRef = useRef({});
+  const dispatch = useDispatch();
+  const navigatino = useNavigate();
   const token = localStorage.getItem('token');
   const [loginState, setLoginState] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies(['nickname']);
   const getUserInfo = useSelector((state) => state.user.data);
-  //에러 메세지 받을꺼임
-  const { error } = useSelector((state) => state.user.data);
-  const dispatch = useDispatch();
-  const navigatino = useNavigate();
+  const putUserInfo = useSelector((state) => state.user.data.nickname);
 
   useEffect(() => {
     if (token) {
@@ -62,21 +61,20 @@ const UserInfo = () => {
             )}
             <button
               onClick={(e) => {
+                e.preventDefault();
+                const userNickname = { nickname: nickRef.current.value };
+                Correction === true && dispatch(__putUser(userNickname));
                 if (nickRef.current.value === '') {
                   alert('내용을 입력해 주세요');
                   return;
+                } else if (putUserInfo) {
+                  removeCookie('nickname');
+                  setCookie('nickname', putUserInfo, {
+                    path: '/',
+                    secure: true,
+                    sameSite: 'none',
+                  });
                 }
-                e.preventDefault();
-                const userNickname = { nickname: nickRef.current.value };
-                //백에 닉네임 수정 요청
-                Correction === true && dispatch(__putUser(userNickname));
-                //쿠키도 바꾼다.
-                removeCookie('nickname');
-                setCookie('nickname', userNickname.nickname, {
-                  path: '/',
-                  secure: true,
-                  sameSite: 'none',
-                });
                 setCorrection(!Correction);
               }}
             >
