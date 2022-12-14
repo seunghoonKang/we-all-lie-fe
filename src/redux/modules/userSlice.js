@@ -34,9 +34,11 @@ export const __putUser = createAsyncThunk(
       Authorization: `Bearer ${token}`,
     };
     try {
-      const { data } = await axios.put(`https://minhyeongi.xyz/api/user`, {
-        headers,
-      });
+      const { data } = await axios.put(
+        `https://minhyeongi.xyz/api/user`,
+        payload,
+        { headers }
+      );
       return thunkAPI.fulfillWithValue(data);
     } catch (error) {
       if (error.response) {
