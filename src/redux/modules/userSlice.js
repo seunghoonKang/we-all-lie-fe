@@ -34,14 +34,15 @@ export const __putUser = createAsyncThunk(
       Authorization: `Bearer ${token}`,
     };
     try {
-      const { data } = await axios.put(
-        `https://minhyeongi.xyz/api/user`,
-        payload,
-        { headers }
-      );
+      const { data } = await axios.put(`https://minhyeongi.xyz/api/user`, {
+        headers,
+      });
       return thunkAPI.fulfillWithValue(data);
     } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+      if (error.response) {
+        alert(error.response.data.errorMessage);
+        return thunkAPI.rejectWithValue(error);
+      }
     }
   }
 );
@@ -72,6 +73,7 @@ const userSlice = createSlice({
     [__putUser.rejected]: (state, action) => {
       state.isLoading = false;
       state.error = action.error;
+      console.log(state.error);
     },
   },
 });
