@@ -5,58 +5,33 @@ import { useDispatch, useSelector } from 'react-redux';
 import { gameOperation, gameResult } from '../redux/modules/gameSlice';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import Camera from '../elements/Camera';
 import CommonModal from '../elements/CommonModal';
 import Timer from '../elements/Timer';
 import { socket } from '../shared/socket';
 import WordExamples from './gamevote/WordExamples';
 
-const GameVote = () => {
+const GameVote = ({
+  userCameras,
+  voteStatus,
+  setVoteStatus,
+  stamp,
+  setStamp,
+}) => {
   // const themeContext = useContext(ThemeContext);
   const param = useParams();
   const dispatch = useDispatch();
   const [cookies] = useCookies(['nickname']);
   const [voteModal, setVoteModal] = useState(false); //투표 버튼 모달
   const [voteDoneModal, setVoteDoneModal] = useState(false); //투표완료 모달
-  const [voteStatus, setVoteStatus] = useState(false);
+  // const [voteStatus, setVoteStatus] = useState(false);
   const [spyAlive, setSpyAlive] = useState('a'); //전체투표에서 스파이가 이겼는지(True) 졌는지(False) 투표전 initialState (a)
   const [spyAnswer, setSpyAnswer] = useState(); //스파이가 클릭한 제시어 initialState(빈값)
   const [spyAnswerStatus, setSpyAnswerStatus] = useState(false); //스파이가 제시어를 전송 했는지(True) 안했는지(False) initialState(false)
   const [timerZero, setTimerZero] = useState(false);
   const [timerAgain, setTimerAgain] = useState(false); //Timer 다시 재생
   const myNickname = cookies.nickname;
-  const [stamp, setStamp] = useState(`${myNickname}`); //기본값이 본인으로 선택
+  // const [stamp, setStamp] = useState(`${myNickname}`); //기본값이 본인으로 선택
   const spy = useSelector((state) => state.game.spy); //스파이 닉네임 들고오기
-
-  const initialState = ['', '', '', '', '', '', '', ''];
-  const [userCameras, setUserCameras] = useState(initialState);
-
-  useEffect(() => {
-    socket.emit('userNickname', param.id);
-    socket.on('userNickname', (user) => {
-      console.log(user);
-      setUserCameras([...user]);
-      return userCameras;
-    });
-  }, []);
-  // socket.emit('userNickname', param.id);
-  // socket.on('userNickname', (user) => {
-  //   console.log(user);
-  //   setUserCameras(initialState);
-  //   // setUserCameras(...user);
-  //   for (let i = 0; i < user.length; i++) {
-  //     if (userCameras[i] !== user[i]) {
-  //       let newuserCameras = initialState;
-  //       newuserCameras[i] = user[i];
-  //       setUserCameras(newuserCameras);
-  //       // userCameras[i] = user[i];
-  //     }
-  //   }
-  //   // dispatch(getUserNickname(userCameras));
-  //   return userCameras;
-  // });
-
-  console.log(userCameras);
 
   /* 
   투표 기본값 : 본인 (O) -> stamp가 찍혀있진 않음
@@ -71,8 +46,10 @@ const GameVote = () => {
   스파이가 이겼는지 졌는지 'endGame'
   */
 
-  //내가 마지막으로 선택한 사람 닉네임 = stamp
-  // console.log('stamp::', stamp);
+  useEffect(() => {
+    //내가 마지막으로 선택한 사람 닉네임 = stamp
+    console.log('stamp::', stamp);
+  }, [stamp]);
 
   //00:00 일때 미투표상태일시 현재 stamp 찍혀있는 사람으로 자동 emit
   useEffect(() => {
@@ -129,6 +106,7 @@ const GameVote = () => {
   //전체투표 결과1 : spyAlive(true) 스파이가 이겼을때, 스파이 승리 화면 컴포넌트로 넘어가기
   useEffect(() => {
     spyAlive === true && dispatch(gameOperation(3));
+    console.log('스파이가 이겼다');
   }, [spyAlive]);
 
   //스파이가 제시어를 고른 뒤 게임 결과 (console말고는 다른점 없음,,) => GameEndContents에도 씀
@@ -265,25 +243,26 @@ const GameVote = () => {
           )}
         </Vote>
       )}
-      {spyAlive === false ? (
-        <CardContainer>
-          <WordExamples spyAnswer={spyAnswer} setSpyAnswer={setSpyAnswer} />
-        </CardContainer>
-      ) : (
-        <Users>
-          {userCameras.map((person, index) => (
-            <Camera
-              person={person}
-              //person={person.nickname}
-              key={index}
-              stamp={stamp}
-              setStamp={setStamp}
-              voteStatus={voteStatus}
-              setVoteStatus={setVoteStatus}
-            />
-          ))}
-        </Users>
-      )}
+      {
+        spyAlive === false ? (
+          <CardContainer>
+            <WordExamples spyAnswer={spyAnswer} setSpyAnswer={setSpyAnswer} />
+          </CardContainer>
+        ) : null
+        // <Users>
+        //   {userCameras.map((person, index) => (
+        //     <Camera
+        //       person={person}
+        //       //person={person.nickname}
+        //       key={index}
+        //       stamp={stamp}
+        //       setStamp={setStamp}
+        //       voteStatus={voteStatus}
+        //       setVoteStatus={setVoteStatus}
+        //     />
+        //   ))}
+        // </Users>
+      }
     </Layout>
   );
 };
@@ -296,8 +275,8 @@ const Layout = styled.div`
   background-color: white;
   border-radius: 10px;
   padding: 16px;
-  min-height: 650px;
-  height: 90vh;
+  /* min-height: 650px; */
+  /* height: 90vh; */
 `;
 
 const HeaderSection = styled.section`
@@ -366,12 +345,10 @@ const Vote = styled.div`
   background-color: ${(props) => props.theme.color.gray1};
   width: 100%;
   min-height: 180px;
-  height: 22vh;
-  /* text-align: center; */
+  /* height: 22vh; */
   margin-top: 2vh;
   margin-bottom: 2vh;
   padding: 30px 30px;
-  /* padding-bottom: 60px; */
   border-radius: 6px;
   ${VoteTitle} {
     font-size: 22px;
@@ -397,7 +374,8 @@ const CardContainer = styled.div`
   align-content: space-evenly; //세로 띄우기
   width: 100%;
   height: 50vh;
-  min-height: 312px;
+  min-height: 360px;
+  margin-bottom: 1000px;
   /* background-color: gray; */
 `;
 

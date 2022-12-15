@@ -54,7 +54,9 @@ const Kakao = () => {
         localStorage.setItem('token', accessToken);
 
         if (res2.status == 200 || 201) {
-          window.location.replace('/home');
+          setTimeout(() => {
+            window.location.replace('/home');
+          }, 1500);
         }
       } else {
         alert('카카오톡 요청 실패');

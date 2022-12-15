@@ -56,6 +56,7 @@ const CorrectCard = styled.div`
   flex-grow: 1;
   margin-top: 15px;
   margin-right: 18px;
+  padding: 10px;
 `;
 
 const CorrectAnswer = styled.div`

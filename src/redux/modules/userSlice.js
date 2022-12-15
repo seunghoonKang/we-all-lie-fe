@@ -41,7 +41,10 @@ export const __putUser = createAsyncThunk(
       );
       return thunkAPI.fulfillWithValue(data);
     } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+      if (error.response) {
+        alert(error.response.data.errorMessage);
+        return thunkAPI.rejectWithValue(error);
+      }
     }
   }
 );
@@ -72,6 +75,7 @@ const userSlice = createSlice({
     [__putUser.rejected]: (state, action) => {
       state.isLoading = false;
       state.error = action.error;
+      console.log(state.error);
     },
   },
 });
