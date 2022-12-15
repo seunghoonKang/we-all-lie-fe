@@ -163,6 +163,6 @@
   - ### FrontEnd: [WeAreLion-FE](https://github.com/seunghoonKang/we-all-lie-fe)
 
 ## 📝Notion
-  - #### 전체: https://github.com/seunghoonKang/we-all-lie-fe](https://bald-crop-238.notion.site/We-All-Lion-a-k-a-OST-1-81c8a848619b40e4b502d5ebddb95f89
+  - #### 전체: https://bald-crop-238.notion.site/We-All-Lion-866ef71edc17476aaac679b81e1be6a7
   - #### 원페이지: https://bald-crop-238.notion.site/We-All-Lion-866ef71edc17476aaac679b81e1be6a7
 
