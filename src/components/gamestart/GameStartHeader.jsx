@@ -70,7 +70,7 @@ const GameStartHeader = ({ setEarlyVote, userCameras }) => {
   useEffect(() => {
     const checkNotDisabledBtn = setTimeout(() => {
       setDisabledBtn('투표하기');
-    }, 3000);
+    }, 60000);
 
     return () => {
       clearTimeout(checkNotDisabledBtn);
