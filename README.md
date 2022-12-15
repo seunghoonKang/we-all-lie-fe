@@ -124,6 +124,15 @@
 
 - Figma : https://www.figma.com/file/fdzOIGhSRQw4whhvLERhu5/We-All-Lion?node-id=0%3A1&t=Vd4Z641HcwUKAZYS-0
 
+<br />
+
+## 🗽아키텍처
+
+<p align="center">
+  <img src = "https://user-images.githubusercontent.com/59612529/207881623-c6b3a74f-d463-478d-9a67-464bcc07aef3.png" />
+</p>
+
+<br />
 
 ## 🛠 사용한 기술
 
