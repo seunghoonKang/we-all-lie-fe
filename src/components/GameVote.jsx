@@ -60,9 +60,14 @@ const GameVote = ({
         setVoteStatus(true);
       }
       if (spy === myNickname) {
-        if (spyAnswerStatus === false) {
-          socket.emit('spyGuess', param.id, spyAnswer, myNickname);
-          console.log('스파이가 마지막으로 클릭한 키워드 보내줌 ::', spyAnswer);
+        if (spyAlive === flase) {
+          if (spyAnswerStatus === false) {
+            socket.emit('spyGuess', param.id, spyAnswer, myNickname);
+            console.log(
+              '스파이가 마지막으로 클릭한 키워드 보내줌 ::',
+              spyAnswer
+            );
+          }
         }
       }
       console.log('시간초 끝!');
