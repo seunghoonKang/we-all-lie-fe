@@ -33,7 +33,7 @@ const MainSwiper = ({ closeDescription }) => {
           height: '500px',
         }}
         spaceBetween={8}
-        initialSlide={1}
+        initialSlide={0}
         centeredSlides={true}
         navigation={true}
         pagination={{

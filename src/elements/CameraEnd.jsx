@@ -4,18 +4,9 @@ import { ReactComponent as Preparing } from '../assets/preparing_cat.svg';
 import { useSelector } from 'react-redux';
 import arrestedstamp from '../img/arrested.png';
 
-const Camera = ({
-  person,
-  stamp,
-  setStamp,
-  voteStatus,
-  streamManager,
-  ready,
-}) => {
-  //console.log('여긴 카메라', person);
-  console.log('stamp', stamp);
+const Camera = ({ streamManager }) => {
   const videoRef = useRef();
-  const gamePage = useSelector((state) => state.game.gamePage);
+
   function getNicknameTag() {
     // Gets the nickName of the user
     if (streamManager) {
@@ -25,51 +16,24 @@ const Camera = ({
     }
   }
 
-  // function getReadyTag() {
-  //   return JSON.parse(props.streamManager.stream.connection.data).boolkey;
-  // }
-
   useEffect(() => {
     if (streamManager && !!videoRef) {
       streamManager.addVideoElement(videoRef.current);
     }
   }, []);
 
-  //투표할때 필요한 로직
-  const arrestedToggle = () => {
-    if (gamePage === 2) {
-      person !== '' && voteStatus === false && setStamp(person);
-      // if (voteStatus == false) {
-      //   setStamp(person);
-      // }
-    }
-  };
-
   return (
-    <Wrap onClick={arrestedToggle}>
+    <Wrap>
       <PreParingIconWrap>
         {streamManager !== undefined ? (
           <div>
-            {gamePage === 2 && person !== '' && stamp === person && (
-              <Arrested>
-                <img src={arrestedstamp} alt="투표 지목된 사람" />
-              </Arrested>
-            )}
             <video autoPlay={true} ref={videoRef} />
           </div>
         ) : (
           <Preparing />
         )}
       </PreParingIconWrap>
-      {ready !== undefined ? (
-        ready ? (
-          <NickName style={{ background: 'orange' }}>
-            {getNicknameTag()}
-          </NickName>
-        ) : (
-          <NickName>{getNicknameTag()}</NickName>
-        )
-      ) : null}
+      <NickName>{getNicknameTag()}</NickName>
     </Wrap>
   );
 };
@@ -78,9 +42,10 @@ export default Camera;
 
 const Wrap = styled.div`
   /* max-width: 204px; */
-  width: 24%;
-  height: 45%;
-  min-height: 170px;
+  /* width: 24%; */
+  /* height: 45%; */
+  /* min-height: 170px; */
+  max-width: 300px;
   max-height: 200px;
   background-color: #e8e8e8;
   border-radius: 5px;
@@ -111,15 +76,4 @@ const NickName = styled.div`
   align-self: flex-end;
   text-align: center;
   border-radius: 0px 0px 5px 5px;
-`;
-
-const Arrested = styled.div`
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translateY(-25%);
-  margin-left: -80px;
-  z-index: 990;
 `;

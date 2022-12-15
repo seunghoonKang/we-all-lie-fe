@@ -2,12 +2,12 @@ import React from 'react';
 import Timer from '../../elements/Timer';
 import styled from 'styled-components';
 
-const GameStartTimerSection = () => {
+const GameStartTimerSection = ({ timerZero, setTimerZero }) => {
   return (
     <TimerContainer>
       <TimerDiv>
         <MinWidthTimerDiv>
-          <Timer min="7" />
+          <Timer min="5" timerZero={timerZero} setTimerZero={setTimerZero} />
         </MinWidthTimerDiv>
       </TimerDiv>
     </TimerContainer>
@@ -32,7 +32,7 @@ const TimerDiv = styled.div`
   color: #fff;
   background-color: #222;
   animation-name: progressTimeBar;
-  animation-duration: 420s;
+  animation-duration: 300s;
   animation-iteration-count: 1;
   animation-direction: reverse;
   animation-timing-function: linear;

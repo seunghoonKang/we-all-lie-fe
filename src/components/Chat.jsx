@@ -8,10 +8,10 @@ import { ReactComponent as ChatProfileDefault } from '../assets/chat_profile_def
 import { ReactComponent as ChatProfileLion } from '../assets/chat_profile_lion.svg';
 import { ReactComponent as PersonIcon } from '../assets/icon_person.svg';
 import { ReactComponent as SendIcon } from '../assets/icon_send.svg';
+import UserInfo from './UserInfo';
 
 //민형님 주소
 import { io } from 'socket.io-client';
-import UserInfo from './UserInfo';
 export const socket = io('https://minhyeongi.xyz', {
   cors: {
     origin: '*',
@@ -108,13 +108,7 @@ const Chat = () => {
       <MyProfile onClick={() => setUserOpenModal(!userOpenModal)}>
         {/* 나중에 user 는 모달로 할수도 */}My ∨
       </MyProfile>
-      {userOpenModal === true && (
-        <UserInfo
-        // closeUseModal={() => {
-        //   setUserOpenModal(!userOpenModal);
-        // }}
-        />
-      )}
+      {userOpenModal === true && <UserInfo />}
       <ChatTop>
         <p style={{ fontSize: '30px' }}>CHAT</p>
         <People>
@@ -168,7 +162,12 @@ const Chat = () => {
       </ChatRow>
       <Form onSubmit={msgSubmitHandler}>
         {/* <p>프로필?</p> */}
-        <input type="text" ref={msgInput} placeholder="여따 할말혀!" required />
+        <input
+          type="text"
+          ref={msgInput}
+          placeholder="채팅 입력해주세요"
+          required
+        />
         <button>
           <SendIcon />
         </button>
