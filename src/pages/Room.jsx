@@ -18,9 +18,9 @@ const Room = () => {
   const param = useParams();
   const [cookies, setCookies] = useCookies(['nickname']);
   const navigate = useNavigate();
-  const gameOperation = useSelector((state) => state.game.gameOperation);
+  const gamePage = useSelector((state) => state.game.gamePage);
 
-  console.log('게임 값 다 받고 실행할 값', gameOperation);
+  console.log('게임 값 다 받고 실행할 값', gamePage);
 
   useEffect(() => {
     //로그인 안하면 로비입장 못하게 하기 (useEffect 안에 넣어야 navigate 먹어요)
@@ -33,25 +33,21 @@ const Room = () => {
   } else {
     return (
       <>
-        {gameOperation !== 0 ? <Notice black="black" /> : <Notice />}
+        {gamePage !== 0 ? <Notice black="black" /> : <Notice />}
         <Box>
-          {gameOperation !== 3 ? (
-            <>
-              <Game>
-                {/* 본인 컴포넌트말고 주석하면 돼용 */}
-                {gameOperation === 0 && <GameReady />}
-                {gameOperation === 1 && <GameStart />}
-                {gameOperation === 2 && <GameVote />}
-                {/* <GameReady /> */}
-                {/* <GameStart /> */}
-                {/* <GameVote /> */}
-              </Game>
-              {/* <GameEnd /> */}
-              <RoomChat />
-            </>
-          ) : (
-            <GameEnd />
-          )}
+          {/* {gamePage !== 3 ? ( */}
+          <>
+            <Game>
+              <GameReady />
+              {/* <GameStart /> */}
+              {/* <GameVote /> */}
+            </Game>
+            {/* <GameEnd /> */}
+            {gamePage !== 3 && <RoomChat />}
+          </>
+          {/* ) : ( */}
+          {/* <GameEnd /> */}
+          {/* )} */}
         </Box>
       </>
     );

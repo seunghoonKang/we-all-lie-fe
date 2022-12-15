@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   spy: 'Agent_징영이(●>◡<●)',
-  gameOperation: 0,
+  gamePage: 0,
   gameResult: 0,
   sendCategory: {
     category: '장소',
@@ -45,7 +45,7 @@ const gameSlice = createSlice({
       console.log('스파이 오라이~', action.payload);
     },
     gameOperation: (state, action) => {
-      state.gameOperation = action.payload;
+      state.gamePage = action.payload;
       //console.log('다음 페이지 넘기는 값', action.payload);
     },
     gameResult: (state, action) => {

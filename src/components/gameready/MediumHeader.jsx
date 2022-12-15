@@ -4,6 +4,8 @@ import { ReactComponent as LockedIcon } from '../../assets/locked_white.svg';
 import { ReactComponent as UnlockedIcon } from '../../assets/unlocked_white.svg';
 
 const MediumHeader = ({}) => {
+  const userNick = useSelector((state) => state.room.userNickname);
+  const currCount = userNick.filter((nick) => nick !== '');
   //게임 정보 있는 헤더
   const getRoomInfo = useSelector((state) => state.room.roomInfos);
   // console.log(getRoomInfo);
@@ -13,7 +15,7 @@ const MediumHeader = ({}) => {
       <RoomInitials>{getRoomInfo.roomTitle}</RoomInitials>
 
       <RoomInfos>
-        <InfoDiv>{getRoomInfo.currentCount} / 8 </InfoDiv>
+        <InfoDiv>{currCount.length} / 8 </InfoDiv>
         <InfoDiv>{getRoomInfo?.gameMode === false ? 'EASY' : 'HARD'}</InfoDiv>
         <div className="flex justify-center items-center mr-[8px] pl-[7px]">
           {getRoomInfo.private == null ? (

@@ -7,12 +7,14 @@ import { useCookies } from 'react-cookie';
 import { ReactComponent as WeAllLieLogo } from '../../assets/we_all_lie_white_logo.svg';
 import { getUserNickname } from '../../redux/modules/roomSlice';
 import { useDispatch } from 'react-redux';
+import { useState } from 'react';
 
 const MainHeader = () => {
   const param = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [cookies, setCookies] = useCookies(['nickname']);
+  const [rtcOut, setRtcOut] = useState(false);
   const nickname = cookies.nickname;
   const BtnHandler = () => {
     //나가기 버튼 눌렀을 때 퇴장메세지 이벤트 emit
@@ -24,6 +26,9 @@ const MainHeader = () => {
       navigate('/home');
     });
     navigate('/home');
+    //RTC 퇴장이벤트
+    setRtcOut(true);
+    //리덕스에 true 값 보내주는 식 작성
   };
 
   return (

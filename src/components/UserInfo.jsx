@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ReactComponent as NicknameMakeButton } from '../assets/user_make_button.svg';
 
-const UserInfo = () => {
+const UserInfo = ({ roomUserOpenModal, setRoomUserOpenModal }) => {
   const [Correction, setCorrection] = useState(false);
   const nickRef = useRef({});
   const dispatch = useDispatch();
@@ -38,61 +38,78 @@ const UserInfo = () => {
   return (
     <>
       <UserWrap>
-        <ProfilWrap>
-          {/* 프로필 이미지 */}
-          <Profil>
-            <img
-              // style={{ transform: 'scale(0.8)' }}
-              src={getUserInfo.profileImg}
-            />
-          </Profil>
+        {roomUserOpenModal === true ? (
+          <ProfilWrap>
+            {/* 프로필 이미지 */}
+            <Profil>
+              <img src={getUserInfo.profileImg} />
+            </Profil>
+            <UserNick> {getUserInfo.nickname}</UserNick>
+            <MemberInfo>
+              <div>스파이 승률</div>
+              {getUserInfo.spyWinRating}%
+            </MemberInfo>
+            <MemberInfo>
+              <div>스파이 정답률</div>
+              {getUserInfo.voteSpyRating}%
+            </MemberInfo>
+          </ProfilWrap>
+        ) : (
+          <>
+            {' '}
+            <ProfilWrap>
+              {/* 프로필 이미지 */}
+              <Profil>
+                <img src={getUserInfo.profileImg} />
+              </Profil>
 
-          {/* 유저이름 + 수정 */}
-          <UserNick>
-            {!Correction ? (
-              getUserInfo.nickname
-            ) : (
-              <input
-                ref={nickRef}
-                defaultValue={getUserInfo.nickname}
-                type="text"
-                placeholder="입력해주세요"
-              ></input>
-            )}
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                const userNickname = { nickname: nickRef.current.value };
-                Correction === true && dispatch(__putUser(userNickname));
-                if (nickRef.current.value === '') {
-                  alert('내용을 입력해 주세요');
-                  return;
-                } else if (putUserInfo) {
-                  removeCookie('nickname');
-                  setCookie('nickname', putUserInfo, {
-                    path: '/',
-                    secure: true,
-                    sameSite: 'none',
-                  });
-                }
-                setCorrection(!Correction);
-              }}
-            >
-              <NicknameMakeButton className="rounded-md hover:bg-orange-400" />
-            </button>
-          </UserNick>
-        </ProfilWrap>
-
-        {/* 승률 */}
-        <MemberInfo>
-          <div>스파이 승률</div>
-          {getUserInfo.spyWinRating}%
-        </MemberInfo>
-        <MemberInfo>
-          <div>스파이 정답률</div>
-          {getUserInfo.voteSpyRating}%
-        </MemberInfo>
-        <button onClick={logoutHandler}>로그아웃</button>
+              {/* 유저이름 + 수정 */}
+              <UserNick>
+                {!Correction ? (
+                  getUserInfo.nickname
+                ) : (
+                  <input
+                    ref={nickRef}
+                    defaultValue={getUserInfo.nickname}
+                    type="text"
+                    placeholder="입력해주세요"
+                  ></input>
+                )}
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const userNickname = { nickname: nickRef.current.value };
+                    Correction === true && dispatch(__putUser(userNickname));
+                    if (nickRef.current.value === '') {
+                      alert('내용을 입력해 주세요');
+                      return;
+                    } else if (putUserInfo) {
+                      removeCookie('nickname');
+                      setCookie('nickname', putUserInfo, {
+                        path: '/',
+                        secure: true,
+                        sameSite: 'none',
+                      });
+                    }
+                    setCorrection(!Correction);
+                  }}
+                >
+                  <NicknameMakeButton className="rounded-md hover:bg-orange-400" />
+                </button>
+              </UserNick>
+            </ProfilWrap>
+            {/* 승률 */}
+            <MemberInfo>
+              <div>스파이 승률</div>
+              {getUserInfo.spyWinRating}%
+            </MemberInfo>
+            <MemberInfo>
+              <div>스파이 정답률</div>
+              {getUserInfo.voteSpyRating}%
+            </MemberInfo>
+            <button onClick={logoutHandler}>로그아웃</button>
+          </>
+        )}
       </UserWrap>
     </>
   );
@@ -107,9 +124,9 @@ const UserWrap = styled.div`
   flex-direction: column;
   border-radius: 5px;
   display: flex;
-  position: fixed;
-  left: 84%;
-  top: 105px;
+  position: absolute;
+  top: 0;
+  right: 0;
   font-size: ${(props) => props.theme.fontSize.xs};
   box-shadow: -4px 4px 10px 4px rgba(34, 34, 34, 0.05);
   justify-content: space-around;
@@ -121,6 +138,7 @@ const ProfilWrap = styled.div`
   justify-content: center;
   gap: 12px;
   margin: 5px;
+  flex-direction: column;
 `;
 
 const Profil = styled.div`
