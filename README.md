@@ -116,7 +116,12 @@
 - 스파이 밝히기
 - 재시작 및 나가기
 
+<p align="center">
+  <img src = "https://user-images.githubusercontent.com/59612529/207949357-2647f0ed-2fe5-4277-8cae-2147ab19ccf2.gif" />
+</p>
+
 <br>
+
 
 
 
