@@ -60,7 +60,7 @@ const GameVote = ({
         setVoteStatus(true);
       }
       if (spy === myNickname) {
-        if (spyAlive === flase) {
+        if (spyAlive === false) {
           if (spyAnswerStatus === false) {
             socket.emit('spyGuess', param.id, spyAnswer, myNickname);
             console.log(
