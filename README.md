@@ -1,4 +1,4 @@
-# WeAreLion-FE
+# WeAllLion-FE
 
 ## 🐱온라인 화상채팅 보드게임, We Are Lion
 
