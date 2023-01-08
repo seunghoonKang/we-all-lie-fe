@@ -1,13 +1,13 @@
 # WeAllLion-FE
 
-## 🐱온라인 화상채팅 보드게임, We Are Lion
+## 🐱온라인 화상채팅 보드게임, We All Lion
 
 <p align="center">
   <img src = "https://user-images.githubusercontent.com/113876583/207038393-fdc23118-2da2-4974-b46e-fbe5fc00956f.jpg" />
 </p>
 
 
-**'We Are Lion'** 은 보드게임 **'스파이 폴'** 을 모티브로 만든 온라인 화상 채팅 보드게임 플랫폼 입니다.
+**'We All Lion'** 은 보드게임 **'스파이 폴'** 을 모티브로 만든 온라인 화상 채팅 보드게임 플랫폼 입니다.
 
 <br>
 
@@ -40,7 +40,7 @@
 - 실시간 온라인 채팅과 영상으로 유저들과 소통할 수 있습니다.  
 - **지금 당장** 게임을 즐겨보세요!
 
-  👉 [We Are Lion 바로가기](https://we-all-lie.vercel.app/)
+  👉 [We All Lion 바로가기](https://we-all-lie.vercel.app/)
 
 
 ## 🔍페이지 기능 소개
@@ -164,8 +164,8 @@
 > # 4. 기타
 
 ## 💻GitHub
-  - ### BackEnd: [WeAreLion-BE](https://github.com/tastekim/WeAllLie-BE)
-  - ### FrontEnd: [WeAreLion-FE](https://github.com/seunghoonKang/we-all-lie-fe)
+  - ### BackEnd: [WeAllLion-BE](https://github.com/tastekim/WeAllLie-BE)
+  - ### FrontEnd: [WeAllLion-FE](https://github.com/seunghoonKang/we-all-lie-fe)
 
 ## 📝Notion
   - #### 전체: https://bald-crop-238.notion.site/We-All-Lion-866ef71edc17476aaac679b81e1be6a7
