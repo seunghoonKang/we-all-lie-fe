@@ -40,7 +40,7 @@
 - 실시간 온라인 채팅과 영상으로 유저들과 소통할 수 있습니다.  
 - **지금 당장** 게임을 즐겨보세요!
 
-  👉 [We All Lion 바로가기](https://we-all-lie.vercel.app/)
+<!--   👉 [We All Lion 바로가기](https://we-all-lie.vercel.app/) -->
 
 
 ## 🔍페이지 기능 소개
