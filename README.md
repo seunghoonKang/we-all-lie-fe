@@ -26,7 +26,7 @@
 |BE|최윤진|https://velog.io/@yunjin5450|https://github.com/yunjin5450|
 |FE `VL`|강승훈|https://velog.io/@deepthink|https://github.com/seunghoonKang|
 |FE|박하은|https://haro-e.tistory.com/|https://github.com/parkharoi|
-|FE|최진영|www.notion.so/yoooooooung/6f65b151350f486f8696c9090504a15b|https://github.com/yoooooooung|
+|FE|최진영|https://www.notion.so/yoooooooung/44ac457e179e4b39955bb0709058c7ad|https://github.com/yoooooooung|
 |Design|이주은|-|**Gmail :** zooni0630@gmail.com|
 
 <br>
